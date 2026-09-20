@@ -64,14 +64,18 @@
     </div>
 
     <!-- Mobile Navigation Drawer (Light Neo-Brutalism) -->
-    <div id="mobile-nav-drawer" class="hidden xl:hidden bg-white border-b-4 border-black px-6 py-4 shadow-2xl">
+    <div id="mobile-nav-drawer" class="hidden xl:hidden bg-white border-b-4 border-black px-4 sm:px-6 py-4 shadow-2xl">
       <div class="flex flex-col gap-1">
         ${mobileLinksHtml}
       </div>
-      <div class="flex items-center gap-3 mt-4 pt-4 border-t-2 border-black">
-        <a href="/docs" target="_blank" class="nav-action-btn btn-white w-full text-center" style="width: 100% !important;">API</a>
-        <a href="/architecture" class="nav-action-btn btn-white w-full text-center" style="width: 100% !important;">Figures</a>
-        <a href="/walkthrough" class="nav-action-btn btn-gold w-full text-center" style="width: 100% !important;">Report</a>
+      <div class="grid grid-cols-2 gap-2.5 mt-4 pt-4 border-t-2 border-black">
+        <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer" class="nav-action-btn btn-white flex items-center justify-center gap-1.5" style="width: 100% !important; min-height: 40px !important;">
+          <img src="https://img.logo.dev/github.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="GitHub" class="w-4 h-4 rounded-full" />
+          <span>REPO</span>
+        </a>
+        <a href="/docs" target="_blank" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">API</a>
+        <a href="/architecture" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">FIGURES</a>
+        <a href="/walkthrough" class="nav-action-btn btn-gold flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">REPORT</a>
       </div>
     </div>
   </header>
@@ -80,8 +84,28 @@
   const toggleBtn = document.getElementById("mobile-nav-toggle");
   const drawer = document.getElementById("mobile-nav-drawer");
   if (toggleBtn && drawer) {
-    toggleBtn.addEventListener("click", () => {
+    const iconSpan = toggleBtn.querySelector(".material-symbols-outlined");
+    toggleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isClosed = drawer.classList.contains("hidden");
       drawer.classList.toggle("hidden");
+      if (iconSpan) {
+        iconSpan.textContent = isClosed ? "close" : "menu";
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!drawer.classList.contains("hidden") && !drawer.contains(e.target) && !toggleBtn.contains(e.target)) {
+        drawer.classList.add("hidden");
+        if (iconSpan) iconSpan.textContent = "menu";
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !drawer.classList.contains("hidden")) {
+        drawer.classList.add("hidden");
+        if (iconSpan) iconSpan.textContent = "menu";
+      }
     });
   }
 })();

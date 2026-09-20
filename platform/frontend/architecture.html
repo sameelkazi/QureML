@@ -30,6 +30,44 @@ tailwind.config = {
 </script>
 <link rel="stylesheet" href="/shared.css"/>
 <style>
+  @media (max-width: 767px) {
+    #nav-actions {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0.65rem !important;
+    }
+    #nav-actions > * {
+      width: 100% !important;
+      min-height: 44px !important;
+      font-size: 0.76rem !important;
+      padding: 0.5rem 0.5rem !important;
+      text-align: center !important;
+      justify-content: center !important;
+    }
+    #figure-controls-bar {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 0.75rem !important;
+      padding: 0.85rem !important;
+    }
+    #figure-controls-bar > div {
+      width: 100% !important;
+      justify-content: space-between !important;
+    }
+    #mobile-figure-select {
+      width: 100% !important;
+      font-size: 15px !important;
+      min-height: 42px !important;
+    }
+    .gallery-card {
+      padding: 1.15rem 0.85rem !important;
+      margin-bottom: 1.25rem !important;
+    }
+    .gallery-card h2 {
+      font-size: 1.2rem !important;
+      line-height: 1.25 !important;
+    }
+  }
   @media print {
     #site-nav, #toc-rail, #print-btn, #nav-actions, #figure-controls-bar, .card-nav-bar { display: none !important; }
     main { max-width: 100% !important; padding: 0 !important; }
