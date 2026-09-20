@@ -1,0 +1,31 @@
+feature_raw,feature,mean_abs_ig,mean_signed_ig
+texture3,Worst Texture,0.06882307,0.0022478057
+texture1,Mean Texture,0.054101285,0.0033553925
+concave_points3,Worst Concave Points,0.040264264,0.009011708
+radius3,Worst Radius,0.039184194,-0.0022692822
+smoothness3,Worst Smoothness,0.039158262,0.0121972365
+concave_points1,Mean Concave Points,0.038301837,0.0061958847
+area3,Worst Area,0.038287442,-0.007868045
+radius1,Mean Radius,0.03803622,0.0026128192
+perimeter3,Worst Perimeter,0.037400063,-0.001726752
+perimeter1,Mean Perimeter,0.037366707,0.0032453656
+area1,Mean Area,0.036212165,-0.0026440443
+smoothness1,Mean Smoothness,0.035001047,0.011885235
+radius2,Radius SE,0.028690165,-0.009319527
+fractal_dimension2,Fractal Dimension SE,0.027966978,-0.0021104869
+compactness1,Mean Compactness,0.027442984,0.0074650478
+compactness3,Worst Compactness,0.026676398,0.0058142887
+area2,Area SE,0.024942156,-0.009298721
+perimeter2,Perimeter SE,0.024021,-0.008167593
+concavity1,Mean Concavity,0.02379707,0.0027694185
+symmetry2,Symmetry SE,0.021487055,-0.00084413384
+concavity3,Worst Concavity,0.021149127,0.003372603
+concavity2,Concavity SE,0.019050565,-0.001247885
+fractal_dimension1,Mean Fractal Dimension,0.01898244,-0.00091866625
+compactness2,Compactness SE,0.018755633,-0.0034037025
+symmetry3,Worst Symmetry,0.018532922,0.0013610383
+symmetry1,Mean Symmetry,0.012419988,0.0002269553
+texture2,Texture SE,0.006761,0.00036039107
+concave_points2,Concave Points SE,0.0064784465,-0.0019450082
+fractal_dimension3,Worst Fractal Dimension,0.0042384616,0.0005019964
+smoothness2,Smoothness SE,0.0036827067,-0.0006008359

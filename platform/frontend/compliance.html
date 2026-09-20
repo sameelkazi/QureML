@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QureML — SIH26139 Compliance &amp; HIPAA Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/shared.css"/>
+</head>
+
+<body class="bg-[#0C0C0C] text-[#FFFFFF] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-white">
+
+<!-- Global Luxury Navbar -->
+<div id="site-nav"></div>
+
+<main class="flex-1 max-w-[1520px] w-full mx-auto px-4 sm:px-8 py-10 space-y-12">
+
+  <!-- Header Section -->
+  <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1608] border border-[#D4AF37]/40 text-[#F5D77F] text-xs font-mono font-medium tracking-wider uppercase mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+        SIH26139 Deliverables &middot; HIPAA &sect; 164.312 Zero-Persistence RAM Protocol
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+        Compliance &amp; <span class="gold-gradient-text">Problem Statement Audit</span>
+      </h1>
+      <p class="text-[#8A9BA8] text-sm sm:text-base max-w-4xl mt-2 font-light">
+        Sponsor: Egreen Quanta &middot; Theme: MedTech / BioTech &middot; Department of Computer Engineering, SPIT Mumbai. Direct verification mapping for all required deliverables.
+      </p>
+    </div>
+
+    <div class="p-4 rounded-2xl bg-[#141414] border border-[#D4AF37]/30 text-xs font-mono text-[#F5D77F] flex items-center gap-3">
+      <span class="material-symbols-outlined text-xl text-emerald-400">verified</span>
+      <div>
+        <div class="font-bold text-white">Status: Fully Verified</div>
+        <div class="text-[#8A9BA8]">5 of 5 Deliverables Complete</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deliverables Grid -->
+  <section class="glass-panel p-6 sm:p-10 space-y-8">
+    <div class="border-b border-white/10 pb-4">
+      <h2 class="text-xl font-bold text-white uppercase tracking-wider">
+        Problem Statement Deliverables Verification Matrix
+      </h2>
+      <p class="text-xs text-[#8A9BA8] font-mono mt-1">Every item mapped strictly to verified code and runtime artifacts</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-6 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-2">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase text-xs font-mono">
+          <span class="material-symbols-outlined text-base">data_thresholding</span>
+          Deliverable 1: Data Pre-processing
+        </div>
+        <h3 class="text-lg font-bold text-white">Zero-Leakage Standardized Pipeline</h3>
+        <p class="text-xs text-[#8A9BA8] font-sans leading-relaxed">
+          StandardScaler &rarr; PCA (6 components, 88.9% explained variance) &rarr; AngleScaler applied identically across all 6 clinical benchmarks (WDBC, Cleveland Heart, Parkinson's, ILPD, CKD, BreastMNIST). Fit strictly on train split only.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-2">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase text-xs font-mono">
+          <span class="material-symbols-outlined text-base">hub</span>
+          Deliverable 2: Hybrid Architecture
+        </div>
+        <h3 class="text-lg font-bold text-white">PennyLane + PyTorch Hybrid Pipeline</h3>
+        <p class="text-xs text-[#8A9BA8] font-sans leading-relaxed">
+          Classical Linear(6,6) pre-layer &rarr; 6-qubit variational quantum circuit (AngleEmbedding + RY/RZ layers + CNOT entangling ring) &rarr; classical Linear(6,1) post-layer. Exactly 73 parameters, end-to-end differentiable via parameter-shift rules.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-2">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase text-xs font-mono">
+          <span class="material-symbols-outlined text-base">science</span>
+          Deliverable 3: Quantum ML Models
+        </div>
+        <h3 class="text-lg font-bold text-white">4-Control Ablation &amp; QSVM Benchmarking</h3>
+        <p class="text-xs text-[#8A9BA8] font-sans leading-relaxed">
+          Full Hybrid VQC (Control A), Classical MLP (Control B, 73 params), Entanglement-Ablated (Control C), and Frozen Quantum Weights (Control D) + Fidelity Quantum Kernel SVM, evaluated across 10 random seeds per dataset.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-2">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase text-xs font-mono">
+          <span class="material-symbols-outlined text-base">monitor_heart</span>
+          Deliverable 4: Prediction &amp; Decision Support
+        </div>
+        <h3 class="text-lg font-bold text-white">Clinical Triage &amp; Explainability</h3>
+        <p class="text-xs text-[#8A9BA8] font-sans leading-relaxed">
+          Three operating thresholds (&tau;=0.10 zero-miss screening, &tau;=0.30 balanced triage, &tau;=0.50 standard), Integrated Gradients path attributions, and finite-shot quantum measurement uncertainty flagging for mandatory specialist review.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/40 space-y-2 md:col-span-2">
+        <div class="flex items-center gap-2 text-[#F5D77F] font-bold uppercase text-xs font-mono">
+          <span class="material-symbols-outlined text-base">dashboard</span>
+          Deliverable 5: Software Platform &amp; On-Demand Training
+        </div>
+        <h3 class="text-lg font-bold text-white">Production Web Platform &amp; Ephemeral Execution</h3>
+        <p class="text-xs text-[#8A9BA8] font-sans leading-relaxed">
+          Live FastAPI backend with OpenAPI 3.1 documentation, interactive clinical triage console, on-demand custom dataset training, batch screening, and hardware telemetry connected to real trained quantum weights.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Objective Transparency -->
+  <section class="glass-panel-subtle p-6 sm:p-8 space-y-4">
+    <h3 class="text-lg font-bold text-white uppercase tracking-wider">
+      On the Problem Statement Objective: "Improve accuracy vs. classical baselines"
+    </h3>
+    <p class="text-xs sm:text-sm text-[#8A9BA8] leading-relaxed">
+      Reported honestly: across 6 real clinical datasets with a strictly parameter-matched classical baseline (Control B, 73 parameters) and Holm-Bonferroni-corrected statistics, the hybrid quantum model achieves <strong class="text-white">statistical parity</strong> with its classical counterpart &mdash; not an exaggerated accuracy claim. The genuine, verified advantages are architectural: <span class="text-[#F5D77F] font-mono">~2,000&times; lighter federated communication payloads</span> (292 bytes/round vs. classical CNNs), a real physical finite-shot measurement-uncertainty metric, and confirmatory outperformance on Parkinson's disease (<span class="text-[#F5D77F] font-mono">p=0.00052</span>).
+    </p>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 QUREML &middot; Smart India Hackathon 2026 &middot; Department of Computer Engineering, SPIT Mumbai &middot; Sponsor: Egreen Quanta
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/predict">Live Triage</a>
+      <a href="/compare">Quantum vs Classical</a>
+      <a href="/walkthrough">Judge Report</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+</body>
+</html>

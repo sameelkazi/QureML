@@ -1,0 +1,56 @@
+{
+  "analysis": "Quantum Circuit Resource Estimation vs Classical Forward Cost",
+  "objective": "PS Computational Efficiency: Structural Resource Accounting",
+  "quantum_circuit_control_a": {
+    "wires_qubits": 6,
+    "circuit_depth": 17,
+    "total_primitive_gates": 42,
+    "single_qubit_gates": {
+      "total": 30,
+      "ry_rotations": 18,
+      "rz_rotations": 12,
+      "encoding_ry": 6,
+      "variational_ry": 12
+    },
+    "two_qubit_entangling_gates": {
+      "cnot": 12,
+      "topology": "Circular 1D CNOT ring"
+    },
+    "measurements": {
+      "count": 1,
+      "observable": "Pauli-Z expectation values"
+    },
+    "parameters": {
+      "quantum_trainable": 24,
+      "classical_linear_pre": 42,
+      "classical_linear_post": 7,
+      "total_hybrid": 73
+    },
+    "inference_latency_ms": {
+      "mean": 8.019,
+      "std": 1.192,
+      "median": 7.837
+    }
+  },
+  "classical_baseline_control_b": {
+    "architecture": "Linear(6, 9) -> Tanh -> Linear(9, 1) -> Sigmoid",
+    "parameters": 73,
+    "forward_flops": {
+      "linear_addmm_flops": 126,
+      "activation_flops": 10,
+      "total_flops": 136
+    },
+    "inference_latency_ms": {
+      "mean": 0.03,
+      "std": 0.009,
+      "median": 0.025
+    }
+  },
+  "comparison_summary": {
+    "parameter_parity": "Identical (73 vs 73 trainable parameters)",
+    "accounting_nature": "Apples-to-oranges structural comparison (quantum gate count vs classical FLOPs)",
+    "nisq_error_hotspot": "12 CNOT gates represent primary hardware noise vulnerability",
+    "simulation_wallclock_ratio": "271.4x"
+  },
+  "figure_url": "/paper_figures/fig_resource_estimation.png"
+}

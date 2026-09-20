@@ -1,0 +1,34 @@
+{
+  "experiment": "Noise-Aware Training under Superconducting Transmon Noise Model",
+  "hardware_profile": "Calibrated to IBM Heron (ibm_fez) error characteristics",
+  "noise_parameters": {
+    "single_qubit_depolarizing": 0.001,
+    "two_qubit_cnot_depolarizing": 0.012,
+    "phase_damping_t2": 0.008,
+    "amplitude_damping_t1": 0.005
+  },
+  "regimes": {
+    "a_ideal_sim": {
+      "description": "Simulator-trained, ideal statevector evaluation",
+      "auc": 0.9983,
+      "accuracy": 0.9825,
+      "brier_score": 0.017
+    },
+    "b_direct_transfer": {
+      "description": "Simulator-trained, evaluated under noisy channels without adaptation",
+      "auc": 0.9983,
+      "accuracy": 0.9825,
+      "brier_score": 0.018
+    },
+    "c_noise_aware": {
+      "description": "Trained from scratch directly under noisy channel simulation",
+      "auc_mean": 0.9978,
+      "auc_std": 0.0004,
+      "accuracy_mean": 0.9532,
+      "accuracy_std": 0.0109,
+      "brier_score_mean": 0.0289
+    }
+  },
+  "auc_recovery_delta": -0.0006,
+  "figure_url": "/paper_figures/fig_noise_aware_training.png"
+}

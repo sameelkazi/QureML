@@ -1,0 +1,49 @@
+{
+  "experiment": "Cross-Dataset Domain Shift Generalization Test",
+  "source_cohort": "Cleveland Heart Disease (N=303)",
+  "target_cohort": "Statlog Heart Disease (N=270)",
+  "feature_alignment": "13 clinical covariates identically mapped with frozen preprocessing",
+  "results": {
+    "Control A (Hybrid QNN)": {
+      "in_domain": {
+        "auc_mean": 0.8331,
+        "auc_std": 0.0391,
+        "accuracy_mean": 0.7279,
+        "accuracy_std": 0.0298,
+        "brier_mean": 0.1917
+      },
+      "out_of_domain": {
+        "auc_mean": 0.9487,
+        "auc_std": 0.008,
+        "accuracy_mean": 0.8867,
+        "accuracy_std": 0.0093,
+        "brier_mean": 0.0859
+      },
+      "transfer_delta": {
+        "delta_auc": 0.1156,
+        "delta_accuracy": 0.1588
+      }
+    },
+    "Control B (Classical MLP)": {
+      "in_domain": {
+        "auc_mean": 0.9219,
+        "auc_std": 0.019,
+        "accuracy_mean": 0.8295,
+        "accuracy_std": 0.034,
+        "brier_mean": 0.1229
+      },
+      "out_of_domain": {
+        "auc_mean": 0.9419,
+        "auc_std": 0.0053,
+        "accuracy_mean": 0.8748,
+        "accuracy_std": 0.0121,
+        "brier_mean": 0.0959
+      },
+      "transfer_delta": {
+        "delta_auc": 0.02,
+        "delta_accuracy": 0.0453
+      }
+    }
+  },
+  "figure_url": "/paper_figures/fig_domain_shift_heart.png"
+}

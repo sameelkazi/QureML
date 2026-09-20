@@ -1,0 +1,69 @@
+{
+  "diagnostic": "Cristianini Kernel-Target Alignment (NeurIPS 2001)",
+  "pearson_r": -0.13442446763588856,
+  "pearson_p": 0.8293623169325705,
+  "spearman_rho": -0.19999999999999998,
+  "spearman_p": 0.7470600781046621,
+  "datasets": [
+    {
+      "dataset": "WDBC",
+      "mean_kta_qsvm": 0.09765795081997244,
+      "std_kta_qsvm": 0.0027255016163019712,
+      "mean_kta_csvm": 0.304423530794994,
+      "std_kta_csvm": 0.004976494304973023,
+      "delta_kta_mean": -0.20676557997502157,
+      "phase3_delta_auc": -0.1257936507936508,
+      "holm_significant": true,
+      "phase3_favors": "Classical SVM",
+      "elapsed_sec": 4.99
+    },
+    {
+      "dataset": "Heart Disease",
+      "mean_kta_qsvm": 0.06793356461929059,
+      "std_kta_qsvm": 0.0028350244118715492,
+      "mean_kta_csvm": 0.19004878257254565,
+      "std_kta_csvm": 0.011185487162034779,
+      "delta_kta_mean": -0.12211521795325506,
+      "phase3_delta_auc": -0.2473214285714286,
+      "holm_significant": true,
+      "phase3_favors": "Classical SVM",
+      "elapsed_sec": 2.67
+    },
+    {
+      "dataset": "Parkinson's",
+      "mean_kta_qsvm": 0.15410806184580275,
+      "std_kta_qsvm": 0.00583263735098437,
+      "mean_kta_csvm": 0.2032857732708148,
+      "std_kta_csvm": 0.009214181003547817,
+      "delta_kta_mean": -0.04917771142501201,
+      "phase3_delta_auc": -0.0275862068965517,
+      "holm_significant": false,
+      "phase3_favors": "Parity / No Sig Diff",
+      "elapsed_sec": 1.83
+    },
+    {
+      "dataset": "Liver (ILPD)",
+      "mean_kta_qsvm": 0.08171255093363253,
+      "std_kta_qsvm": 0.0066919933743633305,
+      "mean_kta_csvm": 0.1015770153062536,
+      "std_kta_csvm": 0.005308154752787396,
+      "delta_kta_mean": -0.019864464372621078,
+      "phase3_delta_auc": -0.0930996714129244,
+      "holm_significant": true,
+      "phase3_favors": "Classical SVM",
+      "elapsed_sec": 5.12
+    },
+    {
+      "dataset": "Kidney (17-feat ablated)",
+      "mean_kta_qsvm": 0.39575282725961036,
+      "std_kta_qsvm": 0.06044674988767274,
+      "mean_kta_csvm": 0.6582480439320889,
+      "std_kta_csvm": 0.01053613563013247,
+      "delta_kta_mean": -0.26249521667247866,
+      "phase3_delta_auc": -0.0038647342995169,
+      "holm_significant": false,
+      "phase3_favors": "Parity / No Sig Diff",
+      "elapsed_sec": 1.45
+    }
+  ]
+}

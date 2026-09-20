@@ -1,0 +1,55 @@
+{
+  "experiment": "Multi-Seed Ensemble Inference (Control A Hybrid QNN)",
+  "dataset": "Wisconsin Diagnostic Breast Cancer (WDBC)",
+  "test_set_size": 114,
+  "n_seeds": 10,
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "single_models_mean": {
+    "auc": 0.9971,
+    "auc_std": 0.0008,
+    "accuracy": 0.9614,
+    "accuracy_std": 0.0137,
+    "brier_score": 0.0267,
+    "ece": 0.0384
+  },
+  "best_single_model": {
+    "seed": 46,
+    "auc": 0.9983,
+    "accuracy": 0.9737,
+    "brier_score": 0.0203,
+    "ece": 0.0395
+  },
+  "ensemble": {
+    "auc": 0.9977,
+    "accuracy": 0.9649,
+    "sensitivity": 0.9048,
+    "specificity": 1.0,
+    "f1": 0.95,
+    "brier_score": 0.0226,
+    "ece": 0.0375
+  },
+  "delta_vs_mean_single": {
+    "auc": 0.0006,
+    "accuracy": 0.0035,
+    "brier_score": -0.0041,
+    "ece": -0.0009
+  },
+  "delta_vs_best_single": {
+    "auc": -0.0007,
+    "accuracy": -0.0088,
+    "brier_score": 0.0022,
+    "ece": -0.002
+  },
+  "figure_url": "/paper_figures/fig_ensemble_calibration.png"
+}

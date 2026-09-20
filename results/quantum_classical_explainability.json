@@ -1,0 +1,101 @@
+{
+  "metadata": {
+    "task": "Quantum vs Classical Explainability Comparison",
+    "cohort": "Wisconsin Diagnostic Breast Cancer (WDBC) Locked Test Set",
+    "n_test": 114,
+    "features": 6,
+    "feature_reduction": "StandardScaler -> PCA(n_components=6) -> AngleScaler([0, pi])",
+    "quantum_model": "Control A: Hybrid Quantum Neural Network (73 params)",
+    "classical_model": "Control B: Classical Parameter-Matched MLP (73 params)",
+    "classical_method": "SHAP (SHapley Additive exPlanations, Lundberg & Lee NeurIPS 2017) via KernelExplainer",
+    "quantum_method": "Quantum Input Sensitivity (Parameter-Shift / Exact Gradient via AngleEmbedding)",
+    "motivating_survey": {
+      "title": "Fusion of quantum computing and explainable AI: A comprehensive survey on transformative healthcare solutions",
+      "authors": "S. S. Singh, S. Kumar, R. Ahuja, and J. Barua",
+      "journal": "Information Fusion",
+      "volume": 122,
+      "article_id": "103217",
+      "year": 2025,
+      "doi": "10.1016/j.inffus.2025.103217"
+    }
+  },
+  "correlation_analysis": {
+    "spearman_rho": 1.0,
+    "spearman_p_value": 0.0,
+    "pearson_r": 0.9401,
+    "pearson_p_value": 0.0053,
+    "alignment_interpretation": "Strong Positive Agreement"
+  },
+  "computational_timing_seconds": {
+    "shap_runtime_sec": 0.543,
+    "quantum_sensitivity_runtime_sec": 2.078
+  },
+  "feature_attributions": [
+    {
+      "feature_index": 0,
+      "feature_name": "PC1",
+      "feature_description": "PC1 (Overall Nuclear Size/Perimeter/Area)",
+      "classical_mean_abs_shap": 0.367069,
+      "classical_relative_importance_pct": 70.38,
+      "classical_rank": 1,
+      "quantum_mean_sensitivity": 0.490815,
+      "quantum_relative_importance_pct": 46.52,
+      "quantum_rank": 1
+    },
+    {
+      "feature_index": 1,
+      "feature_name": "PC2",
+      "feature_description": "PC2 (Nuclear Shape Concavity/Compactness)",
+      "classical_mean_abs_shap": 0.078502,
+      "classical_relative_importance_pct": 15.05,
+      "classical_rank": 2,
+      "quantum_mean_sensitivity": 0.284045,
+      "quantum_relative_importance_pct": 26.92,
+      "quantum_rank": 2
+    },
+    {
+      "feature_index": 2,
+      "feature_name": "PC3",
+      "feature_description": "PC3 (Texture/Smoothness Variation)",
+      "classical_mean_abs_shap": 0.023648,
+      "classical_relative_importance_pct": 4.53,
+      "classical_rank": 4,
+      "quantum_mean_sensitivity": 0.093126,
+      "quantum_relative_importance_pct": 8.83,
+      "quantum_rank": 4
+    },
+    {
+      "feature_index": 3,
+      "feature_name": "PC4",
+      "feature_description": "PC4 (Symmetry/Fractal Dimension)",
+      "classical_mean_abs_shap": 0.021005,
+      "classical_relative_importance_pct": 4.03,
+      "classical_rank": 5,
+      "quantum_mean_sensitivity": 0.050193,
+      "quantum_relative_importance_pct": 4.76,
+      "quantum_rank": 5
+    },
+    {
+      "feature_index": 4,
+      "feature_name": "PC5",
+      "feature_description": "PC5 (Local Extreme Boundary Irregularities)",
+      "classical_mean_abs_shap": 0.024095,
+      "classical_relative_importance_pct": 4.62,
+      "classical_rank": 3,
+      "quantum_mean_sensitivity": 0.098271,
+      "quantum_relative_importance_pct": 9.31,
+      "quantum_rank": 3
+    },
+    {
+      "feature_index": 5,
+      "feature_name": "PC6",
+      "feature_description": "PC6 (Sub-cellular Texture Coarseness)",
+      "classical_mean_abs_shap": 0.00724,
+      "classical_relative_importance_pct": 1.39,
+      "classical_rank": 6,
+      "quantum_mean_sensitivity": 0.038563,
+      "quantum_relative_importance_pct": 3.66,
+      "quantum_rank": 6
+    }
+  ]
+}

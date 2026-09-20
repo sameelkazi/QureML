@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QureML — Comprehensive Research Gallery</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: { extend: {
+    colors: {
+      primary: "#D4AF37", "primary-container": "#B8860B", "on-primary": "#000000", "on-primary-container": "#FFF4D0",
+      secondary: "#F5D77F", "secondary-container": "#D4AF37", "on-secondary": "#000000",
+      background: "#0C0C0C", surface: "#0C0C0C", "surface-container-lowest": "#141414", "surface-container-low": "#181818",
+      "surface-container": "#1B1B1B", "surface-container-high": "#222222", "surface-container-highest": "#282828",
+      "on-surface": "#FFFFFF", "on-surface-variant": "#D7E2EA", outline: "#707881", "outline-variant": "rgba(212,175,55,0.25)",
+      tertiary: "#8A9BA8", "inverse-primary": "#F5D77F", "inverse-surface": "#141414", "inverse-on-surface": "#FFFFFF",
+      success: "#34D399", "success-container": "rgba(16,185,129,0.15)", warning: "#F59E0B", "warning-container": "rgba(245,158,11,0.15)"
+    },
+    borderRadius: { DEFAULT: "0.5rem", lg: "0.75rem", xl: "1rem", "2xl": "1.5rem", "3xl": "1.75rem", full: "999px" },
+    fontFamily: { sans: ["Kanit", "system-ui", "sans-serif"], mono: ["JetBrains Mono", "monospace"] }
+  }}
+}
+</script>
+<link rel="stylesheet" href="/shared.css"/>
+<style>
+  @media print {
+    #site-nav, #toc-rail, #print-btn, #nav-actions, #figure-controls-bar, .card-nav-bar { display: none !important; }
+    main { max-width: 100% !important; padding: 0 !important; }
+    .gallery-card { display: block !important; break-inside: avoid; page-break-inside: avoid; margin-bottom: 2rem !important; border: 1.5px solid #ccc !important; background: #ffffff !important; color: #000 !important; }
+  }
+  .gallery-card {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+</style>
+</head>
+<body class="bg-[#F5F3EF] text-[#0A0A0A] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-black">
+<div id="site-nav"></div>
+
+<main class="flex-1 max-w-[1520px] w-full mx-auto px-4 sm:px-8 py-8">
+
+<!-- Hero Banner -->
+<section class="glass-panel p-6 sm:p-10 relative overflow-hidden mb-8">
+  <div class="relative z-10 space-y-4 max-w-4xl">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="px-3 py-1 rounded-full bg-[#FFFDF2] border border-[#D4AF37]/50 text-[#996515] text-xs font-mono font-medium shadow-sm">SIH 2026 &middot; Problem Statement SIH26139</span>
+      <span class="px-3 py-1 rounded-full bg-white border border-[#E2D9C8] text-[#333333] text-xs font-mono shadow-sm">Living Research &amp; Architecture Gallery</span>
+      <span class="px-3 py-1 rounded-full bg-[#F0FDF4] text-emerald-800 text-xs font-mono border border-emerald-300 shadow-sm flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> 14 Real Empirical Findings Backed by Live APIs
+      </span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-[#0A0A0A] leading-tight">
+      Comprehensive <span class="gold-gradient-text">Research Gallery</span>
+    </h1>
+    <p class="text-sm sm:text-base text-[#525B64] max-w-3xl leading-relaxed font-light">
+      An interactive repository of every empirical ablation, quantum scaling diagnostic, clinical decision-analytic curve, and real hardware validation accumulated across the QureML project. Select any figure from the navigation to inspect.
+    </p>
+    <div id="nav-actions" class="flex flex-wrap items-center gap-3 pt-2">
+      <a class="gold-btn" href="/predict">
+        <span class="material-symbols-outlined text-base">biotech</span> Run Prediction &rarr;
+      </a>
+      <a class="live-project-btn gold" href="/walkthrough">
+        <span class="material-symbols-outlined text-base">fact_check</span> Judge Report
+      </a>
+      <button id="print-btn" onclick="window.print()" class="live-project-btn">
+        <span class="material-symbols-outlined text-base">print</span> Export PDF
+      </button>
+      <a class="live-project-btn" href="/docs" target="_blank">
+        <span class="material-symbols-outlined text-base">api</span> OpenAPI Docs
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Main Grid Layout: Sticky TOC Rail on Left, Active Single Card on Right -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+  <!-- Left Sticky Navigation Rail -->
+  <aside id="toc-rail" class="hidden lg:block lg:col-span-3 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 space-y-3 text-xs">
+    <div class="p-4 rounded-xl border-2 border-black bg-white shadow-[4px_4px_0px_#000000] space-y-2.5">
+      <div class="text-[11px] font-bold text-[#996515] uppercase tracking-wider flex items-center justify-between border-b border-[#EAE5DC] pb-2">
+        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-[#B8860B]">toc</span> Navigation Index</span>
+        <span class="text-[10px] font-mono text-[#666666] bg-[#FFFDF2] border border-[#D4AF37]/40 px-1.5 py-0.5 rounded">14 Figs</span>
+      </div>
+      <nav id="toc-nav" class="space-y-1 text-[#2A2A2A] font-medium">
+        <a href="#sec-qa-sanity" class="toc-link active" data-fig-id="sec-qa-sanity">1. Quantum Advantage Sanity</a>
+        <a href="#sec-dca" class="toc-link" data-fig-id="sec-dca">2. Decision Curve Analysis</a>
+        <a href="#sec-selective" class="toc-link" data-fig-id="sec-selective">3. Selective Prediction Triage</a>
+        <a href="#sec-positioning" class="toc-link" data-fig-id="sec-positioning">4. Related-Work Radar Matrix</a>
+        <a href="#sec-barren" class="toc-link" data-fig-id="sec-barren">5. Barren Plateau Scaling</a>
+        <a href="#sec-kta" class="toc-link" data-fig-id="sec-kta">6. Kernel-Target Alignment</a>
+        <a href="#sec-resource" class="toc-link" data-fig-id="sec-resource">7. Quantum Resource Estimation</a>
+        <a href="#sec-federated" class="toc-link" data-fig-id="sec-federated">8. DP-Federated Learning</a>
+        <a href="#sec-ibm-hardware" class="toc-link" data-fig-id="sec-ibm-hardware">9. IBM Hardware & Noise</a>
+        <a href="#sec-domain" class="toc-link" data-fig-id="sec-domain">10. Cross-Cohort Domain Shift</a>
+        <a href="#sec-missing" class="toc-link" data-fig-id="sec-missing">11. Missing-Data Robustness</a>
+        <a href="#sec-ensemble" class="toc-link" data-fig-id="sec-ensemble">12. Ensemble & Uncertainty</a>
+        <a href="#sec-kfold" class="toc-link" data-fig-id="sec-kfold">13. Stratified 10-Fold CV</a>
+        <a href="#sec-generalization" class="toc-link" data-fig-id="sec-generalization">14. Multi-Dataset Benchmark</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Right Main Content Area: Selective Single-Figure View -->
+  <div class="lg:col-span-9 space-y-6" id="gallery-cards-container">
+
+    <!-- Active Figure Control Bar -->
+    <div id="figure-controls-bar" class="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-white border-2 border-black shadow-[4px_4px_0px_#000000]">
+      <div class="flex items-center gap-2">
+        <span id="active-fig-badge" class="text-xs font-mono font-bold uppercase tracking-wider text-[#996515] bg-[#FFFDF2] px-3 py-1 rounded border border-[#D4AF37]/50 shadow-sm">
+          Figure 1 of 14
+        </span>
+        <span class="text-xs text-[#2A2A2A] font-bold hidden sm:inline" id="active-fig-title">
+          1. Engineered Quantum Advantage Sanity Check
+        </span>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <select id="mobile-figure-select" class="flex-1 sm:flex-none text-xs font-mono font-bold p-2 rounded-lg bg-white border-2 border-black text-[#0A0A0A] shadow-[2px_2px_0px_#000000] focus:outline-none cursor-pointer">
+          <option value="sec-qa-sanity">1. Quantum Advantage Sanity</option>
+          <option value="sec-dca">2. Decision Curve Analysis</option>
+          <option value="sec-selective">3. Selective Prediction Triage</option>
+          <option value="sec-positioning">4. Related-Work Radar Matrix</option>
+          <option value="sec-barren">5. Barren Plateau Scaling</option>
+          <option value="sec-kta">6. Kernel-Target Alignment</option>
+          <option value="sec-resource">7. Quantum Resource Estimation</option>
+          <option value="sec-federated">8. DP-Federated Learning</option>
+          <option value="sec-ibm-hardware">9. IBM Hardware & Noise</option>
+          <option value="sec-domain">10. Cross-Cohort Domain Shift</option>
+          <option value="sec-missing">11. Missing-Data Robustness</option>
+          <option value="sec-ensemble">12. Ensemble & Uncertainty</option>
+          <option value="sec-kfold">13. Stratified 10-Fold CV</option>
+          <option value="sec-generalization">14. Multi-Dataset Benchmark</option>
+        </select>
+        <button id="btn-top-prev" class="px-3 py-1.5 rounded-lg border-2 border-black bg-white hover:bg-[#FFFDF0] text-xs font-mono font-bold flex items-center gap-1 shadow-[2px_2px_0px_#000000] transition-all cursor-pointer">
+          &larr; Prev
+        </button>
+        <button id="btn-top-next" class="px-3 py-1.5 rounded-lg border-2 border-black bg-[#D4AF37] hover:bg-[#E5C048] text-xs font-mono font-bold flex items-center gap-1 shadow-[2px_2px_0px_#000000] transition-all cursor-pointer">
+          Next &rarr;
+        </button>
+      </div>
+    </div>
+
+    <!-- 1. Engineered Quantum Advantage Sanity Check -->
+    <section id="sec-qa-sanity" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Theoretical Control</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">1. Engineered Quantum Advantage Sanity Check</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-Y · Fig. 28</span>
+      </div>
+      <div class="text-xs text-tertiary italic">
+        Citation: Y. Liu, S. Arunachalam, and K. Temme, "A rigorous and robust quantum speed-up in supervised machine learning," <em>Nature Physics</em> 17:1013–1017, 2021. DOI: 10.1038/s41567-021-01287-z.
+      </div>
+      <!-- Live KPI Stat Tiles -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">QUANTUM KERNEL ACC</div>
+          <div id="qa-q-acc" class="text-xl font-bold text-primary mt-0.5">95.56% ± 3.33%</div>
+          <div class="text-[11px] text-on-surface-variant">AUC: 0.9963 ± 0.011</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CLASSICAL RBF ACC</div>
+          <div id="qa-c-acc" class="text-xl font-bold text-secondary mt-0.5">47.22% ± 9.04%</div>
+          <div class="text-[11px] text-on-surface-variant">AUC: 0.4679 ± 0.124</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">ALIGNMENT (KTA)</div>
+          <div id="qa-kta-ratio" class="text-xl font-bold text-on-surface mt-0.5">19.2× Higher</div>
+          <div class="text-[11px] text-on-surface-variant">0.3382 vs 0.0176</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">STATISTICAL TEST</div>
+          <div id="qa-p-val" class="text-xl font-bold text-success mt-0.5">p = 0.00195</div>
+          <div class="text-[11px] text-on-surface-variant">Wilcoxon W=0.0 (t=12.45)</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_quantum_advantage_sanity_check.png" alt="Engineered Quantum Advantage Sanity Check" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <div class="text-sm text-on-surface-variant space-y-1.5 bg-surface-container-low/60 p-4 rounded-lg border border-outline-variant/60">
+        <div class="font-semibold text-on-surface flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-base">verified</span> Scientific Rationale & Ground Truth
+        </div>
+        <p class="text-xs sm:text-sm leading-relaxed">
+          To confirm whether the absence of quantum advantage on clinical tabular datasets is a bug in our pipeline or an inherent property of clinical data geometry, we reproduced the discrete logarithm concept class over cyclic group <code>Z_61*</code> ($g=2$, 6-qubit register, interval state superposition $|C_{y, k}\rangle$). The quantum kernel achieves near-perfect separation (+48.34% accuracy advantage, 19.2× higher KTA, $p = 0.00195$) while classical RBF SVM collapses to near-random guessing. This proves our pipeline is fully capable of unlocking quantum advantage when underlying group structure warrants it; the absence of advantage on clinical data is an intrinsic geometric property of biological manifolds.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. Clinical Decision Curve Analysis -->
+    <section id="sec-dca" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-success-container text-success uppercase">Clinical Decision Analytics</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">2. Clinical Decision Curve Analysis (DCA)</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-F-2 · Fig. 8b</span>
+      </div>
+      <div class="text-xs text-tertiary italic">
+        Citation: A. J. Vickers and E. B. Elkin, "Decision Curve Analysis: A Novel Method for Evaluating Prediction Models," <em>Medical Decision Making</em> 26(6):565–574, 2006. DOI: 10.1177/0272989X06295361.
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">NET BENEFIT (pt=0.10)</div>
+          <div id="dca-nb" class="text-xl font-bold text-primary mt-0.5">0.3626</div>
+          <div class="text-[11px] text-on-surface-variant">vs 0.2982 (Treat All)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">BIOPSIES AVOIDED</div>
+          <div id="dca-avoided" class="text-xl font-bold text-success mt-0.5">58.2 / 100</div>
+          <div class="text-[11px] text-on-surface-variant">Zero missed cancers</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">PLAUSIBLE RANGE</div>
+          <div class="text-xl font-bold text-on-surface mt-0.5">pt ∈ [0.05, 0.50]</div>
+          <div class="text-[11px] text-on-surface-variant">Positive net benefit band</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CLINICAL PARITY</div>
+          <div id="dca-parity" class="text-xl font-bold text-on-surface mt-0.5">ΔNB = +0.0023</div>
+          <div class="text-[11px] text-on-surface-variant">Control A vs Control B</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_decision_curve_analysis.png" alt="Clinical Decision Curve Analysis" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <div class="text-sm text-on-surface-variant space-y-1.5 bg-surface-container-low/60 p-4 rounded-lg border border-outline-variant/60">
+        <div class="font-semibold text-on-surface flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-base">clinical_notes</span> Clinical Decision-Support Rigor
+        </div>
+        <p class="text-xs sm:text-sm leading-relaxed">
+          Evaluated across the locked out-of-sample WDBC cohort ($n=114$, prevalence $36.84\%$). At the standard biopsy threshold $p_t = 0.10$, QureML achieves Net Benefit $= 0.3626$ (safely avoiding 58 unnecessary biopsies per 100 women without missing a single cancer). Both hybrid and classical models achieve nearly identical net benefit trajectories ($\Delta\text{NB} = +0.0023$, max $|\Delta\text{NB}| = 0.0088$), confirming clinical decision parity.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Selective Prediction & Triage System -->
+    <section id="sec-selective" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Risk Management</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">3. Selective Prediction & "Refer-to-Clinician" Triage</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-M-2 · Fig. 18b</span>
+      </div>
+      <div class="text-xs text-tertiary italic">
+        Citation: R. El-Yaniv and Y. Wiener, "On the Foundations of Noise-free Selective Classification," <em>Journal of Machine Learning Research</em> 11:1605–1641, 2010.
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">≤ 90% COVERAGE ACC</div>
+          <div id="sp-cov90" class="text-xl font-bold text-success mt-0.5">100.0%</div>
+          <div class="text-[11px] text-on-surface-variant">0 errors on accepted cases</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">REFERRAL RATE</div>
+          <div id="sp-ref-rate" class="text-xl font-bold text-primary mt-0.5">6.14%</div>
+          <div class="text-[11px] text-on-surface-variant">7 of 114 patients referred</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">ACCEPTED ACCURACY</div>
+          <div id="sp-acc-gain" class="text-xl font-bold text-on-surface mt-0.5">99.07%</div>
+          <div class="text-[11px] text-on-surface-variant">ROC AUC: 0.9992</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">TRIAGE CRITERIA</div>
+          <div class="text-xl font-bold text-on-surface mt-0.5">Dual-Rule</div>
+          <div class="text-[11px] text-on-surface-variant">CI &gt; 0.15 OR |p-0.5| &lt; 0.10</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_selective_prediction_coverage.png" alt="Selective Prediction Coverage Curve" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <div class="text-sm text-on-surface-variant space-y-1.5 bg-surface-container-low/60 p-4 rounded-lg border border-outline-variant/60">
+        <div class="font-semibold text-on-surface flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-base">safety_check</span> Deployment Safety & Abstention Option
+        </div>
+        <p class="text-xs sm:text-sm leading-relaxed">
+          By integrating quantum measurement shot noise (1024-shot CI width) with margin ambiguity, QureML operationalizes an autonomous triage protocol: patients with high quantum dispersion or probabilities in the $[0.40, 0.60]$ boundary are triaged to human pathologists. Abstaining on the 10% most ambiguous presentations raises accepted accuracy to 100.0% with 0 errors. The dual-criterion rule defers 6.14% of cases while elevating accepted diagnostic accuracy to 99.07% (AUC 0.9992).
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. Related-Work Positioning Radar & Capability Matrix (Feature A3) -->
+    <section id="sec-positioning" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-secondary/15 text-secondary border border-secondary/30 uppercase">Feature A3 · Competitive Positioning</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">4. Related-Work Positioning Radar & Capability Matrix</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Table II & Section IV-X</span>
+      </div>
+      <div class="text-xs text-tertiary italic">
+        Benchmarked against Reference A (QubitX_RGUKTN / MediQAI SIH26139 Idea Submission) and Reference B (Zorlu & Colak, <em>Diagnostics</em> 2026, PMC13360165).
+      </div>
+
+      <!-- Radar Chart + Legend Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center pt-2">
+        <div class="md:col-span-7 flex justify-center">
+          <!-- Interactive SVG Radar Chart -->
+          <svg viewBox="0 0 440 440" class="w-full max-w-[420px] h-auto drop-shadow-sm">
+            <!-- Background Circular Polygons -->
+            <polygon points="220,80 319,121 360,220 319,319 220,360 121,319 80,220 121,121" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            <polygon points="220,115 294,146 325,220 294,294 220,325 146,294 115,220 146,146" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+            <polygon points="220,150 269,171 290,220 269,269 220,290 171,269 150,220 171,171" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            <polygon points="220,185 245,195 255,220 245,245 220,255 195,245 185,220 195,195" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            
+            <!-- Axis lines -->
+            <line x1="220" y1="220" x2="220" y2="80" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="319" y2="121" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="360" y2="220" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="319" y2="319" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="220" y2="360" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="121" y2="319" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="80" y2="220" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="220" y1="220" x2="121" y2="121" stroke="#cbd5e1" stroke-width="1"/>
+
+            <!-- Axis Labels -->
+            <text x="220" y="68" text-anchor="middle" font-size="10" font-weight="600" fill="#0b1c30">Statistical Tests</text>
+            <text x="330" y="112" text-anchor="start" font-size="10" font-weight="600" fill="#0b1c30">Ablations</text>
+            <text x="370" y="224" text-anchor="start" font-size="10" font-weight="600" fill="#0b1c30">Real Hardware</text>
+            <text x="330" y="332" text-anchor="start" font-size="10" font-weight="600" fill="#0b1c30">Barren Plateau</text>
+            <text x="220" y="378" text-anchor="middle" font-size="10" font-weight="600" fill="#0b1c30">KTA Diagnostic</text>
+            <text x="110" y="332" text-anchor="end" font-size="10" font-weight="600" fill="#0b1c30">DP & Federated</text>
+            <text x="70" y="224" text-anchor="end" font-size="10" font-weight="600" fill="#0b1c30">Domain Shift</text>
+            <text x="110" y="112" text-anchor="end" font-size="10" font-weight="600" fill="#0b1c30">Missing Data</text>
+
+            <!-- Reference A: QubitX Polygon (Gray Dotted) -->
+            <!-- Scores: Stat: 15%, Ablation: 15%, Hard: 0%, Barren: 0%, KTA: 0%, DP: 0%, Domain: 0%, Missing: 0% -->
+            <polygon points="220,199 235,205 220,220 220,220 220,220 220,220 220,220 220,220" 
+              fill="rgba(148, 163, 184, 0.25)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+            <!-- Reference B: Zorlu & Colak (Amber Dashed) -->
+            <!-- Scores: Stat: 75%, Ablation: 65%, Hard: 10%, Barren: 20%, KTA: 0%, DP: 0%, Domain: 85%, Missing: 10% -->
+            <polygon points="220,115 284,156 234,220 240,240 220,220 220,220 135,220 205,205" 
+              fill="rgba(217, 119, 6, 0.22)" stroke="#d97706" stroke-width="2" stroke-dasharray="5,3"/>
+
+            <!-- QureML: This Work (Primary Deep Blue Solid) -->
+            <!-- Scores: Stat: 100%, Ablation: 100%, Hard: 95%, Barren: 100%, KTA: 100%, DP: 100%, Domain: 90%, Missing: 100% -->
+            <polygon points="220,80 319,121 353,220 319,319 220,360 121,319 94,220 121,121" 
+              fill="rgba(0, 97, 148, 0.28)" stroke="#006194" stroke-width="2.5"/>
+
+            <!-- Data Point Circles for QureML -->
+            <circle cx="220" cy="80" r="3.5" fill="#006194"/>
+            <circle cx="319" cy="121" r="3.5" fill="#006194"/>
+            <circle cx="353" cy="220" r="3.5" fill="#006194"/>
+            <circle cx="319" cy="319" r="3.5" fill="#006194"/>
+            <circle cx="220" cy="360" r="3.5" fill="#006194"/>
+            <circle cx="121" cy="319" r="3.5" fill="#006194"/>
+            <circle cx="94" cy="220" r="3.5" fill="#006194"/>
+            <circle cx="121" cy="121" r="3.5" fill="#006194"/>
+          </svg>
+        </div>
+
+        <div class="md:col-span-5 space-y-3">
+          <div class="p-3.5 rounded-lg border border-primary/25 bg-primary/5 space-y-1">
+            <div class="flex items-center gap-2 font-bold text-sm text-primary">
+              <span class="w-3 h-3 rounded-full bg-primary inline-block"></span>
+              QureML (This Work)
+            </div>
+            <p class="text-xs text-on-surface-variant">
+              Comprehensive quantum-native diagnostics (Barren plateau fit, KTA, DP-FedAvg, IBM Heron r2 telemetry, selective triage, and Holm-Bonferroni statistical testing).
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-lg border border-warning/30 bg-warning/5 space-y-1">
+            <div class="flex items-center gap-2 font-bold text-sm text-warning">
+              <span class="w-3 h-3 rounded-full bg-warning inline-block"></span>
+              Reference B: Zorlu & Colak (2026)
+            </div>
+            <p class="text-xs text-on-surface-variant">
+              Strong classical baseline breadth (XGBoost/CatBoost) and genuine external breast cancer cohort (WBC $n=683$); lacks real hardware, DP, barren-plateau or KTA diagnostics.
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-lg border border-outline-variant bg-surface-container-low space-y-1">
+            <div class="flex items-center gap-2 font-bold text-sm text-tertiary">
+              <span class="w-3 h-3 rounded-full bg-tertiary inline-block"></span>
+              Reference A: QubitX_RGUKTN (SIH Idea)
+            </div>
+            <p class="text-xs text-on-surface-variant">
+              Basic 80/20 holdout on WDBC; single RBF baseline; no significance testing, ablations, hardware, or privacy.
+            </p>
+          </div>
+
+          <button id="toggle-matrix-btn" class="w-full text-xs font-semibold py-2 px-3 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container text-primary flex items-center justify-center gap-1.5 transition-colors">
+            <span class="material-symbols-outlined text-sm">table_chart</span> Show Full 13-Dimension Capability Table
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsible Detailed Capability Table -->
+      <div id="full-matrix-table" class="hidden overflow-x-auto border border-outline-variant rounded-lg mt-4">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-outline-variant bg-surface-container text-on-surface-variant font-bold uppercase">
+              <th class="py-2.5 px-3">Metric / Attribute</th>
+              <th class="py-2.5 px-3">Ref A: QubitX</th>
+              <th class="py-2.5 px-3">Ref B: Zorlu & Colak (2026)</th>
+              <th class="py-2.5 px-3 text-primary">QureML (This Work)</th>
+            </tr>
+          </thead>
+          <tbody id="matrix-tbody" class="divide-y divide-outline-variant bg-surface-container-lowest">
+            <tr><td colspan="4" class="text-center py-4 text-tertiary">Loading live matrix from <code>/related-work-positioning</code>…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. Barren Plateau Scaling -->
+    <section id="sec-barren" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Trainability Diagnostic</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">5. Barren Plateau Scaling & Gradient Variance</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-D · Fig. 20</span>
+      </div>
+      <div class="text-xs text-tertiary italic">
+        Citation: J. R. McClean et al., "Barren plateaus in quantum neural network training landscapes," <em>Nature Communications</em> 9:4812, 2018. DOI: 10.1038/s41467-018-07090-4.
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">SCALING LAW FIT</div>
+          <div id="bp-fit" class="text-base font-bold text-primary mt-0.5">log₁₀(Var) = -0.2764n - 0.1231</div>
+          <div class="text-[11px] text-on-surface-variant">n ∈ [2..12] qubits (300 trials/n)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">DEPLOYED 6-QUBIT VAR</div>
+          <div id="bp-var6" class="text-base font-bold text-success mt-0.5">0.0124</div>
+          <div class="text-[11px] text-on-surface-variant">Trainable non-vanishing regime</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">DECAY PER QUBIT</div>
+          <div id="bp-decay" class="text-base font-bold text-on-surface mt-0.5">0.529×</div>
+          <div class="text-[11px] text-on-surface-variant">Shallow 2-layer ring topology</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_barren_plateau_scaling.png" alt="Barren Plateau Scaling" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Deep random circuits suffer from exponentially vanishing gradient variance ($\sim 2^{-n}$), rendering gradient descent ineffective. By evaluating our specific circular 2-layer architecture across $n \in [2..12]$ qubits (300 random initializations per qubit count), we verify an empirical decay factor of $0.529\times$ per qubit ($\log_{10}\text{Var} = -0.2764n - 0.1231$). At our deployed 6-qubit operating point, variance remains robust at $0.0124$, proving trainability without barren plateau collapse.
+      </p>
+    </section>
+
+    <!-- 6. Kernel-Target Alignment (KTA) -->
+    <section id="sec-kta" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Geometric Diagnostic</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">6. Kernel-Target Alignment (KTA) Diagnostic</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-P · Fig. 21</span>
+      </div>
+      <div class="text-xs text-tertiary italic">
+        Citation: N. Cristianini, J. Shawe-Taylor, A. Elisseeff, and J. Kandola, "On kernel-target alignment," <em>NeurIPS</em> 14:367–373, 2001.
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">PEARSON CORRELATION</div>
+          <div id="kta-pearson" class="text-xl font-bold text-primary mt-0.5">r = -0.134</div>
+          <div class="text-[11px] text-on-surface-variant">p = 0.829 (No Linear Gain)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">SPEARMAN RANK RHO</div>
+          <div id="kta-spearman" class="text-xl font-bold text-primary mt-0.5">ρ = -0.200</div>
+          <div class="text-[11px] text-on-surface-variant">p = 0.747 (No Rank Advantage)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">HIGHEST QUANTUM KTA</div>
+          <div id="kta-kidney" class="text-xl font-bold text-success mt-0.5">Kidney (0.396)</div>
+          <div class="text-[11px] text-on-surface-variant">Classical KTA: 0.658</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">WDBC QUANTUM KTA</div>
+          <div id="kta-wdbc" class="text-xl font-bold text-warning mt-0.5">0.098</div>
+          <div class="text-[11px] text-on-surface-variant">Classical KTA: 0.304</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_kta_comparison.png" alt="Kernel-Target Alignment Diagnostic" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        KTA quantifies the cosine similarity between the kernel Gram matrix and the ideal label rank-1 tensor $Y = y y^T$. Across all five clinical datasets, classical RBF kernel alignment consistently matches or exceeds quantum fidelity kernel alignment ($r = -0.134, p = 0.829; \rho = -0.200, p = 0.747$), providing a rigorous geometric explanation for the absence of downstream quantum accuracy advantage on biological tabular features.
+      </p>
+    </section>
+
+    <!-- 7. Quantum Resource Estimation -->
+    <section id="sec-resource" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Complexity Analysis</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">7. Quantum Resource Estimation & Gate Overhead</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-W · Fig. 27</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">PARAM MATCH RATIO</div>
+          <div id="res-parity" class="text-xl font-bold text-primary mt-0.5">1.00× Exact</div>
+          <div class="text-[11px] text-on-surface-variant">73 vs 73 parameters</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">2-QUBIT CNOT GATES</div>
+          <div id="res-cnots" class="text-xl font-bold text-on-surface mt-0.5">12 Gates</div>
+          <div class="text-[11px] text-on-surface-variant">Circular ring entanglement</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">SINGLE-QUBIT ROTATIONS</div>
+          <div id="res-rotations" class="text-xl font-bold text-on-surface mt-0.5">30 Gates</div>
+          <div class="text-[11px] text-on-surface-variant">RY + RZ angle encoding</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CIRCUIT DEPTH</div>
+          <div id="res-depth" class="text-xl font-bold text-on-surface mt-0.5">17 Layers</div>
+          <div class="text-[11px] text-on-surface-variant">6 qubits, 1024 shots</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_resource_estimation.png" alt="Quantum Resource Estimation" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Rigorous accounting confirms our hybrid classifier matches classical Control B's expressivity budget at exactly 73 parameters, avoiding uncalibrated parameter bloat. The quantum subcircuit uses 42 total gates (12 CNOTs) with depth 17, fitting well within the coherence time budget of modern transmon processors.
+      </p>
+    </section>
+
+    <!-- 8. Differentially Private Federated Learning -->
+    <section id="sec-federated" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-success-container text-success uppercase">Privacy & Federation</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">8. DP-Federated Learning Privacy-Utility Tradeoff</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-N & IV-O · Fig. 19b</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">PAYLOAD PER ROUND</div>
+          <div id="dp-payload" class="text-xl font-bold text-primary mt-0.5">292 Bytes</div>
+          <div class="text-[11px] text-on-surface-variant">&gt;2000× lighter than MLP</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">NON-PRIVATE BASELINE</div>
+          <div id="dp-baseline-auc" class="text-xl font-bold text-success mt-0.5">0.9960 AUC</div>
+          <div class="text-[11px] text-on-surface-variant">ε = ∞, std 0.0004</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">WEAK DP (ε ≈ 7.95)</div>
+          <div id="dp-weak-auc" class="text-xl font-bold text-warning mt-0.5">0.7013 AUC</div>
+          <div class="text-[11px] text-on-surface-variant">Utility cliff, std 0.1808</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">STRONG DP (ε ≈ 0.96)</div>
+          <div id="dp-strong-auc" class="text-xl font-bold text-error mt-0.5">0.5599 AUC</div>
+          <div class="text-[11px] text-on-surface-variant">Strict privacy, std 0.0510</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_federated_dp_tradeoff.png" alt="DP-Federated Privacy-Utility Tradeoff" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        In distributed clinical environments where patient records cannot leave local hospital perimeters (HIPAA/GDPR compliance), QureML transmits only 292 bytes per client round across 4 virtual hospital nodes. Applying Rényi differential privacy reveals the well-documented empirical "DP utility cliff" on small clinical cohorts ($n \approx 100$ per site): while the non-private federated baseline reaches $0.9960$ AUC ($96.14\%$ accuracy), introducing DP noise causes a steep drop to $0.7013$ at $\varepsilon \approx 7.95$, and $0.5599$ under strict privacy ($\varepsilon \approx 0.96$). We honestly report this utility trade-off rather than obscuring the degradation.
+      </p>
+    </section>
+
+    <!-- 9. Real IBM Hardware Validation & Noise-Aware Training -->
+    <section id="sec-ibm-hardware" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Hardware Robustness</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">9. Noise-Aware Training & Real IBM Hardware Validation</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-H & IV-Q · Fig. 15 & Fig. 22</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">IDEAL / NOISY SIM AUC</div>
+          <div id="noise-sim" class="text-xl font-bold text-success mt-0.5">0.9983 AUC</div>
+          <div class="text-[11px] text-on-surface-variant">Acc: 98.25%, Brier: 0.018</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">LIVE QPU BACKEND</div>
+          <div id="gallery-ibm-backend" class="text-xl font-bold text-primary mt-0.5">ibm_fez (156Q)</div>
+          <div class="text-[11px] text-on-surface-variant">Heron r2 Transmon</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">RELAXATION (T₁)</div>
+          <div id="gallery-ibm-t1" class="text-xl font-bold text-on-surface mt-0.5">133.14 µs</div>
+          <div class="text-[11px] text-on-surface-variant">Median coherence</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">2-QUBIT CZ ERROR</div>
+          <div id="gallery-ibm-cz" class="text-xl font-bold text-on-surface mt-0.5">0.289%</div>
+          <div class="text-[11px] text-on-surface-variant">Active calibration metric</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+          <img src="/paper_figures/fig_noise_aware_training.png" alt="Noise Aware Training" class="w-full h-auto object-contain max-h-[320px] mx-auto"/>
+        </div>
+        <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+          <img src="/paper_figures/fig_ibm_hardware_comparison.png" alt="IBM Hardware Comparison" class="w-full h-auto object-contain max-h-[320px] mx-auto"/>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Superconducting quantum processors introduce thermal relaxation ($T_1$), dephasing ($T_2$), and two-qubit CZ gate infidelities. Due to QureML's shallow 2-layer circuit depth (17 layers, 12 CNOTs), evaluating directly under calibrated IBM Heron noise channels ($p_1=0.001, p_2=0.012, \gamma_\phi=0.008, \gamma_a=0.005$) retains $0.9983$ AUC without catastrophic collapse. Noise-aware training from scratch achieves $0.9978 \pm 0.0004$ AUC ($\Delta = -0.0006$), confirming algorithmic robustness against physical hardware noise.
+      </p>
+    </section>
+
+    <!-- 10. Cross-Cohort Domain Shift -->
+    <section id="sec-domain" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Generalization</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">10. Cross-Cohort Clinical Domain Shift (Cleveland → Statlog)</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-S · Fig. 24</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">0-SHOT HYBRID (CONTROL A)</div>
+          <div id="ds-hybrid-acc" class="text-xl font-bold text-primary mt-0.5">88.67%</div>
+          <div id="ds-hybrid-auc" class="text-[11px] text-on-surface-variant">AUC: 0.9487 (±0.0080)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">0-SHOT CLASSICAL (CONTROL B)</div>
+          <div id="ds-classical-acc" class="text-xl font-bold text-on-surface mt-0.5">87.48%</div>
+          <div id="ds-classical-auc" class="text-[11px] text-on-surface-variant">AUC: 0.9419 (±0.0053)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">DOMAIN TRANSFER DELTA</div>
+          <div id="ds-delta" class="text-xl font-bold text-success mt-0.5">+1.19% Acc</div>
+          <div class="text-[11px] text-on-surface-variant">+0.0068 AUC retention</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_domain_shift_heart.png" alt="Domain Shift on Heart Disease" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        We evaluated zero-shot transfer by training models strictly on Cleveland Heart Disease ($N=303$) and testing directly without fine-tuning on the independent Statlog Heart cohort ($N=270$) across 13 identically mapped clinical covariates. On the out-of-domain target cohort, Control A (Hybrid QNN) achieved $88.67\% \pm 0.93\%$ accuracy ($0.9487$ AUC) compared to $87.48\% \pm 1.21\%$ accuracy ($0.9419$ AUC) for Control B (Classical MLP), demonstrating slight positive transfer stability ($+1.19\%$ accuracy, $+0.0068$ AUC).
+      </p>
+    </section>
+
+    <!-- 11. Missing-Data Clinical Robustness -->
+    <section id="sec-missing" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Stress Testing</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">11. Missing-Data Clinical Robustness Under MCAR</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-L · Fig. 23</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">EVALUATED RANGE</div>
+          <div class="text-xl font-bold text-primary mt-0.5">0% to 30%</div>
+          <div class="text-[11px] text-on-surface-variant">MCAR missingness</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CONTROL A AUC (30% MISSING)</div>
+          <div id="md-auc30-a" class="text-xl font-bold text-success mt-0.5">0.9938</div>
+          <div id="md-acc30-a" class="text-[11px] text-on-surface-variant">Acc: 93.51% (std 0.0019)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CONTROL B AUC (30% MISSING)</div>
+          <div id="md-auc30-b" class="text-xl font-bold text-on-surface mt-0.5">0.9929</div>
+          <div id="md-acc30-b" class="text-[11px] text-on-surface-variant">Acc: 93.86% (std 0.0022)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">IMPUTATION STRATEGY</div>
+          <div class="text-xl font-bold text-on-surface mt-0.5">Median Impute</div>
+          <div class="text-[11px] text-on-surface-variant">Train-split fitted (no leakage)</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_missing_data_robustness.png" alt="Missing Data Robustness" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        In real-world oncology and emergency screening, diagnostic panels are frequently incomplete. We evaluated the locked WDBC test cohort ($n=114$) across Missing Completely at Random (MCAR) rates from 0% to 30% using median imputation fitted strictly on the training set to prevent leakage. Both models degrade gracefully: at 30% missingness, Control A retains $0.9938 \pm 0.0019$ AUC ($93.51\%$ accuracy) and Control B retains $0.9929 \pm 0.0022$ AUC ($93.86\%$ accuracy), with average prediction drift $|\Delta p| < 0.05$.
+      </p>
+    </section>
+
+    <!-- 12. Multi-Seed Ensemble Calibration -->
+    <section id="sec-ensemble" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Model Ensembling</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">12. Ensemble Uncertainty & Probability Calibration</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-R · Fig. 25 & Fig. 18</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">ENSEMBLE TEST AUC</div>
+          <div id="ens-auc" class="text-xl font-bold text-primary mt-0.5">0.9977</div>
+          <div id="ens-single-mean" class="text-[11px] text-on-surface-variant">vs single-model mean 0.9971</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CALIBRATION ERROR (ECE)</div>
+          <div id="ens-ece" class="text-xl font-bold text-success mt-0.5">0.0375</div>
+          <div id="ens-brier" class="text-[11px] text-on-surface-variant">Brier score: 0.0226</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">SEEDS ENSEMBLED</div>
+          <div id="ens-seeds" class="text-xl font-bold text-on-surface mt-0.5">10 Models</div>
+          <div class="text-[11px] text-on-surface-variant">Seeds 42–51, soft-voting blend</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+          <img src="/paper_figures/fig_ensemble_calibration.png" alt="Ensemble Calibration" class="w-full h-auto object-contain max-h-[320px] mx-auto"/>
+        </div>
+        <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+          <img src="/paper_figures/fig_shot_uncertainty_histograms.png" alt="Shot Uncertainty Histograms" class="w-full h-auto object-contain max-h-[320px] mx-auto"/>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Ensembling 10 independently trained hybrid seeds (seeds 42 through 51) on the locked WDBC test set ($n=114$) lifts test AUC from $0.9971$ (single-model mean) to $0.9977$, improving accuracy to $96.49\%$, specificity to $100.0\%$, and lowering Brier score from $0.0267$ to $0.0226$ (ECE $0.0375$). In parallel, finite-shot evaluations (1024 shots × 30 runs) reveal quantum shot noise distributions that cleanly distinguish confident patients from borderline decisions.
+      </p>
+    </section>
+
+    <!-- 13. Stratified 10-Fold Cross-Validation -->
+    <section id="sec-kfold" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Validation Rigor</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">13. Stratified 10-Fold Cross-Validation Stability</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Subsection IV-T · Fig. 26</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CONTROL A 10-FOLD AUC</div>
+          <div id="kf-auc-a" class="text-xl font-bold text-primary mt-0.5">0.9916 ± 0.0135</div>
+          <div id="kf-acc-a" class="text-[11px] text-on-surface-variant">Acc: 95.96% ± 2.99%</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">CONTROL B 10-FOLD AUC</div>
+          <div id="kf-auc-b" class="text-xl font-bold text-on-surface mt-0.5">0.9947 ± 0.0073</div>
+          <div id="kf-acc-b" class="text-[11px] text-on-surface-variant">Acc: 97.02% ± 2.87%</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">LOCKED SPLIT CONSISTENCY</div>
+          <div class="text-xl font-bold text-success mt-0.5">Within 1 SD</div>
+          <div class="text-[11px] text-on-surface-variant">Locked split (0.9912) vs CV mean</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_wdbc_kfold_cv.png" alt="Stratified 10-Fold Cross Validation" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Single train-test splits risk sampling bias. We evaluated stratified 10-fold cross-validation across the entire WDBC cohort ($N=569$). Control A achieved mean AUC $0.9916 \pm 0.0135$ ($95.96\%$ accuracy) and Control B achieved mean AUC $0.9947 \pm 0.0073$ ($97.02\%$ accuracy). The locked 80/20 test split AUC ($0.9912$) lies within one standard deviation of the 10-fold distribution, confirming cross-validation stability and ruling out lucky split artifacts.
+      </p>
+    </section>
+
+    <!-- 14. Multi-Dataset Benchmark & Sample Scaling -->
+    <section id="sec-generalization" class="gallery-card rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/60 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary/10 text-primary uppercase">Benchmark Synthesis</span>
+          <h2 class="text-xl font-bold tracking-tight text-on-surface">14. Multi-Dataset Generalization & Sample Scarcity Scaling</h2>
+        </div>
+        <span class="text-xs text-tertiary font-mono">Paper Section IV-C & Table I · Fig. 14</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">BENCHMARK COHORTS</div>
+          <div id="gen-cohorts" class="text-xl font-bold text-primary mt-0.5">3 Datasets</div>
+          <div class="text-[11px] text-on-surface-variant">WDBC, Heart, Parkinson's</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">SAMPLE FRACTIONS</div>
+          <div class="text-xl font-bold text-on-surface mt-0.5">10%, 25%, 50%, 100%</div>
+          <div class="text-[11px] text-on-surface-variant">10 random seeds per cell</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">PARKINSON'S (n=195)</div>
+          <div id="gen-park-status" class="text-xl font-bold text-warning mt-0.5">Statistical Parity</div>
+          <div id="gen-park-p" class="text-[11px] text-on-surface-variant">p = 0.445–0.520 (A vs B, Holm n.s.)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant">
+          <div class="text-[10px] uppercase font-semibold text-tertiary">EMPIRICAL VERDICT</div>
+          <div class="text-xl font-bold text-on-surface mt-0.5">Classical Parity</div>
+          <div class="text-[11px] text-on-surface-variant">Replicates 2026 literature consensus</div>
+        </div>
+      </div>
+      <div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
+        <img src="/paper_figures/fig_generalization_performance.png" alt="Generalization Performance Benchmark" class="w-full h-auto object-contain max-h-[440px] mx-auto"/>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Across benchmark datasets, Control A (Hybrid VQC) and Control B (Classical MLP) perform at statistical parity across sample fractions (10%, 25%, 50%, 100%). On Parkinson's dysphonia ($n=195$), A vs B mean AUC differences range from $-4.16\%$ (at 10% sample fraction) to $+0.38\%$ (at full cohort) with paired two-sided p-values of $0.084$ to $0.520$, none surviving Holm-Bonferroni correction. Our paper documents this honest parity finding directly, replicating recent independent literature (e.g. Zorlu &amp; Colak 2026) demonstrating that NISQ variational circuits do not surpass classical MLPs on real clinical tabular data.
+      </p>
+    </section>
+
+  </div>
+</div>
+</main>
+
+<footer class="bg-surface-container-lowest border-t border-outline-variant mt-12">
+<div class="w-full py-6 px-4 sm:px-8 max-w-[1440px] mx-auto text-sm text-on-surface-variant flex flex-wrap justify-between items-center gap-4">
+  <div>© 2026 QureML — Smart India Hackathon 2026, Problem Statement SIH26139. Sponsor: Egreen Quanta. Department of Computer Engineering, SPIT Mumbai.</div>
+  <div class="flex items-center gap-4 text-xs">
+    <a href="/walkthrough" class="hover:text-primary transition-colors">Judge Report</a>
+    <a href="/evaluation" class="hover:text-primary transition-colors">Evaluation Table</a>
+    <a href="/docs" target="_blank" class="hover:text-primary transition-colors">API Docs</a>
+  </div>
+</div>
+</footer>
+
+<script src="/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Selective Single-Figure Tab Controller (Only selected figure visible)
+  const FIGURE_IDS = [
+    'sec-qa-sanity',
+    'sec-dca',
+    'sec-selective',
+    'sec-positioning',
+    'sec-barren',
+    'sec-kta',
+    'sec-resource',
+    'sec-federated',
+    'sec-ibm-hardware',
+    'sec-domain',
+    'sec-missing',
+    'sec-ensemble',
+    'sec-kfold',
+    'sec-generalization'
+  ];
+
+  let currentFigureIndex = 0;
+  const sections = document.querySelectorAll('section[id^="sec-"]');
+  const tocLinks = document.querySelectorAll('#toc-nav .toc-link');
+  const mobileSelect = document.getElementById('mobile-figure-select');
+  const activeBadge = document.getElementById('active-fig-badge');
+  const activeTitle = document.getElementById('active-fig-title');
+  const btnTopPrev = document.getElementById('btn-top-prev');
+  const btnTopNext = document.getElementById('btn-top-next');
+  const container = document.getElementById('gallery-cards-container');
+
+  // Inject bottom navigation bar inside each figure card
+  FIGURE_IDS.forEach((id, idx) => {
+    const card = document.getElementById(id);
+    if (!card) return;
+    const navBar = document.createElement('div');
+    navBar.className = 'card-nav-bar flex items-center justify-between pt-5 border-t border-[#EAE5DC] mt-6';
+    navBar.innerHTML = `
+      <button type="button" class="btn-card-prev px-4 py-2 rounded-lg border-2 border-black bg-white hover:bg-[#FFFDF0] text-xs font-mono font-bold flex items-center gap-1.5 shadow-[2px_2px_0px_#000000] transition-all cursor-pointer">
+        &larr; Previous Figure
+      </button>
+      <span class="text-xs font-mono text-[#666666] font-semibold">Figure ${idx + 1} of ${FIGURE_IDS.length}</span>
+      <button type="button" class="btn-card-next px-4 py-2 rounded-lg border-2 border-black bg-[#D4AF37] hover:bg-[#E5C048] text-xs font-mono font-bold flex items-center gap-1.5 shadow-[2px_2px_0px_#000000] transition-all cursor-pointer">
+        Next Figure &rarr;
+      </button>
+    `;
+    card.appendChild(navBar);
+
+    navBar.querySelector('.btn-card-prev').addEventListener('click', (e) => {
+      e.preventDefault();
+      const prevIdx = (idx - 1 + FIGURE_IDS.length) % FIGURE_IDS.length;
+      showFigure(FIGURE_IDS[prevIdx], true);
+    });
+
+    navBar.querySelector('.btn-card-next').addEventListener('click', (e) => {
+      e.preventDefault();
+      const nextIdx = (idx + 1) % FIGURE_IDS.length;
+      showFigure(FIGURE_IDS[nextIdx], true);
+    });
+  });
+
+  function showFigure(targetId, shouldScroll = false) {
+    let idx = FIGURE_IDS.indexOf(targetId);
+    if (idx === -1) {
+      idx = 0;
+      targetId = FIGURE_IDS[0];
+    }
+    currentFigureIndex = idx;
+
+    // Show only the selected figure, hide all other 13 figures
+    FIGURE_IDS.forEach((id) => {
+      const card = document.getElementById(id);
+      if (card) {
+        if (id === targetId) {
+          card.style.display = 'block';
+          card.style.opacity = '1';
+        } else {
+          card.style.display = 'none';
+        }
+      }
+    });
+
+    // Update TOC links active styling
+    tocLinks.forEach(link => {
+      const href = link.getAttribute('href')?.replace('#', '') || link.getAttribute('data-fig-id');
+      if (href === targetId) {
+        link.classList.add('active');
+        link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    // Update Mobile Dropdown
+    if (mobileSelect) {
+      mobileSelect.value = targetId;
+    }
+
+    // Update Top Control Bar
+    const activeCard = document.getElementById(targetId);
+    const cardHeading = activeCard ? activeCard.querySelector('h2')?.textContent?.trim() || '' : '';
+    if (activeBadge) activeBadge.textContent = `Figure ${idx + 1} of ${FIGURE_IDS.length}`;
+    if (activeTitle) activeTitle.textContent = cardHeading;
+
+    // Update URL hash without jumping
+    try {
+      history.replaceState(null, null, '#' + targetId);
+    } catch (e) {}
+
+    // Smooth scroll to top of figure card if requested
+    if (shouldScroll && container) {
+      const topOffset = container.getBoundingClientRect().top + window.scrollY - 85;
+      window.scrollTo({ top: Math.max(0, topOffset), behavior: 'smooth' });
+    }
+  }
+
+  // Bind TOC rail link clicks
+  tocLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href')?.replace('#', '') || link.getAttribute('data-fig-id');
+      if (targetId) {
+        showFigure(targetId, true);
+      }
+    });
+  });
+
+  // Bind Mobile Selector
+  if (mobileSelect) {
+    mobileSelect.addEventListener('change', (e) => {
+      showFigure(e.target.value, true);
+    });
+  }
+
+  // Bind Top Prev/Next Buttons
+  if (btnTopPrev) {
+    btnTopPrev.addEventListener('click', (e) => {
+      e.preventDefault();
+      const prevIdx = (currentFigureIndex - 1 + FIGURE_IDS.length) % FIGURE_IDS.length;
+      showFigure(FIGURE_IDS[prevIdx], true);
+    });
+  }
+  if (btnTopNext) {
+    btnTopNext.addEventListener('click', (e) => {
+      e.preventDefault();
+      const nextIdx = (currentFigureIndex + 1) % FIGURE_IDS.length;
+      showFigure(FIGURE_IDS[nextIdx], true);
+    });
+  }
+
+  // Initial display based on URL hash or default to first figure
+  const hashId = window.location.hash.replace('#', '');
+  if (hashId && FIGURE_IDS.includes(hashId)) {
+    showFigure(hashId, false);
+  } else {
+    showFigure(FIGURE_IDS[0], false);
+  }
+
+  // 2. Toggle Related-Work Capability Table
+  const toggleBtn = document.getElementById('toggle-matrix-btn');
+  const matrixTable = document.getElementById('full-matrix-table');
+  let matrixLoaded = false;
+
+  toggleBtn.addEventListener('click', async () => {
+    const isHidden = matrixTable.classList.contains('hidden');
+    if (isHidden) {
+      matrixTable.classList.remove('hidden');
+      toggleBtn.innerHTML = '<span class="material-symbols-outlined text-sm">expand_less</span> Hide Capability Table';
+      if (!matrixLoaded) {
+        await loadPositioningMatrix();
+        matrixLoaded = true;
+      }
+    } else {
+      matrixTable.classList.add('hidden');
+      toggleBtn.innerHTML = '<span class="material-symbols-outlined text-sm">table_chart</span> Show Full 13-Dimension Capability Table';
+    }
+  });
+
+  async function loadPositioningMatrix() {
+    const tbody = document.getElementById('matrix-tbody');
+    try {
+      const res = await fetch('/related-work-positioning');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const rows = data.matrix || data;
+      tbody.innerHTML = rows.map((r, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-surface-container-lowest' : 'bg-surface-container-low/40'}">
+          <td class="py-2.5 px-3 font-semibold text-on-surface">${r['Metric / Attribute']}</td>
+          <td class="py-2.5 px-3 text-tertiary">${r['Reference A: QubitX_RGUKTN / MediQAI (SIH26139)']}</td>
+          <td class="py-2.5 px-3 text-warning font-medium">${r['Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)']}</td>
+          <td class="py-2.5 px-3 text-primary font-bold bg-primary/5">${r['QureML (This Work)']}</td>
+        </tr>
+      `).join('');
+    } catch (err) {
+      console.warn('Failed to fetch related-work matrix:', err);
+    }
+  }
+
+  // 3. Live Endpoint Hydration (Real API Data)
+  async function hydrateLiveKpis() {
+    // Quantum Advantage Sanity Check
+    fetch('/quantum-advantage-sanity-check').then(r => r.json()).then(d => {
+      if (d.quantum_kernel?.accuracy_mean) {
+        document.getElementById('qa-q-acc').textContent = `${(d.quantum_kernel.accuracy_mean * 100).toFixed(2)}% ± ${(d.quantum_kernel.accuracy_std * 100).toFixed(2)}%`;
+      }
+      if (d.classical_rbf?.accuracy_mean) {
+        document.getElementById('qa-c-acc').textContent = `${(d.classical_rbf.accuracy_mean * 100).toFixed(2)}% ± ${(d.classical_rbf.accuracy_std * 100).toFixed(2)}%`;
+      }
+      if (d.significance_test?.wilcoxon_p_value_two_sided) {
+        document.getElementById('qa-p-val').textContent = `p = ${d.significance_test.wilcoxon_p_value_two_sided.toFixed(5)}`;
+      }
+    }).catch(() => {});
+
+    // Decision Curve Analysis
+    fetch('/decision-curve-analysis').then(r => r.json()).then(d => {
+      if (d.net_benefit_interventions_avoided_at_pt_010?.net_benefit_controlA) {
+        document.getElementById('dca-nb').textContent = d.net_benefit_interventions_avoided_at_pt_010.net_benefit_controlA.toFixed(4);
+      }
+      if (d.net_benefit_interventions_avoided_at_pt_010?.interventions_avoided_per_100) {
+        document.getElementById('dca-avoided').textContent = `${d.net_benefit_interventions_avoided_at_pt_010.interventions_avoided_per_100.toFixed(1)} / 100`;
+      }
+      if (d.mean_delta_net_benefit) {
+        document.getElementById('dca-parity').textContent = `ΔNB = +${d.mean_delta_net_benefit.toFixed(4)}`;
+      }
+    }).catch(() => {});
+
+    // Selective Prediction
+    fetch('/selective-prediction-summary').then(r => r.json()).then(d => {
+      if (d.clinical_referral_rule?.referral_rate_pct) {
+        document.getElementById('sp-ref-rate').textContent = `${d.clinical_referral_rule.referral_rate_pct.toFixed(2)}%`;
+      }
+      if (d.clinical_referral_rule?.accepted_accuracy) {
+        document.getElementById('sp-acc-gain').textContent = `${(d.clinical_referral_rule.accepted_accuracy * 100).toFixed(2)}%`;
+      }
+    }).catch(() => {});
+
+    // IBM Live Telemetry
+    fetch('/ibm-live-telemetry').then(r => r.json()).then(d => {
+      if (d.backend_name) {
+        document.getElementById('gallery-ibm-backend').textContent = `${d.backend_name} (${d.num_qubits || 156}Q)`;
+      }
+      if (d.live_calibration_metrics?.t1_us?.median) {
+        document.getElementById('gallery-ibm-t1').textContent = `${d.live_calibration_metrics.t1_us.median.toFixed(2)} µs`;
+      }
+      if (d.live_calibration_metrics?.two_qubit_cz_error?.median) {
+        document.getElementById('gallery-ibm-cz').textContent = `${(d.live_calibration_metrics.two_qubit_cz_error.median * 100).toFixed(3)}%`;
+      }
+    }).catch(() => {});
+
+    // Barren Plateau Summary
+    fetch('/barren-plateau-summary').then(r => r.json()).then(d => {
+      if (d.deployed_model_gradient_variance) {
+        document.getElementById('bp-var6').textContent = d.deployed_model_gradient_variance.toFixed(4);
+      }
+    }).catch(() => {});
+
+    // 6. KTA Summary
+    fetch('/kta-summary').then(r => r.json()).then(d => {
+      if (d.pearson_r !== undefined) {
+        const el = document.getElementById('kta-pearson');
+        if (el) el.textContent = `r = ${d.pearson_r.toFixed(3)}`;
+      }
+      if (d.spearman_rho !== undefined) {
+        const el = document.getElementById('kta-spearman');
+        if (el) el.textContent = `ρ = ${d.spearman_rho.toFixed(3)}`;
+      }
+    }).catch(() => {});
+
+    // 7. Resource Estimation
+    fetch('/resource-estimation-summary').then(r => r.json()).then(d => {
+      const qCircuit = d.quantum_circuit_control_a;
+      if (qCircuit?.two_qubit_entangling_gates?.cnot) {
+        const el = document.getElementById('res-cnots');
+        if (el) el.textContent = `${qCircuit.two_qubit_entangling_gates.cnot} Gates`;
+      }
+      if (qCircuit?.single_qubit_gates?.total) {
+        const el = document.getElementById('res-rotations');
+        if (el) el.textContent = `${qCircuit.single_qubit_gates.total} Gates`;
+      }
+      if (qCircuit?.circuit_depth) {
+        const el = document.getElementById('res-depth');
+        if (el) el.textContent = `${qCircuit.circuit_depth} Layers`;
+      }
+    }).catch(() => {});
+
+    // 8. DP-Federated Results
+    fetch('/federated-dp-results').then(r => r.json()).then(d => {
+      if (d.operating_points) {
+        const base = d.operating_points.find(p => p.regime === 'Non-private Baseline');
+        const weak = d.operating_points.find(p => p.regime.includes('Weak DP'));
+        const strong = d.operating_points.find(p => p.regime.includes('Strong DP'));
+        if (base?.mean_auc) {
+          const el = document.getElementById('dp-baseline-auc');
+          if (el) el.textContent = `${base.mean_auc.toFixed(4)} AUC`;
+        }
+        if (weak?.mean_auc) {
+          const el = document.getElementById('dp-weak-auc');
+          if (el) el.textContent = `${weak.mean_auc.toFixed(4)} AUC`;
+        }
+        if (strong?.mean_auc) {
+          const el = document.getElementById('dp-strong-auc');
+          if (el) el.textContent = `${strong.mean_auc.toFixed(4)} AUC`;
+        }
+      }
+    }).catch(() => {});
+
+    // 9. Noise-Aware Summary
+    fetch('/noise-aware-summary').then(r => r.json()).then(d => {
+      if (d.regimes?.a_ideal_sim?.auc) {
+        const el = document.getElementById('noise-sim');
+        if (el) el.textContent = `${d.regimes.a_ideal_sim.auc.toFixed(4)} AUC`;
+      }
+    }).catch(() => {});
+
+    // 10. Cross-Cohort Domain Shift
+    fetch('/domain-shift-summary').then(r => r.json()).then(d => {
+      const cA = d.results?.['Control A (Hybrid QNN)']?.out_of_domain;
+      const cB = d.results?.['Control B (Classical MLP)']?.out_of_domain;
+      if (cA?.accuracy_mean) {
+        const elAcc = document.getElementById('ds-hybrid-acc');
+        const elAuc = document.getElementById('ds-hybrid-auc');
+        if (elAcc) elAcc.textContent = `${(cA.accuracy_mean * 100).toFixed(2)}%`;
+        if (elAuc) elAuc.textContent = `AUC: ${cA.auc_mean.toFixed(4)} (±${cA.auc_std.toFixed(4)})`;
+      }
+      if (cB?.accuracy_mean) {
+        const elAcc = document.getElementById('ds-classical-acc');
+        const elAuc = document.getElementById('ds-classical-auc');
+        if (elAcc) elAcc.textContent = `${(cB.accuracy_mean * 100).toFixed(2)}%`;
+        if (elAuc) elAuc.textContent = `AUC: ${cB.auc_mean.toFixed(4)} (±${cB.auc_std.toFixed(4)})`;
+      }
+      if (cA?.accuracy_mean && cB?.accuracy_mean) {
+        const delta = (cA.accuracy_mean - cB.accuracy_mean) * 100;
+        const elDelta = document.getElementById('ds-delta');
+        if (elDelta) elDelta.textContent = `+${delta.toFixed(2)}% Acc`;
+      }
+    }).catch(() => {});
+
+    // 11. Missing-Data Robustness
+    fetch('/missing-data-robustness').then(r => r.json()).then(d => {
+      const sum30 = d.summary?.['30%'];
+      if (sum30?.control_a) {
+        const elAuc = document.getElementById('md-auc30-a');
+        const elAcc = document.getElementById('md-acc30-a');
+        if (elAuc) elAuc.textContent = sum30.control_a.auc_mean.toFixed(4);
+        if (elAcc) elAcc.textContent = `Acc: ${(sum30.control_a.acc_mean * 100).toFixed(2)}% (std ${sum30.control_a.auc_std.toFixed(4)})`;
+      }
+      if (sum30?.control_b) {
+        const elAuc = document.getElementById('md-auc30-b');
+        const elAcc = document.getElementById('md-acc30-b');
+        if (elAuc) elAuc.textContent = sum30.control_b.auc_mean.toFixed(4);
+        if (elAcc) elAcc.textContent = `Acc: ${(sum30.control_b.acc_mean * 100).toFixed(2)}% (std ${sum30.control_b.auc_std.toFixed(4)})`;
+      }
+    }).catch(() => {});
+
+    // 12. Ensemble Summary
+    fetch('/ensemble-summary').then(r => r.json()).then(d => {
+      if (d.ensemble?.auc) {
+        const el = document.getElementById('ens-auc');
+        if (el) el.textContent = d.ensemble.auc.toFixed(4);
+      }
+      if (d.single_models_mean?.auc) {
+        const el = document.getElementById('ens-single-mean');
+        if (el) el.textContent = `vs single-model mean ${d.single_models_mean.auc.toFixed(4)}`;
+      }
+      if (d.ensemble?.ece !== undefined) {
+        const el = document.getElementById('ens-ece');
+        if (el) el.textContent = d.ensemble.ece.toFixed(4);
+      }
+      if (d.ensemble?.brier_score !== undefined) {
+        const el = document.getElementById('ens-brier');
+        if (el) el.textContent = `Brier score: ${d.ensemble.brier_score.toFixed(4)}`;
+      }
+      if (d.n_seeds) {
+        const el = document.getElementById('ens-seeds');
+        if (el) el.textContent = `${d.n_seeds} Models`;
+      }
+    }).catch(() => {});
+
+    // 13. K-Fold Cross Validation
+    fetch('/kfold-summary').then(r => r.json()).then(d => {
+      if (d.control_a?.auc_mean) {
+        const elAuc = document.getElementById('kf-auc-a');
+        const elAcc = document.getElementById('kf-acc-a');
+        if (elAuc) elAuc.textContent = `${d.control_a.auc_mean.toFixed(4)} ± ${d.control_a.auc_std.toFixed(4)}`;
+        if (elAcc) elAcc.textContent = `Acc: ${(d.control_a.accuracy_mean * 100).toFixed(2)}% ± ${(d.control_a.accuracy_std * 100).toFixed(2)}%`;
+      }
+      if (d.control_b?.auc_mean) {
+        const elAuc = document.getElementById('kf-auc-b');
+        const elAcc = document.getElementById('kf-acc-b');
+        if (elAuc) elAuc.textContent = `${d.control_b.auc_mean.toFixed(4)} ± ${d.control_b.auc_std.toFixed(4)}`;
+        if (elAcc) elAcc.textContent = `Acc: ${(d.control_b.accuracy_mean * 100).toFixed(2)}% ± ${(d.control_b.accuracy_std * 100).toFixed(2)}%`;
+      }
+    }).catch(() => {});
+
+    // 14. Generalization Benchmark
+    fetch('/generalization-benchmark').then(r => r.json()).then(d => {
+      if (d.datasets) {
+        const el = document.getElementById('gen-cohorts');
+        if (el) el.textContent = `${d.datasets.length} Datasets`;
+      }
+    }).catch(() => {});
+  }
+
+  hydrateLiveKpis();
+});
+</script>
+</body>
+</html>

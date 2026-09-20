@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QureML — Executive Judge Report &amp; SIH Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/shared.css"/>
+<style>
+@media print {
+  #site-nav, footer, .no-print { display: none !important; }
+  body { background: #ffffff !important; color: #000000 !important; }
+  .glass-panel, .glass-panel-subtle { border: 1px solid #cccccc !important; background: #ffffff !important; color: #000000 !important; box-shadow: none !important; }
+  .text-white { color: #000000 !important; }
+  .text-\[\#F5D77F\], .text-\[\#D4AF37\] { color: #8A6D23 !important; }
+  .text-\[\#8A9BA8\], .text-\[\#D7E2EA\] { color: #555555 !important; }
+}
+</style>
+</head>
+
+<body class="bg-[#F5F3EF] text-[#0A0A0A] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-black">
+
+<!-- Global Luxury Navbar -->
+<div id="site-nav"></div>
+
+<main class="flex-1 max-w-[1520px] w-full mx-auto px-4 sm:px-8 py-10 space-y-12">
+
+  <!-- Header Section -->
+  <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFFDF2] border border-[#D4AF37]/50 text-[#996515] text-xs font-mono font-bold tracking-wider uppercase mb-3 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+        SIH26139 &middot; Executive Judge Report &amp; Scientific Verification Audit
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-[#0A0A0A]">
+        Executive <span class="gold-gradient-text">Judge Report</span>
+      </h1>
+      <p class="text-[#525B64] text-sm sm:text-base max-w-4xl mt-2 font-light">
+        Sponsor: Egreen Quanta &middot; Theme: MedTech / BioTech &middot; Department of Computer Engineering, SPIT Mumbai. Reproducible evidence for all 5 Hackathon deliverables.
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-3 no-print">
+      <div id="api-badge" class="p-3 rounded-xl bg-white border-2 border-black shadow-[3px_3px_0px_#000000] text-xs font-mono text-[#0A0A0A] flex items-center gap-2">
+        <span class="spinner"></span> Checking API...
+      </div>
+      <button onclick="window.print()" class="gold-btn">
+        <span class="material-symbols-outlined text-lg">print</span>
+        Print / Save PDF &rarr;
+      </button>
+    </div>
+  </section>
+
+  <!-- Institutional & Tech Stack Logo Showcase -->
+  <section class="p-4 sm:p-5 rounded-xl bg-white border-2 border-black shadow-[4px_4px_0px_#000000] flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-mono font-bold text-[#666666] uppercase tracking-wider">Governance &amp; Stack Partners:</span>
+    </div>
+    <div class="flex flex-wrap items-center gap-5 sm:gap-7">
+      <div class="flex items-center gap-2" title="Sardar Patel Institute of Technology, Mumbai">
+        <img src="/assets/spit.png" alt="SPIT Mumbai" class="h-8 w-auto object-contain" />
+        <span class="text-xs font-bold text-[#0A0A0A] hidden md:inline">SPIT Mumbai</span>
+      </div>
+      <div class="flex items-center gap-2" title="Smart India Hackathon 2026">
+        <img src="/assets/sih.png" alt="Smart India Hackathon" class="h-8 w-auto object-contain" />
+        <span class="text-xs font-bold text-[#0A0A0A] hidden md:inline">SIH 2026</span>
+      </div>
+      <div class="flex items-center gap-2" title="Egreen Quanta (Problem Statement Sponsor)">
+        <img src="/assets/egreenquanta.png" alt="Egreen Quanta" class="h-8 w-auto object-contain" />
+        <span class="text-xs font-bold text-[#0A0A0A] hidden md:inline">Egreen Quanta</span>
+      </div>
+      <div class="flex items-center gap-2" title="IBM Quantum (Hardware Telemetry)">
+        <img src="/assets/ibm.png" alt="IBM Quantum" class="h-8 w-auto object-contain" />
+        <span class="text-xs font-bold text-[#0A0A0A] hidden md:inline">IBM Quantum</span>
+      </div>
+      <div class="flex items-center gap-2" title="PennyLane (Quantum Machine Learning Framework)">
+        <img src="/assets/pennylane.png" alt="PennyLane" class="h-7 w-auto object-contain" />
+        <span class="text-xs font-bold text-[#0A0A0A] hidden md:inline">PennyLane</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Claim Card -->
+  <section class="glass-panel p-6 sm:p-8 space-y-3">
+    <div class="text-xs font-mono font-bold text-[#D4AF37] uppercase tracking-wider">
+      Core Scientific Claim &amp; Research Question
+    </div>
+    <p class="text-base sm:text-lg text-white font-light leading-relaxed">
+      QureML investigates whether parameterized quantum circuits provide genuine clinical utility in disease triage when evaluated under identical parameter counts, isolating quantum computational contributions across 6 real biomedical benchmarks with rigorous statistical corrections.
+    </p>
+  </section>
+
+  <!-- Honest Headline Finding -->
+  <section class="glass-panel p-6 sm:p-10 space-y-6">
+    <div class="flex items-center gap-3 text-white">
+      <span class="material-symbols-outlined text-[#D4AF37] text-2xl">balance</span>
+      <h2 class="text-2xl font-bold uppercase tracking-wider">
+        Honest Headline Finding: Statistical Parity with Classical Baselines
+      </h2>
+    </div>
+    <p class="text-sm sm:text-base text-[#8A9BA8] leading-relaxed max-w-5xl">
+      Across six real clinical datasets, the 6-qubit hybrid quantum classifier (Control A, 73 parameters) achieves <strong class="text-white">statistical parity</strong> with a strictly parameter-matched classical neural network (Control B, 73 parameters) under Holm-Bonferroni family-wise error rate control (<span class="font-mono text-[#F5D77F]">m=3, &alpha;=0.05</span>). Rather than making exaggerated claims of quantum supremacy on low-dimensional tabular data, QureML reports scientific truth with transparency.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-2">
+        <div class="text-xs font-mono text-[#8A9BA8] uppercase">1. Statistical Parity</div>
+        <div class="text-lg font-bold text-white">WDBC, Heart, Liver, CKD</div>
+        <p class="text-xs text-[#8A9BA8] font-light">Both models operate near ceiling; quantum and classical representations are equivalent in discriminative power.</p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/40 space-y-2">
+        <div class="text-xs font-mono text-[#D4AF37] uppercase">2. Confirmatory A &gt; D</div>
+        <div class="text-lg font-bold text-[#F5D77F]">Parkinson's (p = 0.00052)</div>
+        <p class="text-xs text-[#8A9BA8] font-light">Variational training significantly beats random fixed quantum weights, confirming the quantum layer learns real biomedical features.</p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-2">
+        <div class="text-xs font-mono text-emerald-400 uppercase">3. Real Hardware Wins</div>
+        <div class="text-lg font-bold text-emerald-400">Bandwidth &amp; Uncertainty</div>
+        <p class="text-xs text-[#8A9BA8] font-light">292 B/round federated payload (~2,000&times; lighter than ResNet-18) and shot-based quantum uncertainty quantification.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Statement Compliance Checklist -->
+  <section class="glass-panel p-6 sm:p-10 space-y-6">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-[#D4AF37] text-2xl">fact_check</span>
+      <h2 class="text-2xl font-bold text-white uppercase tracking-wider">
+        Problem Statement Deliverables Compliance (SIH26139)
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-1">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          Deliverable 1: Data Pre-processing
+        </div>
+        <p class="text-[#8A9BA8] font-sans text-xs pt-1">
+          StandardScaler &rarr; PCA (6 components, 88.9% variance) &rarr; AngleScaler applied identically across 6 benchmarks with zero data leakage.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-1">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          Deliverable 2: Hybrid Architecture
+        </div>
+        <p class="text-[#8A9BA8] font-sans text-xs pt-1">
+          6-qubit AngleEmbedding + 2 variational layers (RY/RZ) + CNOT ring + classical head (73 parameters, end-to-end differentiable).
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-1">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          Deliverable 3: Quantum ML Models
+        </div>
+        <p class="text-[#8A9BA8] font-sans text-xs pt-1">
+          Rigorous 4-control ablation (Control A, B, C, D) + Fidelity QSVM benchmark, eliminating parameter disparity.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-1">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold uppercase">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          Deliverable 4: Prediction &amp; Decision Support
+        </div>
+        <p class="text-[#8A9BA8] font-sans text-xs pt-1">
+          Clinical operating points (&tau;=0.10, 0.15, 0.30), Integrated Gradients explainability, and interactive clinician audit log.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/30 space-y-1 md:col-span-2">
+        <div class="flex items-center gap-2 text-[#F5D77F] font-bold uppercase">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          Deliverable 5: Software Platform / Prototype
+        </div>
+        <p class="text-[#8A9BA8] font-sans text-xs pt-1">
+          Production FastAPI backend with interactive triage console, live on-demand training curves, batch screening, DP-FedAvg simulation, and genuine quantum measurement uncertainty quantification.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benchmark Table -->
+  <section class="glass-panel p-6 sm:p-10 space-y-6">
+    <div class="flex items-center justify-between">
+      <h2 class="text-2xl font-bold text-white uppercase tracking-wider flex items-center gap-2.5">
+        <span class="material-symbols-outlined text-[#D4AF37]">table_chart</span>
+        Six-Dataset Benchmark Ledger (Parameter-Matched)
+      </h2>
+      <span class="metric-chip">10 Seeds per Benchmark</span>
+    </div>
+
+    <div class="rounded-2xl border border-white/10 bg-[#0C0C0C] overflow-hidden overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-[#181818] border-b border-white/10 text-xs font-mono uppercase text-[#D4AF37]">
+          <tr>
+            <th class="py-3.5 px-4">Dataset Cohort</th>
+            <th class="py-3.5 px-4 text-right">Quantum AUC (A)</th>
+            <th class="py-3.5 px-4 text-right">Classical AUC (B)</th>
+            <th class="py-3.5 px-4 text-right">Accuracy</th>
+            <th class="py-3.5 px-4 text-right">Sensitivity</th>
+            <th class="py-3.5 px-4 text-right">Wilcoxon p</th>
+            <th class="py-3.5 px-4">Statistical Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5 font-mono text-xs" id="judge-table-body">
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 QUREML &middot; Smart India Hackathon 2026 &middot; Department of Computer Engineering, SPIT Mumbai &middot; Sponsor: Egreen Quanta
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/predict">Live Triage</a>
+      <a href="/compare">Quantum vs Classical</a>
+      <a href="/walkthrough">Judge Report</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+<script>
+const FALLBACK_DATASETS = [
+  {name:"Breast Cancer (WDBC, n=569)",control_A_auc:"0.9983 ± 0.0016",control_B_auc:"0.9972 ± 0.0021",accuracy:"97.89% ± 0.65%",sensitivity:"95.24% [84.5%, 98.8%]",p_value:"0.3750",status:"Statistical Parity (Ceiling)"},
+  {name:"Cardiovascular (Cleveland, n=297)",control_A_auc:"0.9528 ± 0.0241",control_B_auc:"0.9561 ± 0.0210",accuracy:"84.50% ± 3.42%",sensitivity:"82.50% [73.2%, 89.2%]",p_value:"0.6953",status:"Statistical Parity"},
+  {name:"Parkinson's Disease (n=195)",control_A_auc:"0.9507 ± 0.0352",control_B_auc:"0.9482 ± 0.0380",accuracy:"83.08% ± 4.15%",sensitivity:"89.66% [80.2%, 95.1%]",p_value:"0.8438",status:"Confirmatory A>D (p=0.00052)"},
+  {name:"Indian Liver Patient (ILPD, n=579)",control_A_auc:"0.8048 ± 0.0482",control_B_auc:"0.7872 ± 0.0510",accuracy:"72.41% ± 3.12%",sensitivity:"76.80% [68.5%, 83.4%]",p_value:"0.2754",status:"Statistical Parity"},
+  {name:"Chronic Kidney Disease (n=158)",control_A_auc:"1.0000 ± 0.0000*",control_B_auc:"1.0000 ± 0.0000*",accuracy:"100.0%",sensitivity:"100.0% [89.1%, 100.0%]",p_value:"1.0000",status:"Comorbidity Saturation*"},
+  {name:"Breast Ultrasound (BreastMNIST, n=780)",control_A_auc:"0.8349 ± 0.0117",control_B_auc:"0.8189 ± 0.0151",accuracy:"80.90% ± 1.34%",sensitivity:"66.67% [51.5%, 79.1%]",p_value:"0.0645",status:"Quanv Parity with Classical CNN"}
+];
+
+function renderTable(datasets) {
+  const tbody = document.getElementById('judge-table-body');
+  tbody.innerHTML = datasets.map(d => `
+    <tr class="hover:bg-white/[0.02] transition-colors">
+      <td class="py-3 px-4 font-bold text-white">${d.name}</td>
+      <td class="py-3 px-4 text-right font-bold text-[#F5D77F]">${d.control_A_auc}</td>
+      <td class="py-3 px-4 text-right text-white">${d.control_B_auc}</td>
+      <td class="py-3 px-4 text-right text-white">${d.accuracy}</td>
+      <td class="py-3 px-4 text-right text-emerald-400 font-semibold">${d.sensitivity}</td>
+      <td class="py-3 px-4 text-right text-[#8A9BA8]">${d.p_value}</td>
+      <td class="py-3 px-4">
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-white/5 border border-white/10 text-[#D7E2EA]">
+          ${d.status}
+        </span>
+      </td>
+    </tr>`).join('');
+}
+renderTable(FALLBACK_DATASETS);
+
+async function loadLiveJudgeData() {
+  const badge = document.getElementById('api-badge');
+  try {
+    const rHealth = await fetch('/health');
+    if (rHealth.ok) {
+      badge.className = "p-3 rounded-2xl bg-emerald-950/20 border border-emerald-500/40 text-xs font-mono text-emerald-300 flex items-center gap-2";
+      badge.innerHTML = '<span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span> Live Backend Connected';
+    }
+  } catch {
+    badge.className = "p-3 rounded-2xl bg-white/5 border border-white/10 text-xs font-mono text-[#8A9BA8]";
+    badge.innerHTML = "Offline (Demonstration Mode)";
+  }
+
+  try {
+    const rEval = await fetch('/evaluation-metrics');
+    if (rEval.ok) {
+      const data = await rEval.json();
+      if (data && data.datasets && data.datasets.length) {
+        renderTable(data.datasets);
+      }
+    }
+  } catch {}
+}
+loadLiveJudgeData();
+</script>
+</body>
+</html>

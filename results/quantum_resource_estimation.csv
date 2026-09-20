@@ -1,0 +1,9 @@
+dimension,Control A (Hybrid QNN),Control B (Classical MLP)
+Hardware Architecture,6-Qubit Parameterized Ansatz (Angle+RY/RZ+CNOT),Feedforward Network (Linear-Tanh-Linear-Sigmoid)
+Trainable Parameters (Total),73 (24 Quantum + 49 Classical),73 (Matched by Design)
+Quantum Gates / Circuit Depth,42 Primitive Gates (Depth 17),N/A (Classical)
+2-Qubit Entangling Gates (CNOT),12 CNOTs (Dominant NISQ Error Source),0
+1-Qubit Rotations,"30 (18 RY, 12 RZ)",N/A
+Classical Operations (Forward FLOPs),91 FLOPs (Pre 78 + Post 13) + Statevector Sim,136 FLOPs (126 Linear + 10 Act)
+Single-Patient Latency (CPU Simulation),8.02 ± 1.19 ms,0.030 ± 0.009 ms (271x faster)
+Federated Client Payload per Round,292 Bytes (Float32 weights),292 Bytes (Float32 weights)

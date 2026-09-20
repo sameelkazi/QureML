@@ -1,0 +1,80 @@
+[
+  {
+    "Metric / Attribute": "Target Clinical Domain",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "Breast Cancer (WDBC)",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "Breast Cancer (WDBC + WBC)",
+    "QureML (This Work)": "Multi-Disease (WDBC, BreastMNIST, Heart Disease, Diabetes, Wine)"
+  },
+  {
+    "Metric / Attribute": "Datasets & Sample Size",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "WDBC (n=569, single 80/20 hold-out)",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "WDBC (n=569, 70/30 split) + Wisconsin Original (WBC, n=683)",
+    "QureML (This Work)": "WDBC (n=569), BreastMNIST (n=780), Cleveland Heart (n=303), Statlog Heart (n=270), Diabetes (n=768)"
+  },
+  {
+    "Metric / Attribute": "Quantum Circuit Architecture",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "VQC & QSVM (unspecified layer depth, standard feature map)",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "8-qubit VQC (PennyLane, 4 StronglyEntanglingLayers) + ZZ-QSVM (Qiskit)",
+    "QureML (This Work)": "6-qubit VQC (17-depth, 12 CNOT ring, 73 params) + 2x2 Quanvolutional filter + Fidelity QSVM"
+  },
+  {
+    "Metric / Attribute": "Classical Baselines Evaluated",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "RBF-SVM",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "XGBoost, LightGBM, CatBoost, Random Forest, RBF-SVM, Stacked Hybrid Ensemble (Winner in baseline breadth)",
+    "QureML (This Work)": "Parameter-matched MLP (Control B: exactly 73 params), RBF-SVM, Logistic Regression, Classical CNN"
+  },
+  {
+    "Metric / Attribute": "Cross-Validation & Significance Testing",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None (single train/test split, no CIs or p-values)",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "Internal-external CV + DeLong correlated ROC test (95% CIs)",
+    "QureML (This Work)": "Stratified 5-Fold CV + Paired Wilcoxon/t-tests with Holm-Bonferroni correction across all metrics"
+  },
+  {
+    "Metric / Attribute": "Ablation & Sensitivity Analyses",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None reported",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "Embedding rotation (X/Y vs Z), circuit depth (1-6 layers), depolarizing noise (p <= 0.10)",
+    "QureML (This Work)": "Barren plateau scaling (2-12 qubits), KTA (5 datasets), noise-aware vs ideal training, DP privacy budget, missing data (0-50%)"
+  },
+  {
+    "Metric / Attribute": "External / Cross-Dataset Generalization",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "Yes: independent Wisconsin Original cohort (WBC, n=683, 9 cytological features; Winner in clinical domain matching)",
+    "QureML (This Work)": "Yes: cross-dataset domain shift on Heart Disease (Cleveland -> Statlog, 0-shot transfer; VQC retains 86.4% vs MLP 84.1%)"
+  },
+  {
+    "Metric / Attribute": "Differential Privacy & Federated Learning",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "None",
+    "QureML (This Work)": "Yes: 292-byte communication payload per client round, DP utility boundary analysis (epsilon <= 8.0, delta = 1e-5)"
+  },
+  {
+    "Metric / Attribute": "Real Quantum Hardware Validation",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None (Simulator only)",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "None (Simulators only: PennyLane lightning.qubit, Qiskit AerSimulator)",
+    "QureML (This Work)": "Yes: Live IBM Quantum hardware calibration on 156-qubit Heron r2 processor (ibm_fez: T1=133.1us, T2=99.1us, CZ error=2.88e-3)"
+  },
+  {
+    "Metric / Attribute": "Barren Plateau & Trainability Diagnostic",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "Theoretical discussion only (McClean et al. cited, not empirically measured)",
+    "QureML (This Work)": "Yes: Empirical gradient variance decay across n in [2..12] qubits (Var[dL/dtheta] ~ 2^{-0.63n}; Var=0.0412 at n=6)"
+  },
+  {
+    "Metric / Attribute": "Kernel-Target Alignment (KTA) Diagnostic",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "None",
+    "QureML (This Work)": "Yes: Exact KTA computed across 5 datasets (WDBC 0.713, Wine 0.642, Heart 0.428, BreastMNIST 0.384, Diabetes 0.291)"
+  },
+  {
+    "Metric / Attribute": "Missing-Data Clinical Robustness",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "None",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "None (evaluated complete-case data only)",
+    "QureML (This Work)": "Yes: 0% to 50% MCAR missingness stress test with mean vs KNN imputation trajectories"
+  },
+  {
+    "Metric / Attribute": "Headline Empirical Result",
+    "Reference A: QubitX_RGUKTN / MediQAI (SIH26139)": "Classical RBF-SVM (90.6% bal. acc.) outperformed best QML (85.3%) by 5.3%; no error bounds",
+    "Reference B: Zorlu & Colak (Diagnostics 2026, PMC13360165)": "Internal: SVM AUC 0.998, VQC 0.992, QSVM 0.727; External WBC: SVM AUC 0.986, VQC 0.983 (Statistical Parity confirmed)",
+    "QureML (This Work)": "WDBC: VQC AUC 0.991 vs MLP 0.988 (Parity, p=0.42); Heart: VQC 0.912 vs MLP 0.905 (p=0.38); Domain-Shift: VQC 86.4% vs MLP 84.1%"
+  }
+]

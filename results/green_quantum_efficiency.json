@@ -1,0 +1,56 @@
+{
+  "analysis": "Green Quantum Computing & Edge Computational Sustainability Analysis",
+  "sponsor_alignment": "Egreen Quanta (Dr. Kumar Gautam) \u2014 Sustainability & Green Computing Theme",
+  "hardware_benchmarked": {
+    "processor": "13th Gen Intel(R) Core(TM) i7-13650HX",
+    "base_tdp_watts": 55.0,
+    "max_turbo_tdp_watts": 157.0,
+    "profiler": "Python time.perf_counter() (200 independent forward iterations)",
+    "methodology_note": "Transparent proxy methodology: exact wall-clock latency multiplied by published Intel processor TDP (55W base). Distinguishes CPU statevector simulation from physical QPU gate execution."
+  },
+  "inference_compute_metrics": {
+    "control_a_hybrid_qnn": {
+      "parameters": 73,
+      "mean_latency_ms": 6.731,
+      "median_latency_ms": 6.701,
+      "std_latency_ms": 0.274,
+      "energy_per_inference_base_mj": 370.18,
+      "energy_per_inference_base_joules": 0.37018,
+      "energy_10k_patients_kwh": 0.001028
+    },
+    "control_b_classical_mlp": {
+      "parameters": 73,
+      "mean_latency_ms": 0.023,
+      "median_latency_ms": 0.022,
+      "std_latency_ms": 0.003,
+      "energy_per_inference_base_mj": 1.258,
+      "energy_per_inference_base_joules": 0.001258,
+      "energy_10k_patients_kwh": 3.5e-06
+    },
+    "simulation_compute_ratio": 294.2
+  },
+  "edge_communication_sustainability": {
+    "qureml_hybrid_vqc": {
+      "parameter_count": 73,
+      "federated_payload_bytes": 292,
+      "transmission_energy_per_round_mj": 0.0584
+    },
+    "standard_clinical_mlp": {
+      "parameter_count": 51713,
+      "federated_payload_bytes": 206852,
+      "transmission_energy_per_round_mj": 41.37
+    },
+    "medical_resnet50": {
+      "parameter_count": 25557032,
+      "federated_payload_bytes": 102228128,
+      "transmission_energy_per_round_mj": 20445.63
+    },
+    "bandwidth_compression_vs_resnet": 350096.3,
+    "bandwidth_compression_vs_mlp": 708.4
+  },
+  "sustainable_healthcare_deployment": {
+    "rural_clinic_feasibility": "73 parameters (292 bytes) enables low-power GSM/2G/satellite telemetry in remote clinics without broadband.",
+    "microcontroller_sram_footprint": "< 1 KB required memory; deployable on battery-powered edge diagnostic screening wands.",
+    "carbon_transmission_per_100_rounds_gco2": 7.7e-06
+  }
+}

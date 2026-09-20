@@ -1,0 +1,6 @@
+patient,true_label,analytic_prob,shots_mean,shots_std,ci95_low,ci95_high,ci95_width,flag
+PT-WDBC-001_confident_malignant,Malignant,0.9981,0.9981,0.0002,0.9978,0.9984,0.0006,confident
+PT-WDBC-000_confident_benign,Benign,0.0013,0.0013,0.0002,0.001,0.0017,0.0008,confident
+PT-WDBC-016_borderline_actual_miss,Malignant,0.1242,0.1314,0.021,0.0948,0.1682,0.0734,confident
+PT-WDBC-112_borderline_benign_leaning_malignant_call_but_true_benign,Malignant,0.4667,0.4593,0.0667,0.3444,0.568,0.2236,HIGH UNCERTAINTY - recommend specialist review
+PT-WDBC-004_borderline_benign,Benign,0.4042,0.4022,0.0567,0.2546,0.4893,0.2347,HIGH UNCERTAINTY - recommend specialist review

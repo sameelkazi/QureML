@@ -1,0 +1,48 @@
+# Python & Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Secrets & Environment Variables (NEVER commit credentials)
+.env
+*.env
+*.env.local
+secrets.json
+ibm_credentials.json
+
+# IDEs & System Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Scratch, Local Execution Proofs & Working Notes
+scratch/
+outputs_proofs/
+Claude outputs/
+EXECUTION_PLAN.md
+.agents/
+.gemini/
+
+# Logs & Temporary Files
+*.log
+*.tmp
+tmp/
+node_modules/
+platform/frontend/src-app/node_modules/

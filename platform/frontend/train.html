@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QureML — On-Demand Quantum Training &amp; Dataset Upload</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/shared.css"/>
+<style>
+  input, select, textarea, .feat-input {
+    background-color: #141414 !important;
+    background: #141414 !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 10px !important;
+    padding: 0.55rem 0.85rem !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.82rem !important;
+    outline: none !important;
+  }
+  input:focus, select:focus, textarea:focus, .feat-input:focus {
+    background-color: #1A1A1A !important;
+    background: #1A1A1A !important;
+    border-color: #D4AF37 !important;
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.4) !important;
+    outline: none !important;
+  }
+</style>
+</head>
+
+<body class="bg-[#0C0C0C] text-[#FFFFFF] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-white">
+
+<!-- Global Luxury Navbar -->
+<div id="site-nav"></div>
+
+<main class="flex-1 max-w-[1520px] w-full mx-auto px-4 sm:px-8 py-10 space-y-10">
+
+  <!-- Header Section -->
+  <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1608] border border-[#D4AF37]/40 text-[#F5D77F] text-xs font-mono font-medium tracking-wider uppercase mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+        SIH26139 Deliverable 5 &middot; Zero-Persistence Ephemeral Training in RAM
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+        Live Dataset Upload &amp; <span class="gold-gradient-text">On-Demand Quantum Training</span>
+      </h1>
+      <p class="text-[#8A9BA8] text-sm sm:text-base max-w-4xl mt-2 font-light">
+        Upload tabular clinical CSV datasets to trigger automated adaptive preprocessing (StandardScaler &rarr; PCA-6 &rarr; AngleEmbedding) and train both Control A (6-qubit Quantum VQC) and Control B (Classical MLP, exactly 73 parameters) on held-out test splits.
+      </p>
+    </div>
+
+    <!-- API Status Badge -->
+    <div id="api-status" class="p-3.5 rounded-2xl border text-xs sm:text-sm font-mono flex items-center gap-2.5 backdrop-blur-md"></div>
+  </section>
+
+  <!-- Upload & Configuration Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Upload Card (Span 2) -->
+    <section class="lg:col-span-2 glass-panel p-6 sm:p-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-[#D4AF37] text-2xl">upload_file</span>
+          <h2 class="text-xl font-bold text-white uppercase tracking-wider">1. Ingest Clinical Cohort Dataset</h2>
+        </div>
+        <button id="btn-load-sample" class="live-project-btn gold" type="button">
+          <span class="material-symbols-outlined text-sm">download</span>
+          1-Click Load Sample Cohort (60 Cases)
+        </button>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div id="drop-zone" class="border-2 border-dashed border-[#D4AF37]/30 hover:border-[#D4AF37] rounded-2xl p-8 text-center bg-[#0C0C0C] transition-all cursor-pointer space-y-3">
+        <div class="w-14 h-14 rounded-full bg-[#1A1608] border border-[#D4AF37]/40 text-[#F5D77F] mx-auto flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">cloud_upload</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-white">Drag and drop your CSV file here, or <span class="text-[#F5D77F] underline">browse files</span></p>
+          <p class="text-xs text-[#8A9BA8] font-mono mt-1">Accepts tabular binary classification CSVs (e.g. WDBC, Heart Disease, Diabetes)</p>
+        </div>
+        <input type="file" id="file-input" accept=".csv" class="hidden"/>
+        <div id="file-details" class="hidden inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#181818] text-xs font-mono text-[#F5D77F] border border-[#D4AF37]/30"></div>
+      </div>
+
+      <!-- Options Row -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+        <div class="flex items-center gap-3">
+          <label for="select-epochs" class="text-xs font-mono font-bold text-[#D4AF37] uppercase">Epochs:</label>
+          <select id="select-epochs" class="text-xs font-mono">
+            <option value="5">5 Epochs (~1.2s Fast Demo)</option>
+            <option value="8" selected>8 Epochs (~2.0s Balanced Fit)</option>
+            <option value="12">12 Epochs (~3.0s Deep Convergence)</option>
+          </select>
+        </div>
+
+        <button id="btn-train" disabled class="gold-btn">
+          <span class="material-symbols-outlined text-lg">model_training</span>
+          <span id="btn-train-text">Train Models On-Demand &rarr;</span>
+        </button>
+      </div>
+
+      <!-- Live Training Progress Banner -->
+      <div id="training-progress" class="hidden rounded-2xl p-6 bg-[#080808] border border-[#D4AF37]/40 space-y-4">
+        <div class="flex items-center justify-between text-xs font-mono">
+          <div class="flex items-center gap-2 text-[#F5D77F]">
+            <span class="spinner"></span>
+            <span id="progress-step" class="font-bold">Initializing training pipelines...</span>
+          </div>
+          <span id="progress-timer" class="text-[#8A9BA8]">0.0s</span>
+        </div>
+        <div class="w-full h-2.5 rounded-full bg-[#181818] overflow-hidden">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-[#D4AF37] via-[#FFF5D0] to-[#D4AF37] rounded-full transition-all duration-300 shadow-[0_0_12px_rgba(212,175,55,0.7)]" style="width: 15%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Side Panel: Architectural Spec -->
+    <section class="glass-panel-subtle p-6 sm:p-8 space-y-5">
+      <div class="flex items-center gap-2 text-white font-bold uppercase tracking-wider text-base">
+        <span class="material-symbols-outlined text-[#D4AF37]">architecture</span>
+        Dual Architecture Specifications
+      </div>
+      <div class="space-y-4 text-xs font-mono">
+        <div class="p-4 rounded-xl bg-[#0C0C0C] border border-[#D4AF37]/30 space-y-1">
+          <div class="text-[#F5D77F] font-bold uppercase">Control A: Quantum VQC</div>
+          <div class="text-white">6 Qubits &middot; Depth 17 &middot; 73 Parameters</div>
+          <p class="text-[#8A9BA8] font-sans text-[11px] pt-1">AngleEmbedding(RY) &rarr; 2 Layers of Rotations + CNOT Entangling Ring &rarr; Pauli-Z Measurement.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-[#0C0C0C] border border-white/10 space-y-1">
+          <div class="text-[#D7E2EA] font-bold uppercase">Control B: Parameter-Matched MLP</div>
+          <div class="text-white">Linear(6,9) + Linear(9,1) &middot; Exactly 73 Parameters</div>
+          <p class="text-[#8A9BA8] font-sans text-[11px] pt-1">Identical parameter capacity ensuring fair quantum computational advantage evaluation.</p>
+        </div>
+      </div>
+      <div class="pt-2 border-t border-white/10 text-[11px] text-[#8A9BA8] flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm text-emerald-400">verified_user</span>
+        <span>Zero patient data is written to disk. Ephemeral RAM execution satisfies HIPAA &sect; 164.312.</span>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Results Section -->
+  <section id="results-section" class="hidden glass-panel p-6 sm:p-10 space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div>
+        <h2 class="text-2xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#D4AF37]">analytics</span>
+          Training &amp; Comparative Evaluation Results
+        </h2>
+        <p id="dataset-summary-text" class="text-xs text-[#8A9BA8] font-mono mt-1"></p>
+      </div>
+      <div id="verdict-chip"></div>
+    </div>
+
+    <!-- Small-Sample Caveat Banner -->
+    <div id="caveat-banner" class="hidden p-4 rounded-xl border border-amber-500/40 bg-amber-950/20 text-amber-300 text-xs font-mono flex items-center gap-2"></div>
+
+    <!-- Twin Results Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Control A Quantum VQC -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/50 shadow-[0_0_30px_rgba(212,175,55,0.12)] space-y-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+            <span class="text-xs font-mono font-bold text-[#F5D77F] uppercase tracking-wider">Control A &middot; Hybrid Quantum VQC</span>
+          </div>
+          <span class="metric-chip" id="qa-time">0.0s</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Test Accuracy</div>
+            <div class="text-2xl font-black text-[#F5D77F] font-mono mt-1" id="qa-acc">0.0%</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Test ROC-AUC</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="qa-auc">0.000</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Sensitivity</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="qa-sens">0.0%</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Specificity</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="qa-spec">0.0%</div>
+          </div>
+        </div>
+
+        <!-- Confusion Matrix -->
+        <div class="p-4 rounded-xl bg-[#141414] border border-white/5 space-y-2">
+          <div class="text-xs font-mono text-[#D4AF37] uppercase">Confusion Matrix (Held-out Test Cohort)</div>
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">True Negative:</span>
+              <strong class="text-emerald-400" id="qa-tn">0</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">False Positive:</span>
+              <strong class="text-amber-400" id="qa-fp">0</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">False Negative:</span>
+              <strong class="text-red-400" id="qa-fn">0</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">True Positive:</span>
+              <strong class="text-emerald-400" id="qa-tp">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control B Classical MLP -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-[#0C0C0C] border border-white/10 space-y-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#8A9BA8]"></span>
+            <span class="text-xs font-mono font-bold text-[#D7E2EA] uppercase tracking-wider">Control B &middot; Classical MLP</span>
+          </div>
+          <span class="metric-chip" id="cb-time">0.0s</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Test Accuracy</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="cb-acc">0.0%</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Test ROC-AUC</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="cb-auc">0.000</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Sensitivity</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="cb-sens">0.0%</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-[#141414] border border-white/5">
+            <div class="text-[10px] font-mono text-[#8A9BA8] uppercase">Specificity</div>
+            <div class="text-2xl font-black text-white font-mono mt-1" id="cb-spec">0.0%</div>
+          </div>
+        </div>
+
+        <!-- Confusion Matrix -->
+        <div class="p-4 rounded-xl bg-[#141414] border border-white/5 space-y-2">
+          <div class="text-xs font-mono text-[#8A9BA8] uppercase">Confusion Matrix (Held-out Test Cohort)</div>
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">True Negative:</span>
+              <strong class="text-emerald-400" id="cb-tn">0</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">False Positive:</span>
+              <strong class="text-amber-400" id="cb-fp">0</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">False Negative:</span>
+              <strong class="text-red-400" id="cb-fn">0</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#0C0C0C] border border-white/5 flex justify-between">
+              <span class="text-[#8A9BA8]">True Positive:</span>
+              <strong class="text-emerald-400" id="cb-tp">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Comparative Interpretation Note -->
+    <div class="p-5 rounded-2xl bg-[#080808] border border-white/10 text-xs font-sans text-[#8A9BA8] leading-relaxed" id="comparative-interpretation"></div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 QUREML &middot; Smart India Hackathon 2026 &middot; Department of Computer Engineering, SPIT Mumbai &middot; Sponsor: Egreen Quanta
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/predict">Live Triage</a>
+      <a href="/compare">Quantum vs Classical</a>
+      <a href="/walkthrough">Judge Report</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+<script>
+async function checkApi() {
+  const el = document.getElementById('api-status');
+  try {
+    const r = await fetch('/health');
+    if (r.ok) {
+      el.className = "p-3 rounded-2xl border border-emerald-500/40 bg-emerald-950/20 text-emerald-300 text-xs sm:text-sm font-mono flex items-center gap-2";
+      el.innerHTML = '<span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span> Live QureML Training Engine Connected';
+    } else throw new Error();
+  } catch {
+    el.className = "p-3 rounded-2xl border border-red-500/40 bg-red-950/20 text-red-300 text-xs sm:text-sm font-mono flex items-center gap-2";
+    el.innerHTML = '<span class="material-symbols-outlined text-sm text-red-400">warning</span> Backend Offline &mdash; Run uvicorn server';
+  }
+}
+checkApi();
+
+let currentCsvContent = null;
+let currentFileName = null;
+
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const fileDetails = document.getElementById('file-details');
+const btnTrain = document.getElementById('btn-train');
+const btnLoadSample = document.getElementById('btn-load-sample');
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+['dragenter', 'dragover'].forEach(name => {
+  dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('border-[#D4AF37]'); });
+});
+['dragleave', 'drop'].forEach(name => {
+  dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('border-[#D4AF37]'); });
+});
+
+dropZone.addEventListener('drop', (e) => {
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files.length) handleFile(e.target.files[0]);
+});
+
+function handleFile(file) {
+  if (!file.name.endsWith('.csv')) { alert('Please upload a valid .csv file.'); return; }
+  currentFileName = file.name;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    currentCsvContent = e.target.result;
+    const lines = currentCsvContent.trim().split('\n');
+    fileDetails.classList.remove('hidden');
+    fileDetails.innerHTML = `<span class="material-symbols-outlined text-sm text-[#D4AF37]">description</span> ${currentFileName} &middot; ${lines.length - 1} cases detected`;
+    btnTrain.disabled = false;
+  };
+  reader.readAsText(file);
+}
+
+btnLoadSample.addEventListener('click', async () => {
+  btnLoadSample.disabled = true;
+  btnLoadSample.innerHTML = '<span class="spinner"></span> Loading sample cohort...';
+  try {
+    const res = await fetch('/sample-dataset');
+    if (!res.ok) throw new Error('Failed to fetch sample dataset');
+    currentCsvContent = await res.text();
+    currentFileName = 'sample_clinical_cohort_60cases.csv';
+    const lines = currentCsvContent.trim().split('\n');
+    fileDetails.classList.remove('hidden');
+    fileDetails.innerHTML = `<span class="material-symbols-outlined text-sm text-[#D4AF37]">description</span> ${currentFileName} &middot; ~${lines.length - 1} balanced clinical cases`;
+    btnTrain.disabled = false;
+  } catch (err) {
+    alert('Could not load sample dataset: ' + err.message);
+  } finally {
+    btnLoadSample.disabled = false;
+    btnLoadSample.innerHTML = '<span class="material-symbols-outlined text-sm">download</span> 1-Click Load Sample Cohort (60 Cases)';
+  }
+});
+
+btnTrain.addEventListener('click', async () => {
+  if (!currentCsvContent) return;
+
+  const epochs = parseInt(document.getElementById('select-epochs').value, 10);
+  const progressDiv = document.getElementById('training-progress');
+  const progressStep = document.getElementById('progress-step');
+  const progressBar = document.getElementById('progress-bar');
+  const progressTimer = document.getElementById('progress-timer');
+  const btnText = document.getElementById('btn-train-text');
+  const resultsSection = document.getElementById('results-section');
+
+  btnTrain.disabled = true;
+  btnText.textContent = 'Training in Progress...';
+  progressDiv.classList.remove('hidden');
+  resultsSection.classList.add('hidden');
+
+  let startTime = Date.now();
+  const timerInterval = setInterval(() => {
+    progressTimer.textContent = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+  }, 100);
+
+  setTimeout(() => {
+    progressStep.textContent = '1/3 Preprocessing data: StandardScaler & PCA-6 encoding...';
+    progressBar.style.width = '35%';
+  }, 300);
+
+  setTimeout(() => {
+    progressStep.textContent = '2/3 Training fresh 6-qubit Quantum VQC (73 parameters)...';
+    progressBar.style.width = '65%';
+  }, 900);
+
+  try {
+    const res = await fetch(`/custom-dataset-train?epochs=${epochs}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/csv' },
+      body: currentCsvContent
+    });
+
+    clearInterval(timerInterval);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Training failed');
+
+    progressBar.style.width = '100%';
+    progressStep.textContent = '3/3 Evaluating held-out test split & generating comparative metrics!';
+
+    setTimeout(() => {
+      progressDiv.classList.add('hidden');
+      btnTrain.disabled = false;
+      btnText.textContent = 'Retrain Models';
+      displayResults(data);
+    }, 400);
+
+  } catch (err) {
+    clearInterval(timerInterval);
+    progressDiv.classList.add('hidden');
+    btnTrain.disabled = false;
+    btnText.textContent = 'Train Models On-Demand';
+    alert('Training Error: ' + err.message);
+  }
+});
+
+function displayResults(data) {
+  const rs = document.getElementById('results-section');
+  rs.classList.remove('hidden');
+  rs.scrollIntoView({ behavior: 'smooth' });
+
+  const ds = data.dataset_summary;
+  document.getElementById('dataset-summary-text').textContent = 
+    `Dataset: ${ds.total_samples} total cases | Train split: ${ds.train_samples} | Held-out test split: ${ds.test_samples} | Features: ${ds.features_detected} | Target: "${ds.target_column}" | Epochs: ${data.epochs_trained}`;
+
+  const verdictChip = document.getElementById('verdict-chip');
+  const verdict = data.comparison.verdict;
+  const accDelta = (data.comparison.accuracy_delta >= 0 ? '+' : '') + (data.comparison.accuracy_delta * 100).toFixed(2) + '%';
+
+  verdictChip.className = "px-4 py-2 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#1A1608] border border-[#D4AF37]/50 text-[#F5D77F] flex items-center gap-2";
+  verdictChip.innerHTML = `<span class="material-symbols-outlined text-sm">biotech</span> ${verdict} (&Delta;Acc: ${accDelta})`;
+
+  const caveatEl = document.getElementById('caveat-banner');
+  if (data.comparison.caveat) {
+    caveatEl.classList.remove('hidden');
+    caveatEl.innerHTML = `<span class="material-symbols-outlined text-amber-400 text-sm flex-shrink-0">warning</span> <span>${data.comparison.caveat}</span>`;
+  } else {
+    caveatEl.classList.add('hidden');
+  }
+
+  // Control A
+  const qa = data.control_a_quantum;
+  document.getElementById('qa-time').textContent = `${qa.training_time_seconds.toFixed(2)}s`;
+  document.getElementById('qa-acc').textContent = `${(qa.test_accuracy * 100).toFixed(1)}%`;
+  document.getElementById('qa-auc').textContent = qa.test_auc !== null ? qa.test_auc.toFixed(3) : 'N/A';
+  document.getElementById('qa-sens').textContent = `${(qa.test_sensitivity * 100).toFixed(1)}%`;
+  document.getElementById('qa-spec').textContent = `${(qa.test_specificity * 100).toFixed(1)}%`;
+  document.getElementById('qa-tn').textContent = `${qa.confusion_matrix.tn} (TN)`;
+  document.getElementById('qa-fp').textContent = `${qa.confusion_matrix.fp} (FP)`;
+  document.getElementById('qa-fn').textContent = `${qa.confusion_matrix.fn} (FN)`;
+  document.getElementById('qa-tp').textContent = `${qa.confusion_matrix.tp} (TP)`;
+
+  // Control B
+  const cb = data.control_b_classical;
+  document.getElementById('cb-time').textContent = `${cb.training_time_seconds.toFixed(2)}s`;
+  document.getElementById('cb-acc').textContent = `${(cb.test_accuracy * 100).toFixed(1)}%`;
+  document.getElementById('cb-auc').textContent = cb.test_auc !== null ? cb.test_auc.toFixed(3) : 'N/A';
+  document.getElementById('cb-sens').textContent = `${(cb.test_sensitivity * 100).toFixed(1)}%`;
+  document.getElementById('cb-spec').textContent = `${(cb.test_specificity * 100).toFixed(1)}%`;
+  document.getElementById('cb-tn').textContent = `${cb.confusion_matrix.tn} (TN)`;
+  document.getElementById('cb-fp').textContent = `${cb.confusion_matrix.fp} (FP)`;
+  document.getElementById('cb-fn').textContent = `${cb.confusion_matrix.fn} (FN)`;
+  document.getElementById('cb-tp').textContent = `${cb.confusion_matrix.tp} (TP)`;
+
+  document.getElementById('comparative-interpretation').innerHTML = `
+    Across this on-demand training run on <strong>${currentFileName || 'custom dataset'}</strong>, Control A (Hybrid Quantum VQC) achieved 
+    <strong>${(qa.test_accuracy * 100).toFixed(1)}% test accuracy</strong> (ROC-AUC: ${qa.test_auc ? qa.test_auc.toFixed(3) : 'N/A'}) in ${qa.training_time_seconds.toFixed(2)}s, 
+    while parameter-matched Control B (Classical MLP) achieved <strong>${(cb.test_accuracy * 100).toFixed(1)}% test accuracy</strong> (ROC-AUC: ${cb.test_auc ? cb.test_auc.toFixed(3) : 'N/A'}) in ${cb.training_time_seconds.toFixed(2)}s. 
+    Both models operate with exactly <strong>73 parameters</strong>. All data was processed ephemerally in volatile RAM and purged upon response completion.
+  `;
+}
+</script>
+</body>
+</html>

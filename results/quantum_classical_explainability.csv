@@ -1,0 +1,7 @@
+Feature,Description,Classical_SHAP_Raw,Classical_Importance_Pct,Classical_Rank,Quantum_Sensitivity_Raw,Quantum_Importance_Pct,Quantum_Rank
+PC1,PC1 (Overall Nuclear Size/Perimeter/Area),0.367069,70.38,1,0.490815,46.52,1
+PC2,PC2 (Nuclear Shape Concavity/Compactness),0.078502,15.05,2,0.284045,26.92,2
+PC3,PC3 (Texture/Smoothness Variation),0.023648,4.53,4,0.093126,8.83,4
+PC4,PC4 (Symmetry/Fractal Dimension),0.021005,4.03,5,0.050193,4.76,5
+PC5,PC5 (Local Extreme Boundary Irregularities),0.024095,4.62,3,0.098271,9.31,3
+PC6,PC6 (Sub-cellular Texture Coarseness),0.00724,1.39,6,0.038563,3.66,6

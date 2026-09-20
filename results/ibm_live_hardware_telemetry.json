@@ -1,0 +1,41 @@
+{
+  "live_connection_verified": true,
+  "authenticated_channel": "ibm_quantum_platform",
+  "instance_crn": "crn:v1:bluemix:public:quantum-computing:us-east:a/7e02914abe0044c8bb36e1d94576eb1f:c445ecf8-6c21-4620-8092-3c4ab5968338::",
+  "backend_name": "ibm_fez",
+  "num_qubits": 156,
+  "processor_type": "IBM Heron r2 (Superconducting Transmon)",
+  "operational": true,
+  "pending_jobs": 5,
+  "status_msg": "active",
+  "live_calibration_metrics": {
+    "t1_us": {
+      "median": 133.14,
+      "mean": 134.58,
+      "min": 1.68,
+      "max": 277.7
+    },
+    "t2_us": {
+      "median": 99.14,
+      "mean": 103.72,
+      "min": 5.07,
+      "max": 289.63
+    },
+    "single_qubit_sx_error": {
+      "median": 0.000318,
+      "mean": 0.00685,
+      "min": 0.000112,
+      "max": 1.0
+    },
+    "two_qubit_cz_error": {
+      "median": 0.002886,
+      "mean": 0.032987,
+      "min": 0.001347,
+      "max": 1.0
+    },
+    "readout_error": {
+      "median": 0.009888,
+      "mean": 0.025136
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "dataset": "WDBC",
+  "cohort_size": 114,
+  "perturbation_protocol": "Independent Gaussian noise scaled to feature population std dev",
+  "summary": [
+    {
+      "model": "Control A (Hybrid Quantum VQC)",
+      "model_short": "Control A (Quantum)",
+      "perturbation_pct": 1,
+      "mean_abs_delta_prob": 0.0006,
+      "std_abs_delta_prob": 0.0018,
+      "max_abs_delta_prob": 0.0117,
+      "n_class_flipped": 0,
+      "total_patients": 114,
+      "class_flip_rate_pct": 0.0
+    },
+    {
+      "model": "Control A (Hybrid Quantum VQC)",
+      "model_short": "Control A (Quantum)",
+      "perturbation_pct": 5,
+      "mean_abs_delta_prob": 0.0024,
+      "std_abs_delta_prob": 0.006,
+      "max_abs_delta_prob": 0.0395,
+      "n_class_flipped": 0,
+      "total_patients": 114,
+      "class_flip_rate_pct": 0.0
+    },
+    {
+      "model": "Control A (Hybrid Quantum VQC)",
+      "model_short": "Control A (Quantum)",
+      "perturbation_pct": 10,
+      "mean_abs_delta_prob": 0.0092,
+      "std_abs_delta_prob": 0.0267,
+      "max_abs_delta_prob": 0.1731,
+      "n_class_flipped": 2,
+      "total_patients": 114,
+      "class_flip_rate_pct": 1.75
+    },
+    {
+      "model": "Control B (Classical MLP Baseline)",
+      "model_short": "Control B (Classical)",
+      "perturbation_pct": 1,
+      "mean_abs_delta_prob": 0.0006,
+      "std_abs_delta_prob": 0.0016,
+      "max_abs_delta_prob": 0.0112,
+      "n_class_flipped": 0,
+      "total_patients": 114,
+      "class_flip_rate_pct": 0.0
+    },
+    {
+      "model": "Control B (Classical MLP Baseline)",
+      "model_short": "Control B (Classical)",
+      "perturbation_pct": 5,
+      "mean_abs_delta_prob": 0.0027,
+      "std_abs_delta_prob": 0.0058,
+      "max_abs_delta_prob": 0.0298,
+      "n_class_flipped": 0,
+      "total_patients": 114,
+      "class_flip_rate_pct": 0.0
+    },
+    {
+      "model": "Control B (Classical MLP Baseline)",
+      "model_short": "Control B (Classical)",
+      "perturbation_pct": 10,
+      "mean_abs_delta_prob": 0.0094,
+      "std_abs_delta_prob": 0.0245,
+      "max_abs_delta_prob": 0.1415,
+      "n_class_flipped": 1,
+      "total_patients": 114,
+      "class_flip_rate_pct": 0.88
+    }
+  ]
+}

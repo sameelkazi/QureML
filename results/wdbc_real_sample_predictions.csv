@@ -1,0 +1,11 @@
+Patient_ID,Mean_Radius,Mean_Texture,Worst_Area,Worst_Conc_Pts,Malignancy_Prob,True_Pathology,Pred_tau_050,Pred_tau_010,Outcome_tau_050
+PT-WDBC-001,20.94,23.56,2010.0,0.2105,0.9981,Malignant,Malignant,Malignant (Alert),True Positive
+PT-WDBC-003,14.42,19.77,826.4,0.1565,0.7606,Malignant,Malignant,Malignant (Alert),True Positive
+PT-WDBC-010,16.25,19.51,939.7,0.1775,0.9793,Malignant,Malignant,Malignant (Alert),True Positive
+PT-WDBC-012,19.16,26.6,1724.0,0.1872,0.9976,Malignant,Malignant,Malignant (Alert),True Positive
+PT-WDBC-023,16.13,17.88,1261.0,0.1864,0.9948,Malignant,Malignant,Malignant (Alert),True Positive
+PT-WDBC-000,11.41,10.82,510.5,0.0896,0.0013,Benign,Benign,Benign,True Negative
+PT-WDBC-002,16.17,16.07,861.5,0.1251,0.1471,Benign,Benign,Malignant (Alert),True Negative
+PT-WDBC-004,13.38,30.72,705.6,0.0776,0.4042,Benign,Benign,Malignant (Alert),True Negative
+PT-WDBC-008,11.6,12.84,512.5,0.0845,0.0014,Benign,Benign,Benign,True Negative
+PT-WDBC-013,11.57,19.04,520.5,0.0666,0.0023,Benign,Benign,Benign,True Negative

@@ -1,0 +1,4 @@
+comparison,c1,c2,mean_diff,wilcoxon_w,p_raw,rank,holm_alpha,holm_sig
+Control A vs. Control D,A,D,-0.009910192147034258,6.0,0.02734375,1,0.016666666666666666,False
+Control A vs. Control C,A,C,0.02303675856307432,7.0,0.037109375,2,0.025,False
+Control A vs. Control B,A,B,0.016019214703425176,9.0,0.064453125,3,0.05,False

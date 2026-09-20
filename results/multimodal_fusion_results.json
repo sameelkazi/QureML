@@ -1,0 +1,50 @@
+{
+  "framing_note": "Synthetic label-matched pairing for architectural proof-of-concept; not real paired patient records.",
+  "test_n": 114,
+  "tabular_only": {
+    "accuracy": 0.9824561403508771,
+    "auc_roc": 0.9983465608465609,
+    "sensitivity": 0.9523809523809523,
+    "specificity": 1.0,
+    "f1": 0.975609756097561,
+    "tp": 40,
+    "tn": 72,
+    "fp": 0,
+    "fn": 2
+  },
+  "imaging_only_full_test": {
+    "accuracy": 0.8333333333333334,
+    "auc_roc": 0.8508771929824561,
+    "sensitivity": 0.5714285714285714,
+    "specificity": 0.9298245614035088,
+    "f1": 0.6486486486486487,
+    "tp": 24,
+    "tn": 106,
+    "fp": 8,
+    "fn": 18
+  },
+  "imaging_only_paired_test": {
+    "accuracy": 0.7631578947368421,
+    "auc_roc": 0.7946428571428571,
+    "sensitivity": 0.5476190476190477,
+    "specificity": 0.8888888888888888,
+    "f1": 0.6301369863013698,
+    "tp": 23,
+    "tn": 64,
+    "fp": 8,
+    "fn": 19
+  },
+  "multimodal_fusion": {
+    "accuracy": 0.9385964912280702,
+    "auc_roc": 0.9847883597883598,
+    "sensitivity": 0.9047619047619048,
+    "specificity": 0.9583333333333334,
+    "f1": 0.9156626506024096,
+    "tp": 38,
+    "tn": 69,
+    "fp": 3,
+    "fn": 4
+  },
+  "fusion_head_params": 641,
+  "joint_embedding_dim": 38
+}

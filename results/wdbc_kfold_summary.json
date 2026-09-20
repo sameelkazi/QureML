@@ -1,0 +1,45 @@
+{
+  "experiment": "Stratified 10-Fold Cross-Validation on WDBC (Control A vs Control B)",
+  "dataset": "Wisconsin Diagnostic Breast Cancer (569 samples, 30 features)",
+  "n_splits": 10,
+  "control_a": {
+    "auc_mean": 0.9916,
+    "auc_std": 0.0135,
+    "accuracy_mean": 0.9596,
+    "accuracy_std": 0.0299,
+    "sensitivity_mean": 0.9431,
+    "sensitivity_std": 0.0738,
+    "specificity_mean": 0.9693,
+    "specificity_std": 0.0359,
+    "f1_mean": 0.9447,
+    "f1_std": 0.0428,
+    "brier_mean": 0.0285,
+    "brier_std": 0.019
+  },
+  "control_b": {
+    "auc_mean": 0.9947,
+    "auc_std": 0.0073,
+    "accuracy_mean": 0.9702,
+    "accuracy_std": 0.0287,
+    "sensitivity_mean": 0.9574,
+    "sensitivity_std": 0.057,
+    "specificity_mean": 0.9776,
+    "specificity_std": 0.0342,
+    "f1_mean": 0.9596,
+    "f1_std": 0.0399,
+    "brier_mean": 0.0207,
+    "brier_std": 0.0187
+  },
+  "headline_locked_split_comparison": {
+    "locked_split_control_a": {
+      "auc": 0.9912,
+      "accuracy": 0.9649
+    },
+    "kfold_mean_control_a": {
+      "auc": 0.9916,
+      "accuracy": 0.9596
+    },
+    "consistency_note": "Cross-validation confirms the headline locked 80/20 test split is within 1 standard deviation of the 10-fold distribution."
+  },
+  "figure_url": "/paper_figures/fig_wdbc_kfold_cv.png"
+}

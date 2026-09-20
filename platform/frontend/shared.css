@@ -1,0 +1,1158 @@
+/* ---------------------------------------------------------------------------
+   QUREML CLINICAL PLATFORM — LUXURY BLACK · GOLDEN · WHITE DESIGN SYSTEM
+   SIH26139 | SPIT Mumbai & Egreen Quanta
+   --------------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-dark: #F5F3EF;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAF8F2;
+  --text-white: #0A0A0A;
+  --text-muted: #2A2A2A;
+  --text-subtle: #525B64;
+  
+  /* Luxurious Gold Palette in Light Brutalism */
+  --gold-primary: #D4AF37;
+  --gold-light: #F5D77F;
+  --gold-pale: #FFF4D0;
+  --gold-dark: #B8860B;
+  --gold-deep: #7D5700;
+  --gold-glow: rgba(212, 175, 55, 0.4);
+  --gold-border: #000000;
+  --gold-border-bright: #000000;
+
+  --font-kanit: "Kanit", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-inter: "Inter", system-ui, -apple-system, sans-serif;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-dark) !important;
+  color: var(--text-white) !important;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  background-color: var(--bg-dark) !important;
+  color: var(--text-white) !important;
+  font-family: var(--font-kanit);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
+  background-image: radial-gradient(#C8C3B8 1.2px, transparent 1.2px) !important;
+  background-size: 22px 22px !important;
+}
+
+/* Subtle background ambient radial gradient */
+.page-bg-mesh {
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.09) 0%, transparent 60%),
+    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 40%);
+}
+
+/* Luxury Gold Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0C0C0C;
+}
+::-webkit-scrollbar-thumb {
+  background: #231E12;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37;
+}
+
+/* Typography Helpers (True Vibrant Gold Light Theme) */
+.hero-heading {
+  background: linear-gradient(180deg, #0A0A0A 0%, #1A1A1A 60%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #0A0A0A !important;
+  font-weight: 900 !important;
+}
+
+.gold-gradient-text {
+  color: #C59B27 !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  font-weight: 900 !important;
+}
+
+.silver-gradient-text {
+  background: linear-gradient(180deg, #0A0A0A 0%, #2D3748 55%, #4A5568 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #2D3748 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   GLOBAL LUXURY NAVBAR (MATCHING HOME PAGE'S SLEEK ELEGANCE)
+   --------------------------------------------------------------------------- */
+.global-nav-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  max-width: 100vw;
+  background: #FFFFFF !important;
+  border-bottom: 3.5px solid #000000 !important;
+  box-shadow: 0 4px 0 #000000 !important;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.global-nav-container {
+  width: 100%;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1440px) {
+  .global-nav-container {
+    padding: 0.75rem 1.5rem;
+    gap: 1.25rem;
+  }
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-brand-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 0px !important;
+  border: 3px solid #000000 !important;
+  background: #D4AF37 !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000 !important;
+  transition: transform 0.25s ease;
+}
+
+.nav-brand:hover .nav-brand-logo {
+  transform: scale(1.05) rotate(5deg);
+}
+
+.nav-brand-name {
+  font-family: var(--font-kanit);
+  font-size: 1.3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: #000000 !important;
+  line-height: 1;
+}
+
+.nav-brand-name span {
+  color: var(--gold-primary);
+}
+
+.nav-brand-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: #8C6D00 !important;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Center Nav Links Row */
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.35rem, 0.8vw, 1.15rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link-item {
+  position: relative;
+  color: #1A1A1A !important;
+  font-family: var(--font-kanit);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  font-size: clamp(0.68rem, 0.78vw, 0.82rem);
+  padding: 0.35rem 0.15rem;
+  display: inline-block;
+  transition: color 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-link-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background: #000000;
+  border-radius: 0px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.28s var(--ease-out-cubic), opacity 0.2s ease;
+  opacity: 0;
+}
+
+.nav-link-item:hover {
+  color: #B8860B !important;
+  opacity: 1;
+}
+
+.nav-link-item:hover::after {
+  transform: scaleX(1);
+  opacity: 0.85;
+}
+
+.nav-link-item.active {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+.nav-link-item.active::after {
+  transform: scaleX(1);
+  opacity: 1;
+  height: 3.5px;
+  background: #000000 !important;
+  box-shadow: 0 2px 0 #D4AF37 !important;
+}
+
+/* Equal-Sized Navbar Action Buttons (Neo-Brutalist) */
+.nav-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 96px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  border-radius: 0px !important;
+  border: 3px solid #000000 !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 900 !important;
+  font-size: 0.78rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+.nav-action-btn:hover {
+  transform: translate(1px, 1px) !important;
+  box-shadow: 2px 2px 0px #000000 !important;
+}
+
+.nav-action-btn:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0px #000000 !important;
+}
+
+.nav-action-btn.btn-white {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+}
+.nav-action-btn.btn-white:hover {
+  background: #F4F1EA !important;
+  color: #000000 !important;
+}
+
+.nav-action-btn.btn-gold {
+  background: #D4AF37 !important;
+  color: #000000 !important;
+}
+.nav-action-btn.btn-gold:hover {
+  background: #E5C158 !important;
+  color: #000000 !important;
+}
+
+/* Signature Gold Button (Neo-Brutalist) */
+.gold-btn,
+.brutalist-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-radius: 0px !important;
+  border: 3.5px solid #000000 !important;
+  background: #D4AF37 !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+  color: #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  padding: 0.75rem 1.85rem;
+  font-size: 0.85rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gold-btn:hover,
+.brutalist-btn-gold:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000 !important;
+  background: #E5C158 !important;
+}
+
+.gold-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Ghost / Secondary Button (Neo-Brutalist) */
+.live-project-btn,
+.brutalist-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0px !important;
+  border: 3px solid #000000 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.8rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.live-project-btn:hover,
+.brutalist-btn-ghost:hover {
+  background: #F4F1EA !important;
+  color: #000000 !important;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000 !important;
+}
+
+.live-project-btn.gold {
+  background: #FFFDF0 !important;
+  border-color: #000000 !important;
+  color: #000000 !important;
+}
+
+.live-project-btn.gold:hover {
+  background: #D4AF37 !important;
+  color: #000000 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   LIGHT THEME NEO-BRUTALIST CONTAINERS & CARDS
+   --------------------------------------------------------------------------- */
+.glass-panel,
+.brutalist-panel {
+  background: #FFFFFF !important;
+  border: 3.5px solid #000000 !important;
+  border-radius: 0px !important;
+  box-shadow: 6px 6px 0px #000000, 12px 12px 0px #D4AF37 !important;
+  position: relative;
+  color: #0A0A0A !important;
+}
+
+.glass-panel-subtle {
+  background: #FAF8F5 !important;
+  border: 3px solid #000000 !important;
+  border-radius: 0px !important;
+  box-shadow: 5px 5px 0px #000000 !important;
+  color: #0A0A0A !important;
+}
+
+.glass-card-interactive {
+  background: #FFFFFF !important;
+  border: 3.5px solid #000000 !important;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #000000, 8px 8px 0px #D4AF37 !important;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  color: #000000 !important;
+}
+
+.glass-card-interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000, 12px 12px 0px #D4AF37 !important;
+}
+
+.glass-card-interactive.active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000, 5px 5px 0px #D4AF37 !important;
+  outline: 2.5px solid #000000 !important;
+  background: #FFFCF2 !important;
+}
+
+/* Metric / Telemetry Chips */
+.metric-chip {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 0px !important;
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  color: #000000;
+  box-shadow: 2px 2px 0px #000000;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.gold-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #000000;
+  background: #D4AF37;
+  border: 2px solid #000000;
+  border-radius: 0px !important;
+  box-shadow: 2px 2px 0px #000000;
+  padding: 0.25rem 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Input Fields (Universal Default) */
+input[type="number"], input[type="text"], input[type="search"], select, textarea {
+  background: #FFFFFF !important;
+  border: 3px solid #000000 !important;
+  color: #000000 !important;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border-radius: 0px !important;
+  padding: 0.65rem 1rem !important;
+  box-shadow: 3px 3px 0 #000000 !important;
+  transition: all 0.2s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #000000 !important;
+  box-shadow: 2px 2px 0 #000000, 4px 4px 0 #D4AF37 !important;
+  outline: none !important;
+}
+
+/* Clean Spinner */
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000000;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin .7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Global Light Neo-Brutalist Footer */
+.site-footer {
+  background: #FFFFFF !important;
+  border-top: 3.5px solid #000000 !important;
+  box-shadow: 0 -4px 0 #000000 !important;
+  padding: 3rem 1.5rem 2rem 1.5rem;
+  margin-top: auto;
+  color: #1A1A1A !important;
+}
+
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  font-size: 0.82rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #1A1A1A !important;
+}
+
+.footer-inner a {
+  color: #000000 !important;
+  text-decoration: underline;
+  font-weight: 800;
+}
+.footer-inner a:hover {
+  color: #D4AF37 !important;
+}
+
+/* ===========================================================================
+   LIGHT THEME NEO-BRUTALISM TAILWIND & COLOR OVERRIDES
+   =========================================================================== */
+.bg-background, .bg-surface {
+  background-color: #F5F3EF !important;
+}
+.bg-surface-container-lowest {
+  background-color: #FFFFFF !important;
+  border-color: #000000 !important;
+}
+.bg-surface-container-low, .bg-surface-container {
+  background-color: #FAF8F5 !important;
+  border-color: #000000 !important;
+}
+.text-on-surface {
+  color: #000000 !important;
+}
+.text-on-surface-variant {
+  color: #2D3748 !important;
+}
+.text-tertiary {
+  color: #4A5568 !important;
+}
+.text-white {
+  color: #000000 !important;
+}
+.text-\[\#D7E2EA\],
+.text-\[\#8A9BA8\],
+.text-slate-400,
+.text-slate-300,
+.text-gray-400,
+.text-gray-300 {
+  color: #3B4252 !important;
+}
+.text-\[\#F5D77F\] {
+  color: #8C6D00 !important;
+  font-weight: 800 !important;
+}
+
+.bg-\[\#0C0C0C\],
+.bg-\[\#141414\],
+.bg-\[\#181818\],
+.bg-\[\#0E0E0E\],
+.bg-\[\#080808\],
+.bg-\[\#121212\],
+.bg-black,
+.bg-black\/30,
+.bg-black\/40,
+.bg-black\/50,
+.bg-white\/5 {
+  background-color: #FAF8F5 !important;
+  color: #000000 !important;
+}
+
+[class*="border-white"] {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ===========================================================================
+   NEO-BRUTALIST QUANTUM CYBERPUNK DESIGN SYSTEM (DASHBOARD SUITE)
+   =========================================================================== */
+
+/* Exact Brutalist Input Container */
+.brutalist-container {
+  position: relative;
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.brutalist-input {
+  width: 100%;
+  padding: 12px 14px !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #000000 !important;
+  background-color: #FFFFFF !important;
+  border: 3.5px solid #000000 !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0px !important;
+  outline: none !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  box-shadow: 4px 4px 0 #000000, 8px 8px 0 #D4AF37 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes focus-pulse {
+  0%, 100% { border-color: #000000; }
+  50% { border-color: #D4AF37; }
+}
+
+@keyframes glitch-slice {
+  0% { clip-path: inset(0 100% 0 0); }
+  10% { clip-path: inset(0 5% 0 0); }
+  20% { clip-path: inset(0 80% 0 0); }
+  30% { clip-path: inset(0 10% 0 0); }
+  40% { clip-path: inset(0 50% 0 0); }
+  50% { clip-path: inset(0 30% 0 0); }
+  60% { clip-path: inset(0 70% 0 0); }
+  70% { clip-path: inset(0 15% 0 0); }
+  80% { clip-path: inset(0 90% 0 0); }
+  90% { clip-path: inset(0 5% 0 0); }
+  100% { clip-path: inset(0 100% 0 0); }
+}
+
+.brutalist-input:focus {
+  animation: focus-pulse 4s cubic-bezier(0.25, 0.8, 0.25, 1) infinite,
+    glitch 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) infinite !important;
+  box-shadow: 4px 4px 0 #000000, 8px 8px 0 #D4AF37 !important;
+}
+
+.brutalist-label {
+  position: absolute;
+  left: -2px;
+  top: -26px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFFFFF;
+  background-color: #000000;
+  border: 2px solid #000000;
+  padding: 3px 8px;
+  transform: rotate(-1deg);
+  z-index: 2;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.brutalist-input:focus + .brutalist-label {
+  transform: rotate(0deg) scale(1.05);
+  background-color: #D4AF37;
+  color: #000000;
+  border-color: #000000;
+}
+
+.smooth-type {
+  position: relative;
+  overflow: hidden;
+}
+
+.smooth-type::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.smooth-type:focus::before {
+  opacity: 1;
+  animation: type-gradient 2s linear infinite;
+}
+
+@keyframes type-gradient {
+  0% { background-position: 300px 0; }
+  100% { background-position: 0 0; }
+}
+
+.brutalist-input::placeholder {
+  color: #888888;
+  transition: color 0.3s ease;
+}
+
+.brutalist-input:focus::placeholder {
+  color: transparent;
+}
+
+/* Fallback for native inputs to follow Brutalist rule */
+input[type="text"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  border-radius: 0px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* ===========================================================================
+   NEO-BRUTALIST PANELS, BUTTONS & WORKSTATION COMPONENTS
+   =========================================================================== */
+
+/* Brutalist Glass Panels & Cards */
+.glass-panel,
+.brutalist-panel {
+  background: #FFFFFF !important;
+  border: 3.5px solid #000000 !important;
+  outline: none !important;
+  border-radius: 0px !important;
+  box-shadow: 6px 6px 0px #000000, 12px 12px 0px #D4AF37 !important;
+  color: #0A0A0A !important;
+}
+
+.glass-panel-subtle {
+  background: #FAF8F5 !important;
+  border: 3px solid #000000 !important;
+  border-radius: 0px !important;
+  box-shadow: 5px 5px 0px #000000 !important;
+  color: #0A0A0A !important;
+}
+
+/* Brutalist Signature Buttons */
+.gold-btn,
+.brutalist-btn-gold {
+  border-radius: 0px !important;
+  border: 3.5px solid #000000 !important;
+  background: #D4AF37 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  padding: 0.75rem 1.85rem !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+}
+
+.gold-btn:hover,
+.brutalist-btn-gold:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px #000000 !important;
+  background: #E5C158 !important;
+}
+
+.live-project-btn,
+.brutalist-btn-ghost {
+  border-radius: 0px !important;
+  border: 3px solid #000000 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 0.65rem 1.4rem !important;
+  font-size: 0.8rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.live-project-btn:hover,
+.brutalist-btn-ghost:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px #000000 !important;
+  background: #F4F1EA !important;
+  color: #000000 !important;
+}
+
+/* Brutalist Category Filter Tabs */
+.filter-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.filter-tab-btn {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 0.45rem 1.15rem !important;
+  border-radius: 0px !important;
+  border: 2.5px solid #000000 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  white-space: nowrap !important;
+}
+
+.filter-tab-btn:hover {
+  color: #000000 !important;
+  background: #F4F1EA !important;
+  transform: translate(1px, 1px) !important;
+  box-shadow: 2px 2px 0px #000000 !important;
+}
+
+.filter-tab-btn.active {
+  background: #D4AF37 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  border-color: #000000 !important;
+  box-shadow: 3px 3px 0px #000000, 6px 6px 0px #000000 !important;
+  transform: translate(1px, 1px) !important;
+}
+
+/* Brutalist Patient Archetype Cards */
+.preset-card,
+.glass-card-interactive {
+  background: #FFFFFF !important;
+  border: 3.5px solid #000000 !important;
+  border-radius: 0px !important;
+  padding: 1.25rem 1.4rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  position: relative !important;
+  box-shadow: 5px 5px 0px #000000, 10px 10px 0px #D4AF37 !important;
+  flex: 1 1 280px !important;
+  color: #000000 !important;
+}
+
+.preset-card:hover,
+.glass-card-interactive:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 7px 7px 0px #000000, 14px 14px 0px #D4AF37 !important;
+}
+
+.preset-card.active,
+.glass-card-interactive.active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 3px 3px 0px #000000, 6px 6px 0px #D4AF37 !important;
+  outline: 2.5px solid #000000 !important;
+}
+
+.preset-card.malignant.active {
+  outline-color: #000000 !important;
+  box-shadow: 3px 3px 0px #000000, 6px 6px 0px #EF4444 !important;
+  background: #FFF5F5 !important;
+}
+
+.preset-card.benign.active {
+  outline-color: #000000 !important;
+  box-shadow: 3px 3px 0px #000000, 6px 6px 0px #10B981 !important;
+  background: #F0FDF4 !important;
+}
+
+.preset-card.borderline.active {
+  outline-color: #000000 !important;
+  box-shadow: 3px 3px 0px #000000, 6px 6px 0px #F59E0B !important;
+  background: #FFFBEB !important;
+}
+
+/* Brutalist Rotated Sticker Badges */
+.brutalist-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2.5px solid #000000;
+  background: #000000;
+  color: #FFFFFF;
+  padding: 0.35rem 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transform: rotate(-1deg);
+  box-shadow: 3px 3px 0px #D4AF37;
+  border-radius: 0px !important;
+}
+
+/* Hide native number spinners for ultra-clean brutalist typography */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Universal Neo-Brutalist Shape Overrides (Dashboard pages only) */
+.rounded-xl,
+.rounded-2xl,
+.rounded-3xl,
+.rounded-lg,
+.rounded-md {
+  border-radius: 0px !important;
+}
+
+/* Brutalist Select Dropdowns */
+select {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 3px solid #000000 !important;
+  border-radius: 0px !important;
+  padding: 0.6rem 1.2rem !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+  outline: none !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+select:focus {
+  border-color: #000000 !important;
+  box-shadow: 2px 2px 0px #000000, 4px 4px 0px #D4AF37 !important;
+}
+
+/* Brutalist File Inputs */
+input[type="file"]::file-selector-button {
+  border: 2.5px solid #000000 !important;
+  border-radius: 0px !important;
+  background: #D4AF37 !important;
+  color: #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  padding: 0.5rem 1.1rem !important;
+  cursor: pointer !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  margin-right: 1rem !important;
+  transition: all 0.2s ease !important;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #FFF5D0 !important;
+  transform: translate(1px, 1px) !important;
+  box-shadow: 2px 2px 0px #000000 !important;
+}
+
+/* Brutalist File Drop Zones */
+#drop-zone {
+  border-radius: 0px !important;
+  border: 3px dashed #000000 !important;
+  background: #FFFFFF !important;
+  box-shadow: 5px 5px 0px #000000, 10px 10px 0px rgba(212, 175, 55, 0.4) !important;
+  transition: all 0.2s ease !important;
+}
+
+#drop-zone:hover {
+  border-style: solid !important;
+  background: #FAF8F5 !important;
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 7px 7px 0px #000000, 14px 14px 0px #D4AF37 !important;
+}
+
+/* Brutalist Progress Containers */
+#training-progress,
+.progress-bar-container {
+  border-radius: 0px !important;
+  border: 3px solid #000000 !important;
+  background: #FFFFFF !important;
+  box-shadow: 4px 4px 0px #000000, 8px 8px 0px #D4AF37 !important;
+}
+
+/* Brutalist Status Banners */
+#api-status {
+  border-radius: 0px !important;
+  border: 2.5px solid #000000 !important;
+  background: #FFFFFF !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+}
+
+/* Brutalist Data Tables */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+  border: 3.5px solid #000000 !important;
+  box-shadow: 6px 6px 0px #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+th {
+  background: #000000 !important;
+  color: #D4AF37 !important;
+  border-bottom: 3.5px solid #000000 !important;
+  padding: 10px 14px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  font-size: 0.75rem !important;
+}
+
+td {
+  background: #FFFFFF !important;
+  color: #0A0A0A !important;
+  border-bottom: 1.5px solid #000000 !important;
+  padding: 10px 14px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+}
+
+tr:hover td {
+  background: #FAF7EF !important;
+  color: #000000 !important;
+}
+
+/* Research Figures Gallery Cards & TOC (architecture.html) */
+.gallery-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2D9C8 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  color: #0A0A0A !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.gallery-card:hover {
+  border-color: #D4AF37 !important;
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.15) !important;
+}
+
+.gallery-card img {
+  background: #FFFFFF !important;
+  border: 1.5px solid #EAE5DC !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+}
+
+.gallery-card .border-outline-variant,
+.gallery-card .border-outline-variant\/60 {
+  border-color: #EAE5DC !important;
+}
+
+.gallery-card .bg-surface-container-low,
+.gallery-card .bg-surface-container-low\/60,
+.gallery-card .bg-surface-container-lowest {
+  background: #FAF8F5 !important;
+  border-color: #EAE5DC !important;
+  color: #1A1A1A !important;
+}
+
+.gallery-card .text-on-surface {
+  color: #0A0A0A !important;
+}
+
+.gallery-card .text-on-surface-variant {
+  color: #3B434C !important;
+}
+
+.gallery-card .text-tertiary {
+  color: #5C6773 !important;
+}
+
+.gallery-card .text-primary {
+  color: #B8860B !important;
+}
+
+.gallery-card .bg-primary\/10 {
+  background: #FFFDF0 !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  color: #9E740A !important;
+}
+
+/* Light TOC Navigation Rail */
+.toc-link {
+  color: #333333 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  display: block !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.18s ease !important;
+  text-decoration: none !important;
+}
+
+.toc-link:hover {
+  background: #F5EFE6 !important;
+  color: #000000 !important;
+  border-left-color: #D4AF37 !important;
+}
+
+.toc-link.active {
+  color: #000000 !important;
+  background: #FFF4D0 !important;
+  border-left: 3.5px solid #D4AF37 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Light-themed Eyebrow Pill Badges above Headings */
+.eyebrow-badge,
+.bg-\[\#1A1608\],
+[class*="bg-[#1A1608]"],
+div[class*="rounded-full"][class*="border"],
+span[class*="rounded-full"][class*="border"] {
+  background: #FFFDF2 !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  color: #996515 !important;
+  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.08) !important;
+}
+
+.bg-\[\#1A1608\] .text-\[\#F5D77F\],
+[class*="bg-[#1A1608]"] .text-\[\#F5D77F\],
+.text-\[\#F5D77F\] {
+  color: #996515 !important;
+  font-weight: 700 !important;
+}
+
+.bg-\[\#1A1608\] .bg-\[\#D4AF37\],
+[class*="bg-[#1A1608]"] .bg-\[\#D4AF37\] {
+  background-color: #D4AF37 !important;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.6) !important;
+}
+
+.border-\[\#D4AF37\]\/40,
+.border-\[\#D4AF37\]\/50,
+.border-\[\#D4AF37\]\/30 {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+}
+
+

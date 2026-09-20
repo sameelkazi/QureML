@@ -1,0 +1,4 @@
+regime,auc,accuracy,sensitivity,specificity,f1,brier_score,confusion_matrix,obs_mae,latency_ms,circuits
+Ideal Statevector (Noiseless),0.9983,0.9825,0.9524,1.0,0.9756,0.017,"{'tp': 40, 'tn': 72, 'fp': 0, 'fn': 2}",0.0,1.61,1
+Raw Noisy (IBM Heron Calibrated),0.9987,0.9825,0.9524,1.0,0.9756,0.0188,"{'tp': 40, 'tn': 72, 'fp': 0, 'fn': 2}",0.0908,18.55,1
+ZNE-Mitigated (Mitiq Richardson),0.998,0.9825,0.9524,1.0,0.9756,0.0153,"{'tp': 40, 'tn': 72, 'fp': 0, 'fn': 2}",0.0576,151.48,3

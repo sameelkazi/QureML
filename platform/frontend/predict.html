@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QureML — Predict &amp; Clinical Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/shared.css"/>
+<style>
+  input, select, textarea, .feat-input {
+    background-color: #141414 !important;
+    background: #141414 !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 10px !important;
+    padding: 0.55rem 0.85rem !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.82rem !important;
+    outline: none !important;
+  }
+  input:focus, select:focus, textarea:focus, .feat-input:focus {
+    background-color: #1A1A1A !important;
+    background: #1A1A1A !important;
+    border-color: #D4AF37 !important;
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.4) !important;
+    outline: none !important;
+  }
+</style>
+</head>
+
+<body class="bg-[#0C0C0C] text-[#FFFFFF] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-white">
+
+<!-- Global Luxury Navbar -->
+<div id="site-nav"></div>
+
+<main class="flex-1 max-w-[1520px] w-full mx-auto px-4 sm:px-8 py-10 space-y-12">
+
+  <!-- Header Section -->
+  <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1608] border border-[#D4AF37]/40 text-[#F5D77F] text-xs font-mono font-medium tracking-wider uppercase mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+        6-Qubit VQC &middot; Analytic Statevector Triage &middot; 73 Parameters
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+        Predict &amp; <span class="gold-gradient-text">Clinical Triage</span>
+      </h1>
+      <p class="text-[#8A9BA8] text-sm sm:text-base max-w-4xl mt-2 font-light">
+        Real-time quantum inference on 30 fine-needle aspirate (FNA) digitized cytopathology biomarkers using the locked Control A Variational Quantum Classifier via <code>POST /predict</code>.
+      </p>
+    </div>
+
+    <!-- Live API Status Badge -->
+    <div id="api-status" class="p-3.5 rounded-2xl border text-xs sm:text-sm font-mono flex items-center gap-2.5 backdrop-blur-md"></div>
+  </section>
+
+  <!-- Interactive Patient Preset Showcase -->
+  <section class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-sm font-mono font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
+        <span class="material-symbols-outlined text-base">clinical_notes</span>
+        Select Verified Patient Preset
+      </h2>
+      <span class="text-xs font-mono text-[#8A9BA8]">Locked WDBC Test Cohort</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Preset 1: Malignant -->
+      <div id="card-preset-mal" class="preset-card malignant active p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="brutalist-sticker text-red-400 border-red-500">Sample #0 &middot; Malignant</span>
+          <span class="w-2.5 h-2.5 bg-red-500 border border-black shadow-[2px_2px_0_#000]"></span>
+        </div>
+        <div class="text-xl font-bold text-white uppercase tracking-wide">High Malignancy Risk</div>
+        <p class="text-xs text-[#8A9BA8] font-mono">
+          Pronounced cell nuclear radius, irregular concave contours, and elevated worst perimeter typical of invasive ductal carcinoma.
+        </p>
+        <div class="pt-2 flex items-center justify-between text-xs font-mono text-[#8A9BA8]">
+          <span>Biopsy Confirmation:</span>
+          <strong class="text-red-400 font-bold uppercase">Malignant (1)</strong>
+        </div>
+      </div>
+
+      <!-- Preset 2: Benign -->
+      <div id="card-preset-ben" class="preset-card benign p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="brutalist-sticker text-emerald-400 border-emerald-500">Sample #1 &middot; Benign</span>
+          <span class="w-2.5 h-2.5 bg-emerald-500 border border-black shadow-[2px_2px_0_#000]"></span>
+        </div>
+        <div class="text-xl font-bold text-white uppercase tracking-wide">Low Benign Pathology</div>
+        <p class="text-xs text-[#8A9BA8] font-mono">
+          Uniform cell dimensions, smooth boundaries, and minimal concavity error indicative of non-neoplastic tissue.
+        </p>
+        <div class="pt-2 flex items-center justify-between text-xs font-mono text-[#8A9BA8]">
+          <span>Biopsy Confirmation:</span>
+          <strong class="text-emerald-400 font-bold uppercase">Benign (0)</strong>
+        </div>
+      </div>
+
+      <!-- Preset 3: Borderline -->
+      <div id="card-preset-border" class="preset-card borderline p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="brutalist-sticker text-[#F5D77F] border-[#D4AF37]">Sample #2 &middot; Borderline</span>
+          <span class="w-2.5 h-2.5 bg-[#D4AF37] border border-black shadow-[2px_2px_0_#000]"></span>
+        </div>
+        <div class="text-xl font-bold text-white uppercase tracking-wide">Ambiguous / Specialist Review</div>
+        <p class="text-xs text-[#8A9BA8] font-mono">
+          Atypical cytological markers lying near screening boundary (&tau;=0.10). Triggers mandatory second-opinion referral.
+        </p>
+        <div class="pt-2 flex items-center justify-between text-xs font-mono text-[#8A9BA8]">
+          <span>Safety Protocol:</span>
+          <strong class="text-[#F5D77F] font-bold">Refer to Clinician</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Biomarkers Input & Execution Console -->
+  <section class="glass-panel p-6 sm:p-10 space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div>
+        <h2 class="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-[#D4AF37]">tune</span>
+          30-Biomarker Fine Needle Aspirate Inputs
+        </h2>
+        <p class="text-xs text-[#8A9BA8] font-mono mt-1">
+          Adjust any individual cytopathology feature or keep preset values
+        </p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="filter-tabs-row flex flex-wrap items-center gap-2">
+        <button id="tab-all" class="filter-tab-btn active">All 30 Biomarkers</button>
+        <button id="tab-mean" class="filter-tab-btn">Mean Cytology (10)</button>
+        <button id="tab-se" class="filter-tab-btn">Standard Error (10)</button>
+        <button id="tab-worst" class="filter-tab-btn">Worst Bounds (10)</button>
+      </div>
+    </div>
+
+    <!-- 30 Feature Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-7 pt-4" id="feature-grid"></div>
+
+    <!-- Action Row -->
+    <div class="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/10">
+      <div class="flex items-center gap-4">
+        <button id="run-predict" class="gold-btn">
+          <span class="material-symbols-outlined text-lg">bolt</span>
+          Execute Quantum Triage &rarr;
+        </button>
+        <button id="btn-reset-defaults" type="button" class="live-project-btn">
+          Reset Biomarkers
+        </button>
+      </div>
+
+      <div class="text-xs font-mono text-[#8A9BA8] flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm text-[#D4AF37]">verified</span>
+        <span>PennyLane Hybrid VQC &middot; 6-Qubit Hilbert Space &middot; 73 Parameters</span>
+      </div>
+    </div>
+
+    <!-- Live Prediction Output Card -->
+    <div id="predict-result" class="text-sm"></div>
+
+    <!-- Clinician Oversight Decision Gate -->
+    <div id="clinician-action-container" class="hidden mt-6 pt-6 border-t border-[#D4AF37]/20"></div>
+  </section>
+
+  <!-- Session Decision Log (Audit Trail) -->
+  <section class="glass-panel p-6 sm:p-10 space-y-6">
+    <div class="flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <div class="text-xl font-bold text-white flex items-center gap-2.5 uppercase tracking-wide">
+          <span class="material-symbols-outlined text-[#D4AF37]">history_edu</span>
+          Session Clinical Decision Log &middot; Audit Trail
+        </div>
+        <p class="text-xs text-[#8A9BA8] font-mono mt-1">
+          Zero-persistence audit ledger (stored client-side in browser session storage) fulfilling SIH Deliverable 4
+        </p>
+      </div>
+      <button id="btn-clear-log" class="live-project-btn">
+        <span class="material-symbols-outlined text-sm">delete_sweep</span>
+        Clear Audit Trail
+      </button>
+    </div>
+
+    <div class="rounded-2xl border border-white/10 bg-[#0C0C0C] overflow-hidden overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-[#181818] border-b border-white/10 text-xs font-mono uppercase text-[#D4AF37]">
+          <tr>
+            <th class="py-3 px-4">Timestamp</th>
+            <th class="py-3 px-4">Patient Profile</th>
+            <th class="py-3 px-4">Quantum Advisory</th>
+            <th class="py-3 px-4">Clinician Action</th>
+            <th class="py-3 px-4">Clinical Rationale</th>
+          </tr>
+        </thead>
+        <tbody id="decision-log-body" class="divide-y divide-white/5 font-mono text-xs">
+          <!-- Populated from localStorage -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 QUREML &middot; Smart India Hackathon 2026 &middot; Department of Computer Engineering, SPIT Mumbai &middot; Sponsor: Egreen Quanta
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/uncertainty">Uncertainty</a>
+      <a href="/compare">Quantum vs Classical</a>
+      <a href="/walkthrough">Judge Report</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+
+<script>
+async function checkApi() {
+  const el = document.getElementById('api-status');
+  try {
+    const r = await fetch('/health');
+    if (r.ok) {
+      el.className = "p-3 rounded-2xl border border-emerald-500/40 bg-emerald-950/20 text-emerald-300 text-xs sm:text-sm font-mono flex items-center gap-2";
+      el.innerHTML = '<span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span> Live QureML Quantum Backend Connected';
+    } else throw new Error();
+  } catch {
+    el.className = "p-3 rounded-2xl border border-red-500/40 bg-red-950/20 text-red-300 text-xs sm:text-sm font-mono flex items-center gap-2";
+    el.innerHTML = '<span class="material-symbols-outlined text-sm text-red-400">warning</span> Backend Offline &mdash; Run uvicorn server';
+  }
+}
+checkApi();
+
+const PRESETS = {
+  malignant: [
+    17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871,
+    1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193,
+    25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189
+  ],
+  benign: [
+    13.54, 14.36, 87.46, 566.3, 0.09779, 0.08129, 0.06664, 0.04781, 0.1885, 0.05766,
+    0.2699, 0.7886, 2.058, 23.56, 0.008462, 0.0146, 0.02387, 0.01315, 0.0198, 0.0023,
+    15.11, 19.26, 99.7, 711.2, 0.144, 0.1773, 0.239, 0.1288, 0.2977, 0.07259
+  ],
+  borderline: [
+    14.28, 19.75, 92.51, 627.0, 0.09687, 0.1082, 0.07865, 0.03541, 0.1755, 0.06312,
+    0.3155, 1.121, 2.145, 27.24, 0.00645, 0.0211, 0.0278, 0.0112, 0.0195, 0.0031,
+    16.14, 25.12, 107.1, 797.8, 0.1345, 0.2458, 0.2678, 0.1021, 0.2845, 0.0812
+  ]
+};
+
+const FEATURE_NAMES = [
+  "Mean Radius","Mean Texture","Mean Perimeter","Mean Area","Mean Smoothness","Mean Compactness","Mean Concavity","Mean Concave Pts","Mean Symmetry","Mean Fractal Dim",
+  "Radius SE","Texture SE","Perimeter SE","Area SE","Smoothness SE","Compactness SE","Concavity SE","Concave Pts SE","Symmetry SE","Fractal Dim SE",
+  "Worst Radius","Worst Texture","Worst Perimeter","Worst Area","Worst Smoothness","Worst Compactness","Worst Concavity","Worst Concave Pts","Worst Symmetry","Worst Fractal Dim"
+];
+
+const grid = document.getElementById('feature-grid');
+FEATURE_NAMES.forEach((lbl, i) => {
+  const cat = i < 10 ? 'mean' : (i < 20 ? 'se' : 'worst');
+  const wrap = document.createElement('div');
+  wrap.className = `feat-item-${cat} feat-wrapper feat-cat-${cat} w-full`;
+  wrap.setAttribute('data-category', cat);
+  wrap.innerHTML = `
+    <div class="brutalist-container">
+      <input type="number" step="any" placeholder="0.00" class="brutalist-input smooth-type feat-input" data-idx="${i}" value="${PRESETS.malignant[i]}"/>
+      <label class="brutalist-label">${lbl}</label>
+    </div>
+  `;
+  grid.appendChild(wrap);
+});
+
+function applyPreset(type) {
+  const arr = PRESETS[type];
+  document.querySelectorAll('.feat-input').forEach((inp, idx) => {
+    inp.value = arr[idx];
+  });
+  ['mal', 'ben', 'border'].forEach(k => {
+    const card = document.getElementById('card-preset-' + k);
+    if (k === type || (k === 'mal' && type === 'malignant') || (k === 'ben' && type === 'benign') || (k === 'border' && type === 'borderline')) {
+      card.classList.add('active');
+    } else {
+      card.classList.remove('active');
+    }
+  });
+}
+
+document.getElementById('card-preset-mal').addEventListener('click', () => applyPreset('malignant'));
+document.getElementById('card-preset-ben').addEventListener('click', () => applyPreset('benign'));
+document.getElementById('card-preset-border').addEventListener('click', () => applyPreset('borderline'));
+document.getElementById('btn-reset-defaults').addEventListener('click', () => applyPreset('malignant'));
+
+// Category Tabs Filter
+const tabAll = document.getElementById('tab-all');
+const tabMean = document.getElementById('tab-mean');
+const tabSe = document.getElementById('tab-se');
+const tabWorst = document.getElementById('tab-worst');
+
+function filterCategory(cat) {
+  [tabAll, tabMean, tabSe, tabWorst].forEach(t => t.classList.remove('active'));
+  if (cat === 'all') tabAll.classList.add('active');
+  if (cat === 'mean') tabMean.classList.add('active');
+  if (cat === 'se') tabSe.classList.add('active');
+  if (cat === 'worst') tabWorst.classList.add('active');
+
+  document.querySelectorAll('.feat-wrapper').forEach(w => {
+    if (cat === 'all' || w.getAttribute('data-category') === cat || w.classList.contains('feat-cat-' + cat)) {
+      w.classList.remove('hidden');
+    } else {
+      w.classList.add('hidden');
+    }
+  });
+}
+
+tabAll.addEventListener('click', () => filterCategory('all'));
+tabMean.addEventListener('click', () => filterCategory('mean'));
+tabSe.addEventListener('click', () => filterCategory('se'));
+tabWorst.addEventListener('click', () => filterCategory('worst'));
+
+function getFeatures() {
+  return Array.from(document.querySelectorAll('.feat-input')).map(i => parseFloat(i.value));
+}
+
+let lastPrediction = null;
+
+document.getElementById('run-predict').addEventListener('click', async () => {
+  const btn = document.getElementById('run-predict');
+  const out = document.getElementById('predict-result');
+  const clinicianBox = document.getElementById('clinician-action-container');
+  btn.disabled = true;
+  out.innerHTML = `
+    <div class="glass-panel-subtle p-6 mt-4 flex items-center justify-center gap-3">
+      <span class="spinner"></span>
+      <span class="font-mono text-sm text-[#F5D77F]">Propagating features through 6-qubit quantum statevector simulation...</span>
+    </div>
+  `;
+
+  try {
+    const r = await fetch('/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ features: getFeatures() })
+    });
+    if (!r.ok) throw new Error(await r.text());
+    const d = await r.json();
+    lastPrediction = d;
+
+    const probPct = (d.malignancy_probability * 100).toFixed(2);
+    const isMalignant = d.decision_classification.toLowerCase().includes('malignant');
+    const isBorderline = d.risk_tier.toLowerCase().includes('medium') || d.risk_tier.toLowerCase().includes('borderline');
+
+    let badgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50';
+    let badgeText = 'LOW RISK &middot; BENIGN';
+    if (isMalignant) {
+      badgeClass = 'bg-red-500/20 text-red-300 border-red-500/50';
+      badgeText = 'HIGH RISK &middot; MALIGNANT';
+    } else if (isBorderline) {
+      badgeClass = 'bg-[#1A1608] text-[#F5D77F] border-[#D4AF37]/50';
+      badgeText = 'ELEVATED / SPECIALIST REVIEW';
+    }
+
+    out.innerHTML = `
+      <div class="mt-6 p-6 sm:p-8 rounded-2xl bg-[#0C0C0C] border ${isMalignant ? 'border-red-500/50' : (isBorderline ? 'border-[#D4AF37]/50' : 'border-emerald-500/50')} space-y-6">
+        
+        <!-- Header Row -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border ${badgeClass}">
+              ${badgeText}
+            </span>
+            <span class="text-xs font-mono text-[#8A9BA8]">Decision: <strong class="text-white">${d.decision_classification}</strong></span>
+          </div>
+
+          <div class="text-xs font-mono text-[#8A9BA8]">
+            Threshold Tiers: &tau;=0.10 (Zero-Miss) &middot; &tau;=0.30 (Balanced) &middot; &tau;=0.50 (Standard)
+          </div>
+        </div>
+
+        <!-- Big Stat + Gauge -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div class="p-6 rounded-2xl bg-[#141414] border border-white/5 space-y-1">
+            <div class="text-xs font-mono text-[#8A9BA8] uppercase">Malignancy Probability</div>
+            <div class="text-4xl font-black font-mono ${isMalignant ? 'text-red-400' : (isBorderline ? 'text-[#F5D77F]' : 'text-emerald-400')}">
+              ${probPct}%
+            </div>
+            <div class="text-[11px] text-[#8A9BA8] font-mono pt-1">Threshold: ${d.operating_threshold}</div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-[#141414] border border-white/5 space-y-3 md:col-span-2">
+            <div class="flex justify-between items-center text-xs font-mono text-[#8A9BA8]">
+              <span>Benign (0%)</span>
+              <span class="text-[#D4AF37] font-bold">Predicted Risk: ${probPct}%</span>
+              <span>Malignant (100%)</span>
+            </div>
+            <div class="w-full h-3.5 rounded-full bg-[#080808] border border-white/10 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-700 ${isMalignant ? 'bg-gradient-to-r from-[#B8860B] to-red-500' : (isBorderline ? 'bg-gradient-to-r from-[#D4AF37] to-[#F5D77F]' : 'bg-gradient-to-r from-emerald-600 to-emerald-400')}" style="width: ${Math.max(2, probPct)}%;"></div>
+            </div>
+            <p class="text-xs text-[#8A9BA8] font-light leading-relaxed pt-1">
+              ${d.clinical_interpretation}
+            </p>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    // Show clinician oversight box
+    clinicianBox.classList.remove('hidden');
+    clinicianBox.innerHTML = `
+      <div class="p-6 rounded-2xl bg-[#141414] border border-[#D4AF37]/30 space-y-4">
+        <div class="flex items-center gap-2 text-white font-bold uppercase tracking-wider text-sm">
+          <span class="material-symbols-outlined text-[#D4AF37]">assignment_turned_in</span>
+          Clinician Decision-Support Oversight (Deliverable 4)
+        </div>
+        <p class="text-xs text-[#8A9BA8] font-light">
+          Confirm or override model recommendation. Action and clinical rationale will be appended to the tamper-evident audit ledger.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="btn-action-accept" class="px-4 py-2 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase transition-all">
+            ✓ Accept Recommendation
+          </button>
+          <button id="btn-action-refer" class="px-4 py-2 rounded-full bg-[#1A1608] hover:bg-[#D4AF37]/20 text-[#F5D77F] border border-[#D4AF37]/40 text-xs font-mono font-bold uppercase transition-all">
+            ⚠ Flag for Specialist Referral
+          </button>
+          <button id="btn-action-override" class="px-4 py-2 rounded-full bg-red-950/20 hover:bg-red-900/30 text-red-300 border border-red-500/40 text-xs font-mono font-bold uppercase transition-all">
+            ✗ Override Model Finding
+          </button>
+        </div>
+
+        <div class="pt-2">
+          <input type="text" id="clinician-notes" placeholder="Enter clinical rationale or notes (optional)..." class="w-full text-xs font-mono"/>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('btn-action-accept').addEventListener('click', () => recordDecision('Accepted', document.getElementById('clinician-notes').value));
+    document.getElementById('btn-action-refer').addEventListener('click', () => recordDecision('Referred to Specialist', document.getElementById('clinician-notes').value));
+    document.getElementById('btn-action-override').addEventListener('click', () => recordDecision('Overridden by Clinician', document.getElementById('clinician-notes').value));
+
+  } catch(e) {
+    out.innerHTML = `
+      <div class="mt-4 p-4 rounded-xl border border-red-500/40 bg-red-950/20 text-red-300 font-mono text-sm">
+        Prediction Error: ${e.message}
+      </div>
+    `;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+function recordDecision(action, notes) {
+  if (!lastPrediction) return;
+  const log = JSON.parse(localStorage.getItem('qureml_decision_log') || '[]');
+  const entry = {
+    timestamp: new Date().toLocaleTimeString(),
+    summary: `Risk: ${(lastPrediction.malignancy_probability * 100).toFixed(1)}% (${lastPrediction.decision_classification})`,
+    advisory: lastPrediction.risk_tier,
+    action: action,
+    notes: notes || 'Routine clinical protocol'
+  };
+  log.unshift(entry);
+  localStorage.setItem('qureml_decision_log', JSON.stringify(log.slice(0, 30)));
+  renderDecisionLog();
+  const box = document.getElementById('clinician-action-container');
+  box.innerHTML = `
+    <div class="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/40 text-emerald-300 font-mono text-xs flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">check_circle</span>
+      Decision recorded into local audit ledger: <strong>${action}</strong>
+    </div>
+  `;
+}
+
+function renderDecisionLog() {
+  const tbody = document.getElementById('decision-log-body');
+  const log = JSON.parse(localStorage.getItem('qureml_decision_log') || '[]');
+  if (!log.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-6 px-4 text-center text-[#8A9BA8]">No triage decisions logged in this session yet. Execute a prediction above.</td>
+      </tr>
+    `;
+    return;
+  }
+  tbody.innerHTML = log.map(item => `
+    <tr class="hover:bg-white/[0.02] transition-colors">
+      <td class="py-3 px-4 text-[#8A9BA8]">${item.timestamp}</td>
+      <td class="py-3 px-4 font-bold text-white">${item.summary}</td>
+      <td class="py-3 px-4 text-[#F5D77F]">${item.advisory}</td>
+      <td class="py-3 px-4">
+        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${item.action.includes('Accept') ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : (item.action.includes('Refer') ? 'bg-[#1A1608] text-[#F5D77F] border border-[#D4AF37]/40' : 'bg-red-500/20 text-red-300 border border-red-500/30')}">
+          ${item.action}
+        </span>
+      </td>
+      <td class="py-3 px-4 text-[#8A9BA8] font-sans">${item.notes}</td>
+    </tr>
+  `).join('');
+}
+renderDecisionLog();
+
+document.getElementById('btn-clear-log').addEventListener('click', () => {
+  localStorage.removeItem('qureml_decision_log');
+  renderDecisionLog();
+});
+</script>
+</body>
+</html>

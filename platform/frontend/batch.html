@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QureML — Batch Cohort Screening &amp; Population Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/shared.css"/>
+</head>
+
+<body class="bg-[#0C0C0C] text-[#FFFFFF] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-white">
+
+<!-- Global Luxury Navbar -->
+<div id="site-nav"></div>
+
+<main class="flex-1 max-w-[1520px] w-full mx-auto px-4 sm:px-8 py-10 space-y-10">
+
+  <!-- Header Section -->
+  <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1608] border border-[#D4AF37]/40 text-[#F5D77F] text-xs font-mono font-medium tracking-wider uppercase mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+        High-Throughput Clinical Screening &middot; Multi-Patient VQC Inference
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+        Batch Cohort <span class="gold-gradient-text">Screening &amp; Triage</span>
+      </h1>
+      <p class="text-[#8A9BA8] text-sm sm:text-base max-w-3xl mt-2 font-light">
+        Upload institutional hospital cohorts (CSV format with 30 FNA features or 6 PCA features) to execute automated population triage via <code>POST /predict-batch</code> with full confusion matrix analytics.
+      </p>
+    </div>
+
+    <!-- API Status Badge -->
+    <div id="api-status" class="p-3.5 rounded-2xl border text-xs sm:text-sm font-mono flex items-center gap-2.5 backdrop-blur-md"></div>
+  </section>
+
+  <!-- Upload & Control Panel -->
+  <section class="glass-panel p-6 sm:p-10 space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div>
+        <h2 class="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-[#D4AF37]">upload_file</span>
+          Hospital Cohort Dataset Ingestion
+        </h2>
+        <p class="text-xs text-[#8A9BA8] font-mono mt-1">
+          Supports CSV with standardized column headers or standard numerical matrices
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/sample-batch-csv" class="live-project-btn gold">
+          <span class="material-symbols-outlined text-sm">download</span>
+          Download 20-Patient Sample CSV
+        </a>
+      </div>
+    </div>
+
+    <!-- Upload Input Zone -->
+    <div class="p-8 rounded-2xl bg-[#0C0C0C] border-2 border-dashed border-[#D4AF37]/30 flex flex-col items-center justify-center text-center space-y-4">
+      <div class="w-14 h-14 rounded-full bg-[#1A1608] border border-[#D4AF37]/40 flex items-center justify-center text-[#F5D77F]">
+        <span class="material-symbols-outlined text-2xl">clinical_notes</span>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white uppercase tracking-wide">Select Patient Cohort File</h3>
+        <p class="text-xs text-[#8A9BA8] font-mono mt-1">Accepts UTF-8 encoded .csv files up to 50MB</p>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <input type="file" id="batch-file" accept=".csv" class="text-xs font-mono text-[#D7E2EA] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#D4AF37] file:text-black hover:file:bg-[#F5D77F] file:cursor-pointer"/>
+        <button id="run-batch" class="gold-btn">
+          <span class="material-symbols-outlined text-lg">bolt</span>
+          Execute Batch Screening &rarr;
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Container -->
+    <div id="batch-result" class="text-sm"></div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      &copy; 2026 QUREML &middot; Smart India Hackathon 2026 &middot; Department of Computer Engineering, SPIT Mumbai &middot; Sponsor: Egreen Quanta
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/predict">Live Triage</a>
+      <a href="/uncertainty">Uncertainty</a>
+      <a href="/walkthrough">Judge Report</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+<script>
+async function checkApi() {
+  const el = document.getElementById('api-status');
+  try {
+    const r = await fetch('/health');
+    if (r.ok) {
+      el.className = "p-3 rounded-2xl border border-emerald-500/40 bg-emerald-950/20 text-emerald-300 text-xs sm:text-sm font-mono flex items-center gap-2";
+      el.innerHTML = '<span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span> Live QureML Batch Ingestion Engine Connected';
+    } else throw new Error();
+  } catch {
+    el.className = "p-3 rounded-2xl border border-red-500/40 bg-red-950/20 text-red-300 text-xs sm:text-sm font-mono flex items-center gap-2";
+    el.innerHTML = '<span class="material-symbols-outlined text-sm text-red-400">warning</span> Backend Offline &mdash; Run uvicorn server';
+  }
+}
+checkApi();
+
+document.getElementById('run-batch').addEventListener('click', async () => {
+  const fileInput = document.getElementById('batch-file');
+  const out = document.getElementById('batch-result');
+  const btn = document.getElementById('run-batch');
+
+  if (!fileInput.files.length) {
+    out.innerHTML = `
+      <div class="p-4 rounded-xl border border-amber-500/40 bg-amber-950/20 text-amber-300 font-mono text-xs">
+        Please select a CSV file first (or click 'Download 20-Patient Sample CSV' above, then upload it).
+      </div>
+    `;
+    return;
+  }
+
+  btn.disabled = true;
+  out.innerHTML = `
+    <div class="glass-panel-subtle p-6 mt-4 flex items-center justify-center gap-3">
+      <span class="spinner"></span>
+      <span class="font-mono text-sm text-[#F5D77F]">Running vectorized quantum inference across cohort records...</span>
+    </div>
+  `;
+
+  const fd = new FormData();
+  fd.append('file', fileInput.files[0]);
+
+  try {
+    const r = await fetch('/predict-batch', { method: 'POST', body: fd });
+    if (!r.ok) throw new Error(await r.text());
+    const d = await r.json();
+
+    let metricsCardsHtml = '';
+    if (d.has_ground_truth) {
+      metricsCardsHtml = `
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/30">
+            <div class="text-xs font-mono text-[#D4AF37] uppercase">Accuracy</div>
+            <div class="text-3xl font-black text-white mt-1 font-mono">${(d.accuracy * 100).toFixed(2)}%</div>
+            <div class="text-[11px] text-[#8A9BA8] font-mono mt-1">Ground truth aligned</div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10">
+            <div class="text-xs font-mono text-[#8A9BA8] uppercase">Sensitivity (Recall)</div>
+            <div class="text-3xl font-black text-white mt-1 font-mono">${(d.sensitivity * 100).toFixed(2)}%</div>
+            <div class="text-[11px] text-[#8A9BA8] font-mono mt-1">Malignancy detection rate</div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10">
+            <div class="text-xs font-mono text-[#8A9BA8] uppercase">Specificity</div>
+            <div class="text-3xl font-black text-white mt-1 font-mono">${(d.specificity * 100).toFixed(2)}%</div>
+            <div class="text-[11px] text-[#8A9BA8] font-mono mt-1">Benign clearance rate</div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10">
+            <div class="text-xs font-mono text-[#8A9BA8] uppercase">Confusion Counts</div>
+            <div class="text-sm font-mono font-bold text-white mt-2 space-y-0.5">
+              <div>TP: <span class="text-emerald-400">${d.confusion_matrix.tp}</span> &middot; TN: <span class="text-emerald-400">${d.confusion_matrix.tn}</span></div>
+              <div>FP: <span class="text-amber-400">${d.confusion_matrix.fp}</span> &middot; FN: <span class="text-red-400">${d.confusion_matrix.fn}</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const rows = d.results.map((p, idx) => {
+      const isMal = p.predicted_class.toLowerCase().includes('malignant');
+      const isCorrect = p.correct;
+      return `
+        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+          <td class="py-3 px-4 text-xs font-mono text-white font-semibold">${p.patient_id || ('Patient #' + (idx + 1))}</td>
+          <td class="py-3 px-4 text-xs font-mono text-right font-bold ${isMal ? 'text-[#F5D77F]' : 'text-emerald-400'}">
+            ${(p.probability * 100).toFixed(2)}%
+          </td>
+          <td class="py-3 px-4 text-xs font-mono">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${isMal ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'}">
+              ${p.predicted_class}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-xs font-mono text-[#8A9BA8] uppercase">${p.true_label || '&mdash;'}</td>
+          <td class="py-3 px-4 text-xs font-mono">
+            ${isCorrect === null || isCorrect === undefined ? '&mdash;' : (isCorrect ? '<span class="text-emerald-400 font-bold">✓ CORRECT</span>' : '<span class="text-red-400 font-bold">✗ MISMATCH</span>')}
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    out.innerHTML = `
+      <div class="mt-8 space-y-6">
+        <!-- Population Cohort Tally -->
+        <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/30">
+          <div class="flex items-center gap-4 text-xs font-mono">
+            <span>Total Patients: <strong class="text-white text-sm">${d.total_patients}</strong></span>
+            <span class="text-white/20">|</span>
+            <span>Flagged Malignant: <strong class="text-red-400 text-sm">${d.predicted_malignant}</strong></span>
+            <span class="text-white/20">|</span>
+            <span>Cleared Benign: <strong class="text-emerald-400 text-sm">${d.predicted_benign}</strong></span>
+          </div>
+          <div class="text-xs font-mono text-[#8A9BA8]">
+            Vectorized Batch Runtime: <strong class="text-white">Active</strong>
+          </div>
+        </div>
+
+        ${metricsCardsHtml}
+
+        <!-- Dark Table -->
+        <div class="rounded-2xl border border-white/10 bg-[#0C0C0C] overflow-hidden overflow-x-auto max-h-[500px]">
+          <table class="w-full text-left">
+            <thead class="sticky top-0 bg-[#181818] border-b border-white/10 text-xs font-mono uppercase text-[#D4AF37]">
+              <tr>
+                <th class="py-3 px-4">Patient Record</th>
+                <th class="py-3 px-4 text-right">Malignancy Risk</th>
+                <th class="py-3 px-4">Triage Decision</th>
+                <th class="py-3 px-4">Ground Truth</th>
+                <th class="py-3 px-4">Verification</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } catch(e) {
+    out.innerHTML = `
+      <div class="mt-4 p-4 rounded-xl border border-red-500/40 bg-red-950/20 text-red-300 font-mono text-sm">
+        Error processing batch screening: ${e.message}
+      </div>
+    `;
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
