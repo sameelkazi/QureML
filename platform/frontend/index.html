@@ -4,7 +4,9 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>QureML — Hybrid Quantum Clinical Intelligence</title>
-<link rel="icon" href="data:,">
+<link rel="icon" type="image/png" href="/assets/team_logo.png">
+<link rel="shortcut icon" type="image/png" href="/assets/team_logo.png">
+<link rel="apple-touch-icon" href="/assets/team_logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -51,6 +53,16 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(212, 175, 55, 0.6) !important;
+  outline-offset: 2px !important;
 }
 
 html, body, #root, .main-wrapper {
@@ -59,6 +71,7 @@ html, body, #root, .main-wrapper {
   font-family: var(--font-kanit);
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 /* Reference .hero-heading gradient text */
@@ -415,46 +428,338 @@ button.contact-btn {
   }
 }
 
+/* Mobile Sidebar Defaults (Hidden on Desktop) */
+.hero-mobile-bar,
+.hero-sidebar-backdrop,
+.hero-mobile-sidebar {
+  display: none;
+}
+
 @media (max-width: 767px) {
-  /* Hero Nav horizontal pill scroller on phone */
-  .hero-nav {
-    padding: 1rem 1rem 0 1rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .hero-nav::-webkit-scrollbar {
-    display: none;
-  }
-  .hero-nav .nav-links-row {
-    gap: 0.65rem;
-    justify-content: flex-start;
-    width: max-content;
-  }
-  .hero-nav .nav-link-item {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.35rem 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 9999px;
-    white-space: nowrap;
+  #hero-section {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 540px;
   }
 
-  /* About section floating corner elements toned down on mobile */
+  /* Hero Nav bar on phone */
+  .hero-nav {
+    padding: 0.85rem 1rem 0 1rem;
+  }
+  .hero-nav .nav-links-row {
+    display: none !important; /* Replaced by sleek mobile sidebar button */
+  }
+  .hero-mobile-bar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 30;
+  }
+  .hero-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: #FFFFFF;
+  }
+  .hero-mobile-logo {
+    width: 32px;
+    height: 32px;
+    background: #000000;
+    border: 1.5px solid rgba(212, 175, 55, 0.45);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+  }
+  .hero-mobile-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .hero-mobile-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .hero-mobile-title span:first-child {
+    font-family: var(--font-kanit);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: -0.01em;
+  }
+  .hero-mobile-title span:first-child b {
+    color: var(--gold-primary);
+  }
+  .hero-mobile-sub {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.12em;
+    margin-top: 2px;
+  }
+  .hero-nav {
+    position: relative !important;
+    z-index: 100 !important;
+    pointer-events: auto !important;
+  }
+  .hero-mobile-bar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 100 !important;
+    pointer-events: auto !important;
+  }
+  .hero-sidebar-toggle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(18, 18, 18, 0.9);
+    border: 1.5px solid rgba(212, 175, 55, 0.45);
+    color: #F5D77F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+    transition: all 0.15s ease;
+    position: relative !important;
+    z-index: 101 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+  }
+  .hero-sidebar-toggle-btn:active {
+    transform: scale(0.92);
+  }
+
+  /* Off-Canvas Backdrop */
+  .hero-sidebar-backdrop {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99998;
+    opacity: 0;
+    pointer-events: none !important;
+    visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+  }
+  .hero-sidebar-backdrop.active {
+    opacity: 1;
+    pointer-events: auto !important;
+    visibility: visible;
+  }
+
+  /* Off-Canvas Slide Drawer */
+  .hero-mobile-sidebar {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(84vw, 320px);
+    background: #0C0C0C;
+    border-left: 2px solid rgba(212, 175, 55, 0.4);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.9);
+    z-index: 99999;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s ease;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    pointer-events: none !important;
+    visibility: hidden;
+  }
+  .hero-mobile-sidebar.active {
+    transform: translateX(0);
+    pointer-events: auto !important;
+    visibility: visible;
+  }
+  .hero-sidebar-header {
+    padding: 1.15rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .hero-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .hero-sidebar-name {
+    font-family: var(--font-kanit);
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1;
+  }
+  .hero-sidebar-name span {
+    color: var(--gold-primary);
+  }
+  .hero-sidebar-tag {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: var(--gold-light);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+  .hero-sidebar-close-btn {
+    width: 34px;
+    height: 34px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #FFFFFF;
+    font-size: 1.4rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .hero-sidebar-nav {
+    padding: 0.85rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .hero-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    border-radius: 8px;
+    color: #A0AEC0;
+    text-decoration: none;
+    font-family: var(--font-kanit);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.18s ease;
+  }
+  .hero-sidebar-link .material-symbols-outlined {
+    font-size: 1.15rem;
+    color: #8A9BA8;
+  }
+  .hero-sidebar-link:hover,
+  .hero-sidebar-link.active {
+    color: #FFFFFF;
+    background: rgba(212, 175, 55, 0.12);
+    border-left: 3px solid var(--gold-primary);
+  }
+  .hero-sidebar-link.active .material-symbols-outlined {
+    color: var(--gold-light);
+  }
+  .hero-sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    background: #080808;
+  }
+  .hero-sidebar-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+    color: #000000;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.7rem;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+  }
+  .hero-sidebar-github-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #CBD5E1;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .hero-sidebar-github-card:hover {
+    background: rgba(212, 175, 55, 0.12);
+    border-color: rgba(212, 175, 55, 0.45);
+    color: #FFFFFF;
+  }
+
+  /* About section vibrant luxury dark background on mobile */
+  #about-section {
+    padding: 5rem 1.25rem !important;
+    background: 
+      radial-gradient(ellipse 95% 65% at 50% 20%, rgba(212, 175, 55, 0.18) 0%, rgba(32, 24, 10, 0.6) 45%, rgba(12, 12, 12, 0.98) 85%),
+      radial-gradient(circle at 10% 85%, rgba(212, 175, 55, 0.1) 0%, transparent 45%),
+      radial-gradient(circle at 90% 75%, rgba(184, 134, 11, 0.12) 0%, transparent 50%),
+      linear-gradient(180deg, #070707 0%, #110E07 50%, #080808 100%) !important;
+    box-shadow: inset 0 25px 50px rgba(0, 0, 0, 0.9), inset 0 -25px 50px rgba(0, 0, 0, 0.9) !important;
+    border-top: 1px solid rgba(212, 175, 55, 0.25) !important;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25) !important;
+    position: relative !important;
+  }
+  #about-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.8), transparent);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    pointer-events: none;
+  }
+  #about-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.8), transparent);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    pointer-events: none;
+  }
   .about-decor {
-    opacity: 0.25 !important;
-    width: 54px !important;
+    opacity: 0.45 !important;
+    width: 58px !important;
+    filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.4)) !important;
   }
   .about-content-box {
     gap: 1.75rem !important;
   }
   .about-heading {
-    font-size: clamp(2.2rem, 9vw, 3.2rem) !important;
+    font-size: clamp(2.4rem, 10vw, 3.4rem) !important;
+    text-shadow: 0 0 35px rgba(212, 175, 55, 0.4) !important;
   }
   .animated-paragraph {
-    font-size: 1.05rem !important;
-    line-height: 1.55 !important;
+    font-size: 1.06rem !important;
+    line-height: 1.6 !important;
+    color: #F8FAFC !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9) !important;
   }
 
   /* Bento grid responsive single column stack */
@@ -469,6 +774,90 @@ button.contact-btn {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 0.65rem !important;
   }
+
+  /* Hero Bottom Controls on Phone: Scroll indicator centered on top, buttons side-by-side below */
+  .hero-bottom-bar {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 0.55rem 0.65rem !important;
+    padding: 0 0.85rem max(1rem, calc(env(safe-area-inset-bottom) + 0.6rem)) 0.85rem !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 95 !important;
+    pointer-events: auto !important;
+  }
+
+  .hero-scroll-indicator {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    order: 1 !important;
+    width: auto !important;
+    margin: 0 0 0.2rem 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    opacity: 0.95 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 96 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  #open-team-modal-btn.contact-btn {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    order: 2 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 44px !important;
+    padding: 0 0.45rem !important;
+    font-size: 0.74rem !important;
+    letter-spacing: 0.04em !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.35rem !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    z-index: 96 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .hero-bottom-bar a.contact-btn {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    order: 2 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 44px !important;
+    padding: 0 0.45rem !important;
+    font-size: 0.74rem !important;
+    letter-spacing: 0.04em !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.35rem !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    z-index: 96 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .hero-bottom-bar .contact-btn span.material-symbols-outlined {
+    font-size: 1.05rem !important;
+  }
 }
 
 @media (max-width: 640px) {
@@ -482,21 +871,14 @@ button.contact-btn {
     font-size: clamp(2.2rem, 13vw, 3.5rem);
     justify-content: space-around;
   }
-  .hero-bottom-bar {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 0 1rem 1.25rem 1rem;
-  }
-  .hero-bottom-bar .contact-btn {
-    width: 100%;
-    max-width: 320px;
-    height: 48px;
-  }
-  .hero-scroll-indicator {
-    order: 3;
-    width: 100%;
-    margin-top: 0.25rem;
+}
+
+@media (max-width: 375px) {
+  #open-team-modal-btn.contact-btn,
+  .hero-bottom-bar a.contact-btn {
+    font-size: 0.68rem !important;
+    padding: 0 0.2rem !important;
+    gap: 0.2rem !important;
   }
 
   /* Figure Modal on phone */
@@ -1423,6 +1805,7 @@ button.contact-btn {
 
     <!-- Top Navbar -->
     <header class="hero-nav">
+      <!-- Desktop Nav Row (100% Untouched on Desktop) -->
       <ul class="nav-links-row">
         <li><a href="#hero-section" class="nav-link-item active">Overview</a></li>
         <li><a href="/predict" class="nav-link-item">Triage</a></li>
@@ -1432,7 +1815,100 @@ button.contact-btn {
         <li><a href="/hardware" class="nav-link-item">IBM QPU</a></li>
         <li><a href="/walkthrough" class="nav-link-item">Judge Report</a></li>
       </ul>
+
+      <!-- Sleek Mobile Top Bar (Phones & Small Screens) -->
+      <div class="hero-mobile-bar">
+        <a href="/" class="hero-mobile-brand" title="QureML Platform">
+          <div class="hero-mobile-logo">
+            <img src="https://img.logo.dev/egreenquanta.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" onerror="this.onerror=null; this.src='/assets/egreenquanta.png'" alt="Egreen Quanta" />
+          </div>
+          <div class="hero-mobile-title">
+            <span>QURE<b>ML</b></span>
+            <span class="hero-mobile-sub">HYBRID VQC</span>
+          </div>
+        </a>
+
+        <button type="button" id="hero-sidebar-toggle" class="hero-sidebar-toggle-btn" aria-label="Open Navigation Menu">
+          <span class="material-symbols-outlined" style="font-size: 1.45rem;">menu</span>
+        </button>
+      </div>
     </header>
+
+    <!-- Sleek Mobile Slide-Out Sidebar Drawer -->
+    <div id="hero-sidebar-backdrop" class="hero-sidebar-backdrop" aria-hidden="true"></div>
+    <aside id="hero-mobile-sidebar" class="hero-mobile-sidebar" aria-hidden="true">
+      <div class="hero-sidebar-header">
+        <div class="hero-sidebar-brand">
+          <div class="hero-mobile-logo">
+            <img src="https://img.logo.dev/egreenquanta.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" onerror="this.onerror=null; this.src='/assets/egreenquanta.png'" alt="Egreen Quanta" />
+          </div>
+          <div>
+            <div class="hero-sidebar-name">QURE<span>ML</span></div>
+            <div class="hero-sidebar-tag">HYBRID VQC &middot; EGREEN QUANTA</div>
+          </div>
+        </div>
+        <button type="button" id="hero-sidebar-close" class="hero-sidebar-close-btn" aria-label="Close Menu">&times;</button>
+      </div>
+
+      <nav class="hero-sidebar-nav">
+        <a href="#hero-section" class="hero-sidebar-link active">
+          <span class="material-symbols-outlined">home</span>
+          <span>Overview</span>
+        </a>
+        <a href="/predict" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">biotech</span>
+          <span>Live Triage Demo</span>
+        </a>
+        <a href="/uncertainty" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">query_stats</span>
+          <span>Finite-Shot UQ Gate</span>
+        </a>
+        <a href="/compare" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">compare_arrows</span>
+          <span>4-Control Ablation</span>
+        </a>
+        <a href="/explain" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">neurology</span>
+          <span>Quantum Explainability</span>
+        </a>
+        <a href="/train" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">model_training</span>
+          <span>VQC Optimization</span>
+        </a>
+        <a href="/hardware" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">developer_board</span>
+          <span>IBM Heron QPU Telemetry</span>
+        </a>
+        <a href="/architecture" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">gallery_thumbnail</span>
+          <span>Research Figures Gallery</span>
+        </a>
+        <a href="/evaluation" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">assignment</span>
+          <span>Empirical Evaluation</span>
+        </a>
+        <a href="/walkthrough" class="hero-sidebar-link">
+          <span class="material-symbols-outlined">fact_check</span>
+          <span>Judge Skim Report</span>
+        </a>
+        <button type="button" id="hero-sidebar-team-btn" class="hero-sidebar-link" style="width: 100%; text-align: left; background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.28); cursor: pointer; margin-top: 0.35rem;">
+          <span class="material-symbols-outlined" style="color: var(--gold-primary);">diversity_3</span>
+          <span style="color: var(--gold-pale); font-weight: 700;">Research Team Roster</span>
+        </button>
+      </nav>
+
+      <div class="hero-sidebar-footer">
+        <a href="/predict" class="hero-sidebar-cta">
+          <span class="material-symbols-outlined">bolt</span>
+          <span>Launch Live Triage &rarr;</span>
+        </a>
+        <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer" class="hero-sidebar-github-card">
+          <img src="https://img.logo.dev/github.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="GitHub" class="w-4 h-4 rounded-full" />
+          <span>sameelkazi / QureML &middot; GitHub</span>
+          <span class="material-symbols-outlined" style="font-size: 0.85rem; margin-left: auto; color: var(--gold-primary);">open_in_new</span>
+        </a>
+      </div>
+    </aside>
 
     <!-- Massive Heading: RevealText Staggered Spring & Texture Panning (Behind 3D YDSE Model) -->
     <div class="hero-heading-box">
@@ -2830,11 +3306,32 @@ window.addEventListener('pointermove', (e) => {
   pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
 });
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+function updateThreeCamera() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const isPhone = width < 768;
+  const isTablet = width >= 768 && width < 1024;
+
+  camera.aspect = width / height;
+  if (isPhone) {
+    // Phone portrait view: adjust FOV and push camera back so the entire optical rail fits
+    camera.fov = 48;
+    camera.position.set(0, 0.08, 8.6);
+  } else if (isTablet) {
+    camera.fov = 38;
+    camera.position.set(0, 0.1, 7.2);
+  } else {
+    // Desktop: exact original values untouched
+    camera.fov = 36;
+    camera.position.set(0, 0.1, 6.4);
+  }
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
+window.addEventListener('resize', updateThreeCamera);
+updateThreeCamera();
 
 // Animation Loop
 let clock = new THREE.Clock();
@@ -2848,8 +3345,10 @@ function animate3D() {
   smoothedPointer.x += (pointer.x - smoothedPointer.x) * 0.05;
   smoothedPointer.y += (pointer.y - smoothedPointer.y) * 0.05;
 
-  const isDesktop = window.innerWidth >= 1024;
-  const targetScale = isDesktop ? 0.94 : 0.72;
+  const width = window.innerWidth;
+  const isDesktop = width >= 1024;
+  const isTablet = width >= 768 && width < 1024;
+  const targetScale = isDesktop ? 0.94 : (isTablet ? 0.72 : Math.min(0.42, 0.42 * (width / 390)));
 
   ydseGroup.scale.setScalar(targetScale);
   ydseGroup.rotation.y = -0.28 + smoothedPointer.x * 0.32;
@@ -3332,37 +3831,44 @@ animate3D();
 }
 .team-modal-heading {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  justify-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0 0.5rem 0;
+  margin-bottom: 0.25rem;
+  border-bottom: 1.5px dashed rgba(0, 0, 0, 0.15);
+  width: 100%;
 }
 .team-heading-brands {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
 }
 .team-heading-spit-logo {
-  height: 36px;
-  width: 36px;
+  height: 38px;
+  width: 38px;
   object-fit: contain;
   background: #FFFFFF;
   border: 1.5px solid #000000;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 2px 2px 0px #000000;
-  padding: 2px;
+  padding: 2.5px;
 }
 .team-heading-cross {
   font-family: var(--font-kanit);
   font-weight: 900;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   color: #000000;
   line-height: 1;
 }
 .team-heading-team-logo {
-  height: 38px;
+  height: 40px;
   width: auto;
-  max-width: 170px;
+  max-width: 180px;
   object-fit: contain;
   display: block;
 }
@@ -3379,8 +3885,10 @@ animate3D();
 .team-modal-institution {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #475569;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 .team-grid {
   display: grid;
@@ -4038,10 +4546,54 @@ animate3D();
     });
   }
 
+  // Hero Mobile Sidebar Drawer Controller
+  const sidebar = document.getElementById('hero-mobile-sidebar');
+  const sidebarToggle = document.getElementById('hero-sidebar-toggle');
+  const sidebarClose = document.getElementById('hero-sidebar-close');
+  const sidebarBackdrop = document.getElementById('hero-sidebar-backdrop');
+  const sidebarTeamBtn = document.getElementById('hero-sidebar-team-btn');
+  const sidebarLinks = document.querySelectorAll('.hero-sidebar-link');
+
+  function openSidebar() {
+    if (!sidebar || !sidebarBackdrop) return;
+    sidebar.classList.add('active');
+    sidebarBackdrop.classList.add('active');
+    sidebar.setAttribute('aria-hidden', 'false');
+    sidebarBackdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+  }
+
+  function closeSidebar() {
+    if (!sidebar || !sidebarBackdrop) return;
+    sidebar.classList.remove('active');
+    sidebarBackdrop.classList.remove('active');
+    sidebar.setAttribute('aria-hidden', 'true');
+    sidebarBackdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (typeof lenis !== 'undefined' && lenis) lenis.start();
+  }
+
+  if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+  if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
+  if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+  if (sidebarTeamBtn) {
+    sidebarTeamBtn.addEventListener('click', () => {
+      closeSidebar();
+      setTimeout(openTeamModal, 250);
+    });
+  }
+  sidebarLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      closeSidebar();
+    });
+  });
+
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (modal && modal.classList.contains('active')) closeModal();
       if (teamModal && teamModal.classList.contains('active')) closeTeamModal();
+      if (sidebar && sidebar.classList.contains('active')) closeSidebar();
     }
   });
 })();
