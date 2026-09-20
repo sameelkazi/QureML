@@ -47,8 +47,8 @@ To isolate whether quantum variational layers offer true inductive bias or merel
 
 | Control | Architecture Designation | Parameters | Description | Scientific Purpose |
 | :--- | :--- | :---: | :--- | :--- |
-| **Control A** | **Full Hybrid VQC** | **73** | Linear In $\to$ Angle Encoding ($R_y$) $\to$ Circular CNOT Entangling Ring $\to$ Variational Rotations ($R_y, R_z$) $\to$ Pauli-$Z$ Expectation $\to$ Linear Out | Evaluates full variational hybrid quantum performance. |
-| **Control B** | **Classical Baseline MLP** | **73** | Linear In $\to$ GELU Non-linearity $\to$ Hidden Dense Layer ($d=8$) $\to$ Linear Out | Exact parameter-matched classical comparison baseline. |
+| **Control A** | **Full Hybrid VQC** | **73** | Linear In → Angle Encoding ($R_y$) → Circular CNOT Entangling Ring → Variational Rotations ($R_y, R_z$) → Pauli-Z Expectation → Linear Out | Evaluates full variational hybrid quantum performance. |
+| **Control B** | **Classical Baseline MLP** | **73** | Linear In → GELU Non-linearity → Hidden Dense Layer ($d = 8$) → Linear Out | Exact parameter-matched classical comparison baseline. |
 | **Control C** | **Entanglement-Free VQC** | **61** | Identical to Control A, but with all two-qubit CNOT entangling gates deleted | Tests if multi-qubit quantum entanglement provides clinical value. |
 | **Control D** | **Untrained Quantum Reservoir**| **49** | Identical to Control A, but quantum variational weights are frozen at initialization | Isolates the contribution of optimizing quantum variational circuits. |
 
@@ -63,18 +63,22 @@ To isolate whether quantum variational layers offer true inductive bias or merel
 </p>
 
 ### 1. Tabular Manifold Ceiling Parity
-On standard tabular diagnostic datasets (**Wisconsin Breast Cancer $n=569$**, **Cleveland Heart Disease $n=297$**, and circularity-ablated **Chronic Kidney Disease $n=158$**), the 73-parameter hybrid quantum classifier (Control A) matches the classical baseline (Control B) without statistically significant difference ($p \ge 0.078$ post Holm-Bonferroni adjustment).
+On standard tabular diagnostic datasets (**Wisconsin Breast Cancer**, $n = 569$; **Cleveland Heart Disease**, $n = 297$; and circularity-ablated **Chronic Kidney Disease**, $n = 158$), the 73-parameter hybrid quantum classifier (Control A) matches the classical baseline (Control B) without statistically significant difference ($p \ge 0.078$ post Holm-Bonferroni adjustment).
 
 ### 2. Entanglement is Dispensable on Low-Dimensional Tabular Data
 Ablating two-qubit entangling gates (**Control C**) produces zero statistically significant degradation in held-out diagnostic AUC compared to the fully entangled circuit (**Control A**) on tabular clinical datasets ($p > 0.35$). Circular CNOT entanglement adds circuit depth and gate noise without conferring classification gains on tabular manifolds.
 
 ### 3. Inductive Regularization in Scarce Clinical Regimes (Parkinson's Telemonitoring)
-In low-sample, high-uncertainty clinical domains (**Parkinson's Voice Dysphonia, $n=195$**), variational quantum training (**Control A**) significantly outperforms the frozen quantum feature map (**Control D**):
-$$\Delta \text{AUC} = +2.17\% \pm 0.81\% \quad (p = 0.00052 \text{ across 25 pre-registered seeds})$$
+In low-sample, high-uncertainty clinical domains (**Parkinson's Voice Dysphonia**, $n = 195$), variational quantum training (**Control A**) significantly outperforms the frozen quantum feature map (**Control D**):
+
+```math
+\Delta \text{AUC} = +2.17\% \pm 0.81\% \quad (p = 0.00052 \text{ across 25 pre-registered seeds})
+```
+
 This demonstrates that variational quantum layers act as effective inductive regularizers in high-variance, small-$n$ biomedical regimes.
 
 ### 4. Classical Superiority at Higher Feature Dimensions
-On Cleveland Heart Disease at $q=8$ qubits, classical neural networks significantly outperform hybrid quantum circuits by **$+1.85\%$ mean AUC** ($p = 0.00195$, strictly surviving Holm-Bonferroni correction), confirming that as classical feature dimensionality expands, classical dense representations capture complex feature covariances more efficiently than shallow NISQ ansatzes.
+On Cleveland Heart Disease at $q = 8$ qubits, classical neural networks significantly outperform hybrid quantum circuits by **$+1.85\%$ mean AUC** ($p = 0.00195$, strictly surviving Holm-Bonferroni correction), confirming that as classical feature dimensionality expands, classical dense representations capture complex feature covariances more efficiently than shallow NISQ ansatzes.
 
 <p align="center">
   <img src="paper_figures/fig5_pvalue_heatmap.png" alt="Statistical Significance P-Value Heatmap" width="70%">
@@ -107,7 +111,9 @@ In addition to statevector simulations, QureML was deployed directly to **IBM Qu
 
 Clinicians cannot rely on uninterpretable "black box" quantum models. QureML formulates an end-to-end differentiable adjoint expectation pipeline:
 
-$$\text{Attribution}_i(x) = (x_i - x_i') \times \int_{0}^{1} \frac{\partial F(x' + \alpha (x - x'))}{\partial x_i} \, d\alpha$$
+```math
+\text{Attribution}_i(x) = (x_i - x_i') \times \int_{0}^{1} \frac{\partial F(x' + \alpha (x - x'))}{\partial x_i} \, d\alpha
+```
 
 <p align="center">
   <img src="paper_figures/fig_explainability_local.png" alt="Local Biomarker Attribution" width="85%">
@@ -115,7 +121,13 @@ $$\text{Attribution}_i(x) = (x_i - x_i') \times \int_{0}^{1} \frac{\partial F(x'
   <em>Figure 5: Patient-specific biomarker attributions generated via 35-step path-integrated gradients directly through quantum expectation values. Completeness axiom error is bounded below 0.25%.</em>
 </p>
 
-By computing analytical parameter-shift gradients through the quantum variational layer into the classical preprocessor, QureML mathematically satisfies the **Completeness Axiom** ($\sum \text{Attributions} = F(x) - F(x')$) with numerical error $< 0.25\%$.
+By computing analytical parameter-shift gradients through the quantum variational layer into the classical preprocessor, QureML mathematically satisfies the **Completeness Axiom**:
+
+```math
+\sum_{i=1}^{d} \text{Attribution}_i(x) = F(x) - F(x')
+```
+
+with empirical numerical error $< 0.25\%$.
 
 ---
 

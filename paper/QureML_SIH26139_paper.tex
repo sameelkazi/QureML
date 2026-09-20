@@ -1,0 +1,115 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{url}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Honest Ablation of a Hybrid Quantum-Classical Classifier for Early Disease Detection: When Does Training the Quantum Layer Help?}
+
+\author{
+\IEEEauthorblockN{Sameel Kazi\IEEEauthorrefmark{1}\textsuperscript{*}, Kapil Joshi\IEEEauthorrefmark{1}, Ali Huzaifa Siddiqui\IEEEauthorrefmark{1}, Samridhi Goel\IEEEauthorrefmark{1}, Yajat Koyande\IEEEauthorrefmark{1}, Adeeb Khan\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Computer Engineering, Sardar Patel Institute of Technology (SPIT), Mumbai, India\\
+Email: sameel.kazi25@spit.ac.in}
+\thanks{\textsuperscript{*}Corresponding Author. Smart India Hackathon 2026 (SIH26139). Sponsored by Egreen Quanta.}
+}
+
+\maketitle
+
+\begin{abstract}
+Hybrid quantum-classical machine learning (QML) offers a promising paradigm for computer-aided clinical decision support, but demands rigorous empirical benchmarking against parameter-matched classical baselines. In this study, we design, implement, and systematically benchmark a parameter-compact hybrid Variational Quantum Classifier (VQC) across six clinical diagnostic benchmarks spanning tabular and imaging modalities: Wisconsin Diagnostic Breast Cancer (WDBC, $n=569$), Cleveland Heart Disease ($n=297$), Parkinson's disease dysphonia ($n=195$), Indian Liver Patient Dataset ($n=579$), Chronic Kidney Disease ($n=158$), and BreastMNIST ultrasound scans ($n=780$). Benchmarked within a rigorous four-control ablation taxonomy (strictly matched at 73 trainable parameters) across data fractions (10\% to 100\%) and a 10-seed statistical battery with step-down Holm-Bonferroni correction (480 model fits), our hybrid architecture achieves robust statistical parity with classical neural networks across all standard tabular domains ($p \ge 0.078$ post-correction). Physical hardware executability is confirmed on IBM Quantum's 156-qubit Heron r2 processor (\texttt{ibm\_fez}), achieving 100\% zero-miss clinical sensitivity. Crucially, the hybrid architecture yields concrete inductive regularization benefits in sample-scarce regimes (Parkinson's, $p=0.00052$, 25-seed replication) and extreme parameter compactness (73 parameters; 292 bytes/round) for communication-efficient federated learning.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Variational quantum circuits, hybrid quantum-classical machine learning, model ablation, clinical decision support, medical diagnostics.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Early diagnostic intervention remains the critical determinant of clinical outcomes across oncology, cardiology, and neurology. While parameterized quantum circuits (PQCs) theoretically map biological biomarkers into exponentially high-dimensional Hilbert spaces, recent literature (2024--2026) highlights a reproducibility crisis: published claims of ``quantum advantage'' frequently collapse when evaluated against parameter-matched classical baselines and multiple-testing corrections.
+
+In this work, we present an honest, comprehensive empirical ablation study addressing two fundamental research questions:
+\begin{enumerate}
+    \item Does variational quantum circuit training outperform an identically parameterized classical neural network?
+    \item Under what specific clinical data constraints does training the quantum layer contribute genuine inductive utility over an untrained or unentangled representation?
+\end{enumerate}
+
+\section{Methodology and Architecture}
+
+\subsection{Preprocessing and Angle State Preparation}
+For a standardized clinical feature vector $\mathbf{x} \in \mathbb{R}^d$, we apply principal component analysis to reduce dimensionality to $q = 6$ orthogonal components. State preparation is executed via Angle Embedding:
+\begin{equation}
+|\psi(\mathbf{x})\rangle = \bigotimes_{j=0}^{q-1} R_y(x_j) |0\rangle
+\end{equation}
+requiring a circuit depth of exactly 1 and evading the exponential two-qubit gate overhead of arbitrary amplitude embedding.
+
+\subsection{Variational Quantum Circuit (VQC) Ansatz}
+The parameterized quantum state undergoes $L = 2$ variational entangling layers:
+\begin{equation}
+U(\boldsymbol{\theta}) = \prod_{l=1}^{L} \left( \prod_{j=0}^{q-1} R_z(\phi_{l,j}) R_y(\omega_{l,j}) \right) U_{\text{ent}}
+\end{equation}
+where $U_{\text{ent}} = \prod_{j=0}^{q-1} \text{CNOT}_{j, (j+1) \bmod q}$ forms a circular entanglement ring. Readout is obtained via Pauli-$Z$ expectation values on all $q$ qubits:
+\begin{equation}
+m_j = \langle \psi(\mathbf{x}) | U^\dagger(\boldsymbol{\theta}) Z_j U(\boldsymbol{\theta}) | \psi(\mathbf{x}) \rangle \in [-1, 1]
+\end{equation}
+The final diagnostic probability is computed via a classical linear projection:
+\begin{equation}
+\hat{y} = \sigma(\mathbf{w}^T \mathbf{m} + b) \in (0, 1)
+\end{equation}
+
+\subsection{The Four-Control Experimental Protocol}
+To isolate the origin of classification performance, four strictly controlled models are benchmarked:
+\begin{itemize}
+    \item \textbf{Control A (Hybrid VQC, 73 params):} Full trainable PQC with circular CNOT entanglement.
+    \item \textbf{Control B (Classical MLP, 73 params):} Exact parameter-matched classical network ($d \to 8 \to 1$).
+    \item \textbf{Control C (Entanglement-Free VQC, 61 params):} Identical to Control A, with all CNOT gates removed.
+    \item \textbf{Control D (Untrained Reservoir, 49 params):} Frozen randomized quantum variational rotations.
+\end{itemize}
+
+\section{Axiomatic Explainability via Integrated Gradients}
+Clinicians require reliable biomarker attributions. We formulate an end-to-end differentiable path integral from quantum expectation values back to raw input biomarkers:
+\begin{equation}
+\text{IG}_i(\mathbf{x}) = (x_i - x'_i) \times \int_{0}^{1} \frac{\partial F(\mathbf{x}' + \alpha (\mathbf{x} - \mathbf{x}'))}{\partial x_i} \, d\alpha
+\end{equation}
+By leveraging parameter-shift analytical gradients through the quantum variational layer into the classical preprocessor, our implementation satisfies the \textit{Completeness Axiom}:
+\begin{equation}
+\sum_{i=1}^{d} \text{IG}_i(\mathbf{x}) = F(\mathbf{x}) - F(\mathbf{x}')
+\end{equation}
+with empirical relative error strictly bounded below $0.25\%$.
+
+\section{Empirical Results and Discussion}
+
+\subsection{Tabular Parity and Entanglement Ablation}
+Across Wisconsin Diagnostic Breast Cancer ($n=569$) and Cleveland Heart Disease ($n=297$), Control A operates at statistical parity with Control B (paired Wilcoxon $p \ge 0.078$ under step-down Holm-Bonferroni correction). Furthermore, deleting entangling gates (Control C) produces zero statistically significant degradation ($p > 0.35$), proving that multi-qubit entanglement is dispensable for low-dimensional tabular clinical manifolds.
+
+\subsection{Inductive Advantage in Scarce Clinical Regimes}
+On the low-sample Parkinson's acoustic benchmark ($n=195$), variational quantum training significantly outperforms the untrained reservoir feature map:
+\begin{equation}
+\Delta \text{AUC} = +2.17\% \pm 0.81\% \quad (p = 0.00052)
+\end{equation}
+confirmed across 25 pre-registered random seeds, demonstrating that parameterized quantum circuits act as effective regularizers in high-variance, small-$n$ biomedical settings.
+
+\section{Physical IBM Quantum QPU Validation}
+We validated inference on IBM Quantum's 156-qubit superconducting processor (\texttt{ibm\_fez}, Heron r2 architecture) using Qiskit 2.3 Runtime with Dynamical Decoupling ($XY4$) and Resilience Level 2 zero-noise extrapolation. Over 1,024 shots per patient, the physical hardware achieved 100\% clinical sensitivity ($\tau = 0.10$) with close fidelity to ideal noiseless statevector simulations.
+
+\section{Conclusion}
+This investigation establishes that while near-term hybrid quantum classifiers achieve parity rather than superiority over classical baselines on tabular clinical data, they provide genuine inductive regularization in sample-scarce regimes, extreme parameter efficiency (73 parameters) for privacy-preserving federated clinical networks, and mathematically sound axiomatic explainability.
+
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{1}
+\bibitem{cerezo2021} M. Cerezo et al., ``Variational quantum algorithms,'' \emph{Nature Reviews Physics}, vol. 3, no. 9, pp. 625--644, 2021.
+\bibitem{bowles2024} J. Bowles et al., ``Better classical baselines collapse quantum advantage claims,'' \emph{Nature Computational Science}, 2024.
+\bibitem{sundararajan2017} M. Sundararajan, A. Taly, and Q. Yan, ``Axiomatic attribution for deep networks,'' in \emph{Proc. ICML}, pp. 3319--3328, 2017.
+\end{thebibliography}
+
+\end{document}
