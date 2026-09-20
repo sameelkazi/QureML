@@ -1,3 +1,21 @@
+<p align="center">
+  <a href="https://www.sih.gov.in/" target="_blank" rel="noopener noreferrer">
+    <img src="assets/sih.png" alt="Smart India Hackathon 2026" height="70" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.spit.ac.in/" target="_blank" rel="noopener noreferrer">
+    <img src="assets/spit_logo.png" alt="Sardar Patel Institute of Technology" height="70" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://egreenquanta.com/" target="_blank" rel="noopener noreferrer">
+    <img src="assets/egreenquanta.png" alt="Egreen Quanta" height="70" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer">
+    <img src="assets/team_logo.png" alt="Unhandled Exceptionz" height="56" />
+  </a>
+</p>
+
 <div align="center">
 
 # QureML: Empirical Ablation and Clinical Triage Platform for Hybrid Quantum Machine Learning
@@ -10,18 +28,26 @@
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.115-009688.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Smart India Hackathon 2026 (SIH26139) | Track: MedTech / BioTech / HealthTech**  
-*Sponsor: Egreen Quanta | Institution: Sardar Patel Institute of Technology (SPIT), Mumbai*
+**Smart India Hackathon 2026 (SIH26139) &middot; Problem Statement: MedTech / BioTech / HealthTech**  
+**Sponsor:** Egreen Quanta &nbsp;|&nbsp; **Host Institution:** Sardar Patel Institute of Technology (SPIT), Mumbai  
+**Team:** Unhandled Exceptionz
+
+[📄 **Read Full Research Paper (PDF)**](paper/QureML_SIH26139_paper.pdf) &nbsp;|&nbsp; [📊 **Interactive Research Gallery**](http://127.0.0.1:8000/architecture) &nbsp;|&nbsp; [🖥️ **Live Clinical Platform**](http://127.0.0.1:8000/)
+
+</div>
 
 ---
 
-### **Authors**
-**Sameel Kazi** ([sameel.kazi25@spit.ac.in](mailto:sameel.kazi25@spit.ac.in))  
-**Kapil Joshi**  
+## 👥 Team — *Unhandled Exceptionz*
+
 *Department of Computer Engineering, Sardar Patel Institute of Technology (SPIT), Mumbai, India*  
 *In Collaboration with Egreen Quanta*
 
-[📄 **Read Full Research Paper (PDF)**](paper/QureML_SIH26139_paper.pdf) | [📊 **Interactive Research Gallery**](http://127.0.0.1:8000/architecture) | [🖥️ **Live Clinical Platform**](http://127.0.0.1:8000/)
+<div align="center">
+
+| <a href="https://www.linkedin.com/in/sameel-kazi-390726386?utm_source=share_via&utm_content=profile&utm_medium=member_android"><img src="team/sameel.jpg" width="95" height="95" style="border-radius: 50%;" alt="Sameel Kazi"><br><b>Sameel Kazi</b></a><br><sub>👑 <b>Team Leader</b></sub><br>[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sameel-kazi-390726386?utm_source=share_via&utm_content=profile&utm_medium=member_android) | <a href="https://www.linkedin.com/in/kapil-joshi-69735b384?utm_source=share_via&utm_content=profile&utm_medium=member_android"><img src="team/kapil.jpg" width="95" height="95" style="border-radius: 50%;" alt="Kapil Joshi"><br><b>Kapil Joshi</b></a><br><br>[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kapil-joshi-69735b384?utm_source=share_via&utm_content=profile&utm_medium=member_android) | <a href="https://www.linkedin.com/in/alihuzaifa-siddiqui-2a097b396?utm_source=share_via&utm_content=profile&utm_medium=member_android"><img src="team/alihuzaifa.jpg" width="95" height="95" style="border-radius: 50%;" alt="Alihuzaifa Siddiqui"><br><b>Alihuzaifa Siddiqui</b></a><br><br>[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alihuzaifa-siddiqui-2a097b396?utm_source=share_via&utm_content=profile&utm_medium=member_android) |
+| :---: | :---: | :---: |
+| <a href="https://www.linkedin.com/in/samridhi-goel-28912838b?utm_source=share_via&utm_content=profile&utm_medium=member_android"><img src="team/samridhi.jpg" width="95" height="95" style="border-radius: 50%;" alt="Samridhi Goel"><br><b>Samridhi Goel</b></a><br><br>[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/samridhi-goel-28912838b?utm_source=share_via&utm_content=profile&utm_medium=member_android) | <a href="https://www.linkedin.com/in/yajat-p-koyande-911608395?utm_source=share_via&utm_content=profile&utm_medium=member_android"><img src="team/yajat.jpg" width="95" height="95" style="border-radius: 50%;" alt="Yajat Koyande"><br><b>Yajat Koyande</b></a><br><br>[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yajat-p-koyande-911608395?utm_source=share_via&utm_content=profile&utm_medium=member_android) | <a href="https://www.linkedin.com/in/adeeb-khan-51b938394?utm_source=share_via&utm_content=profile&utm_medium=member_android"><img src="team/adeeb.jpg" width="95" height="95" style="border-radius: 50%;" alt="Adeeb Khan"><br><b>Adeeb Khan</b></a><br><br>[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/adeeb-khan-51b938394?utm_source=share_via&utm_content=profile&utm_medium=member_android) |
 
 </div>
 
@@ -135,11 +161,7 @@ with empirical numerical error $< 0.25\%$.
 
 The repository includes a responsive, clinician-focused web application built with vanilla JavaScript, modern CSS design tokens, and a high-performance asynchronous FastAPI backend.
 
-<p align="center">
-  <img src="paper_figures/screenshot_dashboard.png" alt="QureML Clinical Dashboard" width="94%">
-  <br>
-  <em>Figure 6: QureML Clinical Triage Dashboard featuring real-time diagnostic inference, selective prediction risk triage, and interactive quantum explainability.</em>
-</p>
+
 
 ### Core Platform Features:
 - **Calibrated Clinical Triage:** Dual-operating thresholds ($\tau = 0.10$ for zero-miss screening, $\tau = 0.30$ for balanced diagnostic specificity).
@@ -251,7 +273,7 @@ If you build upon this work, cite our paper:
 ```bibtex
 @article{kazi2026qureml,
   title={Honest Ablation of a Hybrid Quantum-Classical Classifier for Early Disease Detection: When Does Training the Quantum Layer Help?},
-  author={Kazi, Sameel and Joshi, Kapil and Contributors, QureML},
+  author={Kazi, Sameel and Joshi, Kapil and Siddiqui, Alihuzaifa and Goel, Samridhi and Koyande, Yajat and Khan, Adeeb},
   journal={Smart India Hackathon 2026 Research Proceedings (SIH26139)},
   institution={Sardar Patel Institute of Technology (SPIT), Mumbai and Egreen Quanta},
   year={2026},

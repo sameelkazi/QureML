@@ -968,10 +968,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial display based on URL hash or default to first figure
   const hashId = window.location.hash.replace('#', '');
   if (hashId && FIGURE_IDS.includes(hashId)) {
-    showFigure(hashId, false);
+    showFigure(hashId, true);
+    setTimeout(() => {
+      const activeCard = document.getElementById(hashId);
+      if (activeCard) {
+        const topOffset = activeCard.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top: Math.max(0, topOffset), behavior: 'smooth' });
+      }
+    }, 200);
   } else {
     showFigure(FIGURE_IDS[0], false);
   }
+
+  // Dynamic hashchange listener so links and back/forward navigation scroll to target card
+  window.addEventListener('hashchange', () => {
+    const newHash = window.location.hash.replace('#', '');
+    if (newHash && FIGURE_IDS.includes(newHash)) {
+      showFigure(newHash, true);
+    }
+  });
 
   // 2. Toggle Related-Work Capability Table
   const toggleBtn = document.getElementById('toggle-matrix-btn');

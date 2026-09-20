@@ -1,0 +1,38 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/static/:path*", "destination": "/:path*" },
+    { "source": "/triage", "destination": "/predict.html" },
+    { "source": "/predict", "destination": "/predict.html" },
+    { "source": "/uncertainty", "destination": "/uncertainty.html" },
+    { "source": "/compare", "destination": "/compare.html" },
+    { "source": "/explain", "destination": "/explain.html" },
+    { "source": "/batch", "destination": "/batch.html" },
+    { "source": "/train", "destination": "/train.html" },
+    { "source": "/evaluation", "destination": "/evaluation.html" },
+    { "source": "/hardware", "destination": "/hardware.html" },
+    { "source": "/compliance", "destination": "/compliance.html" },
+    { "source": "/roadmap", "destination": "/roadmap.html" },
+    { "source": "/walkthrough", "destination": "/walkthrough.html" },
+    { "source": "/architecture", "destination": "/architecture.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/(assets|paper_figures|team)/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

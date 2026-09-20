@@ -31,13 +31,13 @@
   target.innerHTML = `
   <header class="global-nav-header">
     <div class="global-nav-container">
-      <a class="nav-brand" href="/">
-        <div class="nav-brand-logo" style="overflow: hidden; padding: 2px; background: #000000 !important;">
-          <img src="/assets/logo.webp" alt="QureML" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.outerHTML='<span class=\'material-symbols-outlined\' style=\'font-size: 1.25rem; color: #D4AF37;\'>biotech</span>'" />
+      <a class="nav-brand" href="/" title="QureML Hybrid Quantum Clinical Platform">
+        <div class="nav-brand-logo" style="overflow: hidden; padding: 2px; background: #000000 !important; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+          <img src="https://img.logo.dev/egreenquanta.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" onerror="this.onerror=null; this.src='/assets/egreenquanta.png'" alt="Egreen Quanta" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" />
         </div>
         <div>
           <div class="nav-brand-name">QURE<span>ML</span></div>
-          <div class="nav-brand-tag">HYBRID VQC &middot; SIH26139</div>
+          <div class="nav-brand-tag">HYBRID VQC &middot; EGREEN QUANTA</div>
         </div>
       </a>
 
@@ -48,6 +48,10 @@
       </nav>
 
       <div class="hidden sm:flex items-center gap-2.5 flex-shrink-0">
+        <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer" class="nav-action-btn btn-white flex items-center gap-1.5" title="View QureML on GitHub">
+          <img src="https://img.logo.dev/github.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="GitHub" class="w-4 h-4 rounded-full" />
+          <span>REPO</span>
+        </a>
         <a href="/docs" target="_blank" class="nav-action-btn btn-white">API</a>
         <a href="/architecture" class="nav-action-btn btn-white">FIGURES</a>
         <a href="/walkthrough" class="nav-action-btn btn-gold">REPORT</a>

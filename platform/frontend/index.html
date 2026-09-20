@@ -105,6 +105,11 @@ html, body, #root, .main-wrapper {
   box-shadow: 0px 8px 24px rgba(212, 175, 55, 0.55), inset 4px 4px 14px #b8860b;
 }
 
+button.contact-btn {
+  border: none;
+  cursor: pointer;
+}
+
 /* Reference LiveProjectButton (Ghost Pill) */
 .live-project-btn {
   display: inline-flex;
@@ -388,11 +393,20 @@ html, body, #root, .main-wrapper {
   z-index: 30;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   padding: 0 1.5rem 2rem 1.5rem;
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
+  gap: 1rem;
+}
+
+.hero-bottom-bar .contact-btn {
+  width: clamp(210px, 16vw, 250px);
+  height: 52px;
+  padding: 0 1.25rem;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 @media (min-width: 768px) {
@@ -401,20 +415,87 @@ html, body, #root, .main-wrapper {
   }
 }
 
-.hero-sub-text {
-  color: var(--text-muted);
-  font-family: var(--font-kanit);
-  font-weight: 300;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1.25;
-  font-size: clamp(0.75rem, 1.35vw, 1.4rem);
-  max-width: clamp(180px, 26vw, 320px);
+@media (max-width: 640px) {
+  .hero-bottom-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 0 1rem 1.5rem 1rem;
+  }
+  .hero-bottom-bar .contact-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+  .hero-scroll-indicator {
+    order: 3;
+    width: 100%;
+    margin-top: 0.35rem;
+  }
 }
 
-.hero-sub-text strong {
-  font-weight: 600;
-  color: var(--gold-light);
+/* Middle Scroll Indicator */
+.hero-scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  opacity: 0.88;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  user-select: none;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.75rem;
+}
+.hero-scroll-indicator:hover {
+  opacity: 1;
+  transform: translateY(3px);
+}
+.scroll-mouse-icon {
+  width: 20px;
+  height: 32px;
+  border: 2px solid #D4AF37;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+  display: flex;
+  justify-content: center;
+}
+.scroll-wheel-dot {
+  width: 3.5px;
+  height: 6px;
+  background: #FFE600;
+  border-radius: 2px;
+  position: absolute;
+  top: 5px;
+  animation: mouseWheelScroll 1.6s infinite ease-in-out;
+}
+@keyframes mouseWheelScroll {
+  0% { opacity: 1; transform: translateY(0); }
+  60% { opacity: 0.2; transform: translateY(12px); }
+  100% { opacity: 0; transform: translateY(12px); }
+}
+.scroll-label-group {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.scroll-indicator-text {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.scroll-arrow-bounce {
+  font-size: 1.05rem;
+  color: #FFE600;
+  animation: bounceChevron 1.6s infinite ease-in-out;
+}
+@keyframes bounceChevron {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
 }
 
 /* ---------------------------------------------------------------------------
@@ -1044,25 +1125,31 @@ html, body, #root, .main-wrapper {
 }
 
 .footer-top {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .footer-top {
-    flex-direction: row;
-    align-items: flex-start;
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-top {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
   }
 }
 
 .footer-brand h3 {
   font-family: var(--font-kanit);
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   color: #ffffff;
   text-transform: uppercase;
+  letter-spacing: -0.01em;
 }
 
 .footer-brand h3 span {
@@ -1071,10 +1158,144 @@ html, body, #root, .main-wrapper {
 
 .footer-brand p {
   color: var(--text-subtle);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   max-width: 440px;
   margin-top: 0.5rem;
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+.footer-sponsor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  margin-top: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--gold-light);
+  width: fit-content;
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.95rem;
+}
+
+.footer-links-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-link {
+  color: #94A3B8;
+  text-decoration: none;
+  font-family: var(--font-kanit);
+  font-size: 0.84rem;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: #FFFFFF;
+  transform: translateX(2px);
+}
+
+/* Footer Ecosystem Partner Cloud (Powered by Logo.dev) */
+.footer-ecosystem-section {
+  padding: 2.2rem 0 1.8rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 1.5rem;
+}
+.footer-ecosystem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.footer-ecosystem-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.footer-ecosystem-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-subtle);
+  letter-spacing: 0.04em;
+}
+.footer-partner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .footer-partner-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .footer-partner-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+.partner-logo-card {
+  background: #121212;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  padding: 0.75rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.partner-logo-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold-primary);
+  background: #1A1A1A;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.22);
+}
+.partner-logo-card img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #FFFFFF;
+  padding: 2px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.partner-logo-name {
+  font-family: var(--font-kanit);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.15;
+}
+.partner-logo-role {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--gold-light);
+  line-height: 1;
 }
 
 .footer-bottom {
@@ -1169,15 +1390,26 @@ html, body, #root, .main-wrapper {
       </div>
     </div>
 
-    <!-- Bottom Bar -->
+    <!-- Bottom Bar: Left Button, Middle Scroll Indicator, Right Button -->
     <div class="hero-bottom-bar">
-      <p class="hero-sub-text">
-        Physical wave-particle interference scaled to a <strong>6-qubit clinical Hilbert space</strong> on 156-qubit IBM Heron.
-      </p>
+      <button type="button" id="open-team-modal-btn" class="contact-btn" aria-label="Open Research Team Roster">
+        <span class="material-symbols-outlined" style="font-size: 1.15rem;">diversity_3</span>
+        <span>Team Roster</span>
+      </button>
+
+      <div class="hero-scroll-indicator" id="hero-scroll-trigger" role="button" tabindex="0" aria-label="Scroll down to explore findings">
+        <div class="scroll-mouse-icon">
+          <span class="scroll-wheel-dot"></span>
+        </div>
+        <div class="scroll-label-group">
+          <span class="scroll-indicator-text">Scroll to Explore</span>
+          <span class="material-symbols-outlined scroll-arrow-bounce">keyboard_double_arrow_down</span>
+        </div>
+      </div>
 
       <a href="/predict" class="contact-btn">
         <span class="material-symbols-outlined" style="font-size: 1.1rem;">biotech</span>
-        Launch Live Triage &rarr;
+        <span>Launch Live Triage &rarr;</span>
       </a>
     </div>
   </section>
@@ -1729,26 +1961,124 @@ html, body, #root, .main-wrapper {
        ========================================================================= -->
   <footer class="site-footer">
     <div class="footer-inner">
+      <!-- 1. Footer Top: Brand & Sitemap Columns -->
       <div class="footer-top">
+        <!-- Brand Column -->
         <div class="footer-brand">
           <h3>Qure<span>ML</span></h3>
           <p>
             Hybrid Quantum Clinical Intelligence Platform engineered for zero false-negative cancer triage and real superconducting quantum processor execution.
           </p>
+          <div class="footer-sponsor-tag">
+            <img src="/static/assets/egreenquanta.png" onerror="this.src='/assets/egreenquanta.png'" alt="Egreen Quanta" style="width: 18px; height: 18px; object-fit: contain; border-radius: 3px; background: #FFFFFF; padding: 1px;" />
+            <span>Sponsored by Egreen Quanta &middot; SPIT Mumbai</span>
+          </div>
         </div>
 
-        <div>
-          <a href="/predict" class="contact-btn">
-            Run Patient Triage Demo &rarr;
+        <!-- Column 2: Clinical Platform -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-title">PLATFORM</h4>
+          <a href="/predict" class="footer-link">Live Patient Triage</a>
+          <a href="/train" class="footer-link">VQC Optimization (100 Epochs)</a>
+          <a href="/uncertainty" class="footer-link">Finite-Shot UQ Gate (1024s)</a>
+          <a href="/hardware" class="footer-link">IBM Heron QPU Telemetry</a>
+        </div>
+
+        <!-- Column 3: Clinical Research -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-title">RESEARCH</h4>
+          <a href="/architecture" class="footer-link">Living Architecture & Figures</a>
+          <a href="/evaluation" class="footer-link">Empirical Evaluation Battery</a>
+          <a href="/walkthrough" class="footer-link">Judge Skim Report</a>
+          <a href="/compliance" class="footer-link">HIPAA Zero-Persistence Policy</a>
+        </div>
+
+        <!-- Column 4: Ecosystem & Code -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-title">ECOSYSTEM</h4>
+          <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository &rarr;</a>
+          <a href="/docs" target="_blank" class="footer-link">FastAPI API Docs</a>
+          <a href="/roadmap" class="footer-link">Clinical Roadmap</a>
+          <a href="/compare" class="footer-link">Ablation Controls A, B, C, D</a>
+        </div>
+      </div>
+
+      <!-- 2. Ecosystem & Technology Cloud (Powered by Logo.dev) -->
+      <div class="footer-ecosystem-section">
+        <div class="footer-ecosystem-header">
+          <div class="footer-ecosystem-title">
+            <span class="material-symbols-outlined" style="font-size: 1rem; color: #D4AF37;">hub</span>
+            <span>Quantum Research & Technology Ecosystem</span>
+          </div>
+          <span class="footer-ecosystem-subtitle">Verified Hardened Production Stack &middot; Powered by Logo.dev</span>
+        </div>
+
+        <div class="footer-partner-grid">
+          <!-- 1. IBM Quantum -->
+          <a href="https://quantum.ibm.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/ibm.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="IBM Quantum">
+            <span class="partner-logo-name">IBM Quantum</span>
+            <span class="partner-logo-role">Heron QPU Fez</span>
+          </a>
+
+          <!-- 2. SPIT Mumbai -->
+          <a href="https://www.spit.ac.in/" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="/static/assets/spit_logo.png" onerror="this.src='/assets/spit_logo.png'" alt="SPIT Mumbai">
+            <span class="partner-logo-name">SPIT Mumbai</span>
+            <span class="partner-logo-role">Host Institution</span>
+          </a>
+
+          <!-- 3. PennyLane -->
+          <a href="https://pennylane.ai/" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/pennylane.ai?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="PennyLane">
+            <span class="partner-logo-name">PennyLane</span>
+            <span class="partner-logo-role">Quantum Circuits</span>
+          </a>
+
+          <!-- 4. PyTorch -->
+          <a href="https://pytorch.org/" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/pytorch.org?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="PyTorch">
+            <span class="partner-logo-name">PyTorch</span>
+            <span class="partner-logo-role">Autograd Engine</span>
+          </a>
+
+          <!-- 5. Qiskit -->
+          <a href="https://www.ibm.com/quantum/qiskit" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/qiskit.org?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="Qiskit">
+            <span class="partner-logo-name">Qiskit Runtime</span>
+            <span class="partner-logo-role">M3 & Transpiler</span>
+          </a>
+
+          <!-- 6. Python -->
+          <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/python.org?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="Python">
+            <span class="partner-logo-name">Python 3.11</span>
+            <span class="partner-logo-role">Scientific Runtime</span>
+          </a>
+
+          <!-- 7. FastAPI -->
+          <a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/fastapi.tiangolo.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="FastAPI">
+            <span class="partner-logo-name">FastAPI</span>
+            <span class="partner-logo-role">Async API Core</span>
+          </a>
+
+          <!-- 8. GitHub -->
+          <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer" class="partner-logo-card">
+            <img src="https://img.logo.dev/github.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="GitHub">
+            <span class="partner-logo-name">GitHub</span>
+            <span class="partner-logo-role">Open Research</span>
           </a>
         </div>
       </div>
 
+      <!-- 3. Footer Bottom -->
       <div class="footer-bottom">
-        <div>&copy; 2026 QureML (SIH26139). Sponsored by Egreen Quanta &middot; S.P.I.T.</div>
+        <div>&copy; 2026 QureML (SIH26139). Developed by Unhandled Exceptionz &middot; S.P.I.T. Mumbai.</div>
         <div>
           <a href="/compliance">HIPAA Zero-Persistence Policy</a> &middot; 
-          <a href="/walkthrough">Judge Skim Report</a>
+          <a href="/walkthrough">Judge Skim Report</a> &middot;
+          <a href="https://github.com/sameelkazi/QureML" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
       </div>
     </div>
@@ -2775,21 +3105,326 @@ animate3D();
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0px #000000;
 }
-@media (max-height: 560px) {
-  .figure-modal-box {
+.team-roster-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  color: #000000;
+  font-family: var(--font-kanit);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.75rem 1.8rem;
+  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  white-space: nowrap;
+}
+.team-roster-pill-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000;
+  background: #FFE600;
+  color: #000000;
+}
+.team-roster-pill-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* =========================================================================
+   NEO-BRUTALISM LIGHT THEME TEAM ROSTER MODAL
+   ========================================================================= */
+.team-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 42, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease-out;
+}
+.team-modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.team-modal-box {
+  background: #FCFBF9;
+  border: 3px solid #000000;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 820px;
+  max-height: 94vh;
+  box-shadow: 7px 7px 0px #000000;
+  transform: scale(0.96) translateY(8px);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  color: #000000;
+  overflow: hidden;
+}
+.team-modal-backdrop.active .team-modal-box {
+  transform: scale(1) translateY(0);
+}
+.team-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.15rem;
+  border-bottom: 2.5px solid #000000;
+  background: #FFFFFF;
+}
+.team-modal-badge {
+  display: inline-block;
+  background: #FFE600;
+  color: #000000;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.55rem;
+  border: 1.5px solid #000000;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0px #000000;
+}
+.team-modal-sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+}
+.team-modal-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #FF5E5E;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+  color: #000000;
+  font-size: 1.35rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  line-height: 1;
+}
+.team-modal-close-btn:hover {
+  background: #FF3B3B;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000000;
+}
+.team-modal-close-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000000;
+}
+.team-modal-body {
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+.team-modal-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.team-heading-brands {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.team-heading-spit-logo {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  background: #FFFFFF;
+  border: 1.5px solid #000000;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0px #000000;
+  padding: 2px;
+}
+.team-heading-cross {
+  font-family: var(--font-kanit);
+  font-weight: 900;
+  font-size: 1.25rem;
+  color: #000000;
+  line-height: 1;
+}
+.team-heading-team-logo {
+  height: 38px;
+  width: auto;
+  max-width: 170px;
+  object-fit: contain;
+  display: block;
+}
+.team-modal-title {
+  font-family: var(--font-kanit);
+  font-size: 1.3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: #000000;
+  margin: 0;
+}
+.team-modal-institution {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+}
+@media (min-width: 640px) {
+  .team-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.team-card {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  box-shadow: 3px 3px 0px #000000;
+  padding: 0.65rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.team-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #000000;
+}
+.team-card.is-leader {
+  background: #FFFDF0;
+  border: 2.5px solid #000000;
+}
+.team-photo-frame {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+  overflow: hidden;
+  margin-bottom: 0.45rem;
+  background: #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.team-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.team-member-name {
+  font-family: var(--font-kanit);
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #000000;
+  line-height: 1.2;
+  margin: 0;
+}
+.team-leader-tag {
+  display: inline-block;
+  background: #FFE600;
+  color: #000000;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.1rem 0.55rem;
+  border: 1.5px solid #000000;
+  border-radius: 4px;
+  box-shadow: 1.5px 1.5px 0px #000000;
+  margin-top: 0.25rem;
+  margin-bottom: 0.2rem;
+}
+.team-linkedin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #0077B5;
+  color: #FFFFFF;
+  font-family: var(--font-kanit);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.22rem 0.6rem;
+  border-radius: 4px;
+  border: 1.5px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+  text-decoration: none;
+  margin-top: 0.35rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.team-linkedin-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000000;
+  background: #0088D1;
+  color: #FFFFFF;
+}
+.team-linkedin-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000000;
+}
+.team-linkedin-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: block;
+}
+.team-modal-footer {
+  padding: 0.65rem 1.15rem;
+  border-top: 2.5px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+}
+.team-footer-text {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+@media (max-height: 580px) {
+  .team-modal-box {
     max-height: 96vh;
     overflow-y: auto;
   }
-  .figure-modal-img-container {
-    max-height: 150px;
-  }
-  .figure-modal-img-container img {
-    max-height: 140px;
+  .team-photo-frame {
+    width: 56px;
+    height: 56px;
   }
 }
 </style>
 
-<!-- Neo-Brutalism Light Theme Modal DOM -->
+<!-- Neo-Brutalism Light Theme Figure Modal DOM -->
 <div id="figure-modal" class="figure-modal-backdrop" aria-hidden="true" role="dialog">
   <div class="figure-modal-box">
     <!-- Modal Header -->
@@ -2832,6 +3467,115 @@ animate3D();
         Inspect in Research Gallery &rarr;
       </a>
       <button type="button" class="modal-btn-close" id="modal-close-footer">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neo-Brutalism Light Theme Team Roster Modal DOM -->
+<div id="team-modal" class="team-modal-backdrop" aria-hidden="true" role="dialog">
+  <div class="team-modal-box">
+    <!-- Header -->
+    <div class="team-modal-header">
+      <div class="flex items-center gap-2">
+        <span class="team-modal-badge">TEAM ROSTER</span>
+        <span class="team-modal-sub">SIH26139 &middot; Smart India Hackathon</span>
+      </div>
+      <button type="button" class="team-modal-close-btn" id="team-modal-close-x" aria-label="Close modal">&times;</button>
+    </div>
+
+    <!-- Body -->
+    <div class="team-modal-body">
+      <div class="team-modal-heading">
+        <div class="team-heading-brands">
+          <img src="/static/assets/spit_logo.png" onerror="this.src='/assets/spit_logo.png'" alt="SPIT Mumbai" class="team-heading-spit-logo" title="Sardar Patel Institute of Technology, Mumbai">
+          <span class="team-heading-cross">&times;</span>
+          <img src="/static/assets/team_logo.png" onerror="this.src='/assets/team_logo.png'" alt="Unhandled Exceptionz" class="team-heading-team-logo" title="Unhandled Exceptionz">
+        </div>
+        <span class="team-modal-institution">SPIT Mumbai &middot; SIH26139</span>
+      </div>
+
+      <div class="team-grid">
+        <!-- 1. Sameel Kazi (Team Leader) -->
+        <div class="team-card is-leader">
+          <div class="team-photo-frame">
+            <img src="/static/team/sameel.jpg" alt="Sameel Kazi" onerror="this.src='/team/sameel.jpg'">
+          </div>
+          <h3 class="team-member-name">Sameel Kazi</h3>
+          <span class="team-leader-tag">Team Leader</span>
+          <a href="https://www.linkedin.com/in/sameel-kazi-390726386?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="team-linkedin-btn" title="View Sameel Kazi on LinkedIn">
+            <img src="https://img.logo.dev/linkedin.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="LinkedIn" class="team-linkedin-icon">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+
+        <!-- 2. Alihuzaifa Siddiqui -->
+        <div class="team-card">
+          <div class="team-photo-frame">
+            <img src="/static/team/alihuzaifa.jpg" alt="Alihuzaifa Siddiqui" onerror="this.src='/team/alihuzaifa.jpg'">
+          </div>
+          <h3 class="team-member-name">Alihuzaifa Siddiqui</h3>
+          <a href="https://www.linkedin.com/in/alihuzaifa-siddiqui-2a097b396?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="team-linkedin-btn" title="View Alihuzaifa Siddiqui on LinkedIn">
+            <img src="https://img.logo.dev/linkedin.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="LinkedIn" class="team-linkedin-icon">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+
+        <!-- 3. Samridhi Goel -->
+        <div class="team-card">
+          <div class="team-photo-frame">
+            <img src="/static/team/samridhi.jpg" alt="Samridhi Goel" onerror="this.src='/team/samridhi.jpg'">
+          </div>
+          <h3 class="team-member-name">Samridhi Goel</h3>
+          <a href="https://www.linkedin.com/in/samridhi-goel-28912838b?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="team-linkedin-btn" title="View Samridhi Goel on LinkedIn">
+            <img src="https://img.logo.dev/linkedin.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="LinkedIn" class="team-linkedin-icon">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+
+        <!-- 4. Kapil Joshi -->
+        <div class="team-card">
+          <div class="team-photo-frame">
+            <img src="/static/team/kapil.jpg" alt="Kapil Joshi" onerror="this.src='/team/kapil.jpg'">
+          </div>
+          <h3 class="team-member-name">Kapil Joshi</h3>
+          <a href="https://www.linkedin.com/in/kapil-joshi-69735b384?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="team-linkedin-btn" title="View Kapil Joshi on LinkedIn">
+            <img src="https://img.logo.dev/linkedin.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="LinkedIn" class="team-linkedin-icon">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+
+        <!-- 5. Yajat Koyande -->
+        <div class="team-card">
+          <div class="team-photo-frame">
+            <img src="/static/team/yajat.jpg" alt="Yajat Koyande" onerror="this.src='/team/yajat.jpg'">
+          </div>
+          <h3 class="team-member-name">Yajat Koyande</h3>
+          <a href="https://www.linkedin.com/in/yajat-p-koyande-911608395?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="team-linkedin-btn" title="View Yajat Koyande on LinkedIn">
+            <img src="https://img.logo.dev/linkedin.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="LinkedIn" class="team-linkedin-icon">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+
+        <!-- 6. Adeeb Khan -->
+        <div class="team-card">
+          <div class="team-photo-frame">
+            <img src="/static/team/adeeb.jpg" alt="Adeeb Khan" onerror="this.src='/team/adeeb.jpg'">
+          </div>
+          <h3 class="team-member-name">Adeeb Khan</h3>
+          <a href="https://www.linkedin.com/in/adeeb-khan-51b938394?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="team-linkedin-btn" title="View Adeeb Khan on LinkedIn">
+            <img src="https://img.logo.dev/linkedin.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="LinkedIn" class="team-linkedin-icon">
+            <span>LinkedIn</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="team-modal-footer">
+      <div class="team-footer-text">
+        <span>QureML Research Cohort &bull; SPIT Mumbai</span>
+      </div>
+      <button type="button" class="modal-btn-close" id="team-modal-close-footer">Dismiss</button>
     </div>
   </div>
 </div>
@@ -3138,7 +3882,7 @@ animate3D();
     });
   }
 
-  // Close triggers
+  // Close triggers for figure modal
   if (closeBtnX) closeBtnX.addEventListener('click', closeModal);
   if (closeBtnFooter) closeBtnFooter.addEventListener('click', closeModal);
   if (modal) {
@@ -3146,9 +3890,64 @@ animate3D();
       if (e.target === modal) closeModal();
     });
   }
+
+  // Team Roster Modal Controller
+  const teamModal = document.getElementById('team-modal');
+  const openTeamBtn = document.getElementById('open-team-modal-btn');
+  const closeTeamBtnX = document.getElementById('team-modal-close-x');
+  const closeTeamBtnFooter = document.getElementById('team-modal-close-footer');
+
+  function openTeamModal() {
+    if (!teamModal) return;
+    teamModal.classList.add('active');
+    teamModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+  }
+
+  function closeTeamModal() {
+    if (!teamModal) return;
+    teamModal.classList.remove('active');
+    teamModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (typeof lenis !== 'undefined' && lenis) lenis.start();
+  }
+
+  if (openTeamBtn) openTeamBtn.addEventListener('click', openTeamModal);
+  if (closeTeamBtnX) closeTeamBtnX.addEventListener('click', closeTeamModal);
+  if (closeTeamBtnFooter) closeTeamBtnFooter.addEventListener('click', closeTeamModal);
+  if (teamModal) {
+    teamModal.addEventListener('click', (e) => {
+      if (e.target === teamModal) closeTeamModal();
+    });
+  }
+
+  // Hero Scroll Indicator Click & Keyboard Handler
+  const scrollTrigger = document.getElementById('hero-scroll-trigger');
+  if (scrollTrigger) {
+    const handleScrollClick = () => {
+      const target = document.getElementById('marquee-section');
+      if (target) {
+        if (typeof lenis !== 'undefined' && lenis) {
+          lenis.scrollTo(target);
+        } else {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+    scrollTrigger.addEventListener('click', handleScrollClick);
+    scrollTrigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleScrollClick();
+      }
+    });
+  }
+
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
-      closeModal();
+    if (e.key === 'Escape') {
+      if (modal && modal.classList.contains('active')) closeModal();
+      if (teamModal && teamModal.classList.contains('active')) closeTeamModal();
     }
   });
 })();

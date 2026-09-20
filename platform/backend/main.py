@@ -123,10 +123,18 @@ PROJECT_ROOT = BASE_DIR.parent.parent
 # Static directories
 frontend_dir = BASE_DIR.parent / "frontend"
 paper_figures_dir = PROJECT_ROOT / "paper_figures"
+team_dir = PROJECT_ROOT / "team"
+assets_dir = frontend_dir / "assets"
+if not assets_dir.exists():
+    assets_dir = PROJECT_ROOT / "assets"
 if paper_figures_dir.exists():
     app.mount("/paper_figures", StaticFiles(directory=str(paper_figures_dir)), name="paper_figures")
 if frontend_dir.exists():
     app.mount("/static", StaticFiles(directory=str(frontend_dir)), name="static")
+if assets_dir.exists():
+    app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+if team_dir.exists():
+    app.mount("/team", StaticFiles(directory=str(team_dir)), name="team")
 
 # Load model weights
 model_path = BASE_DIR / "model_weights.pt"
