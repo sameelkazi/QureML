@@ -1,5 +1,9 @@
 import json
 import pickle
+import os
+import random
+import urllib.request
+import urllib.error
 from pathlib import Path
 from typing import List, Optional, Union, Dict
 
@@ -260,6 +264,20 @@ class ExplainResponse(BaseModel):
     all_attributions: Dict[str, float]
     circuit_qubit_angles: List[QubitRotationInfo]
     methodology: str
+
+class ChatMessage(BaseModel):
+    role: str = "user"
+    text: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: Optional[List[ChatMessage]] = None
+
+class ChatResponse(BaseModel):
+    reply: str
+    status: str = "ok"
+    active_key_index: Optional[int] = None
+
 
 # ------------------------------------------------------------------------------
 # Frontend Multi-Page Routing & Static Asset Endpoints
@@ -1874,6 +1892,180 @@ def get_explainability_comparison():
         raise HTTPException(status_code=404, detail="Explainability comparison results not found.")
     with open(exp_path, "r") as f:
         return json.load(f)
+
+
+# ------------------------------------------------------------------------------
+# QureML Quantum Clinical Intelligence Assistant Endpoint
+# ------------------------------------------------------------------------------
+CHAT_SYSTEM_INSTRUCTION = """You are the QureML Quantum Clinical Intelligence Assistant (SIH26139).
+You are an expert scientific, technical, and clinical AI assistant embedded in the QureML hybrid quantum machine learning platform.
+Your sole purpose is to explain and answer questions about the QureML project, its architecture, benchmarks, clinical utility, and deliverables to evaluators, judges, clinicians, and researchers.
+
+### IDENTITY & TONE:
+- Name: QureML Quantum Clinical Assistant
+- Creators: Developed by Sameel Kazi and team for SIH26139 in partnership with Egreen Quanta & SPIT Mumbai.
+- Tone: Rigorous, highly technical, academic yet clear, clinically grounded, objective, and completely honest.
+- CRITICAL DIRECTIVE: NEVER mention "Gemini", "Google", or any external third-party AI provider. You are the proprietary built-in QureML Quantum Assistant.
+- SCOPE DIRECTIVE: You MUST ONLY answer questions related to QureML, quantum machine learning, clinical oncology diagnostics, the SIH26139 problem statement, our datasets, architecture, and empirical benchmarks. If a user asks an unrelated general question (e.g., sports, general coding, random trivia), politely redirect them back to QureML.
+
+### CORE PROJECT ARCHITECTURE:
+1. Hybrid Quantum Neural Network (Control A):
+   - Dimension reduction: 30 raw FNA biomarkers -> StandardScaler -> PCA (6 principal components retaining 88.9% variance) -> MinMaxScaler angle encoding (scaled to [0, pi]).
+   - Classical Pre-Layer: Linear(6, 6) with tanh(pi/2) activation (42 parameters: 36 weights + 6 biases).
+   - Quantum Circuit: 6 qubits, 2 variational layers on PennyLane default.qubit (24 trainable variational parameters).
+     * Feature Encoding: AngleEmbedding along Y-axis for each qubit.
+     * Ansatz: 2 repeated blocks of parameterized rotations (RY, RZ) followed by a circular CNOT entanglement ring (qubits 0-1, 1-2, 2-3, 3-4, 4-5, 5-0).
+     * Measurement: PauliZ expectation values <Z_i> on all 6 qubits, yielding a 6-dimensional quantum latent representation.
+   - Classical Readout Layer: Linear(6, 1) followed by Sigmoid activation (7 parameters: 6 weights + 1 bias).
+   - Total Trainable Parameters: Exactly 73 parameters (42 classical pre + 24 quantum variational + 7 classical readout).
+
+2. The 4-Control Ablation Family (Rigorous Fair-Baseline Benchmarking):
+   - Control A (HybridQNN): 73 parameters (6-qubit PQC with circular CNOT entanglement).
+   - Control B (Classical MLP Baseline): Exactly 73 parameters (Linear(6, 9) -> Tanh -> Linear(9, 1); 54 + 9 + 9 + 1 = 73 parameters). Provides an exact size-matched classical baseline to test if quantumness yields an intrinsic advantage.
+   - Control C (Entanglement-Ablated PQC): Exactly 73 parameters (identical circuit to Control A, but all 12 CNOT gates are removed; tests whether multi-qubit entanglement is driving the performance).
+   - Control D (Untrained Quantum Reservoir): 49 parameters (the 24 quantum variational parameters are randomly initialized and frozen during training; only classical pre- and post-layers train).
+
+3. Empirical Benchmarks & 2026 Scientific Consensus:
+   - Evaluated across 6 clinical datasets: WDBC (Breast Cancer), Heart Disease, Diabetes, Hepatitis, Parkinson's, and BreastMNIST.
+   - Core Finding: Hybrid QML achieves statistical parity (competitive accuracy and AUC) with classical baselines on tabular biomedical data.
+   - Crucial Exception: On Heart Disease with a restricted 25% training data budget, Control A demonstrates a statistically significant quantum performance advantage over classical Control B (p = 0.0039, paired Wilcoxon signed-rank test across 10 random seeds).
+   - Quantum Sanity Check (Liu, Arunachalam & Temme, Nature Physics 2021): Reproducing the discrete log group-theoretic benchmark yields +48.34% test accuracy, +0.5284 AUC, and 19.2x higher Kernel-Target Alignment (KTA) for the quantum kernel over classical RBF SVM (p = 0.00195). This proves that QureML's quantum kernel pipeline is fully functional and that the absence of massive advantage on clinical tabular data is an inherent property of clinical data geometry, not a pipeline flaw.
+
+4. Clinical Decision Support & Utility:
+   - Decision Curve Analysis (Vickers & Elkin, 2006): At the clinical referral threshold (p_t = 0.10), Control A achieves a Net Benefit of 0.3626 vs 0.2982 for "treat all", safely avoiding 58 unnecessary invasive biopsies per 100 patients with zero missed cancers.
+   - Selective Classification & Triage (El-Yaniv & Wiener, 2010): When abstaining on the top 10% most ambiguous cases, accepted diagnostic accuracy reaches 100.0%. The operational referral rule flags cases with 95% CI width > 0.150 or |p - 0.50| < 0.10, safely referring 6.14% of borderline cases to specialist pathologists while achieving 99.07% accuracy on accepted cases.
+   - Zero-Miss Triage Threshold: Tuning the classification threshold to tau = 0.10 guarantees 100% sensitivity on malignant cases in high-stakes oncology screening.
+
+5. Real IBM Quantum Heron Hardware Validation:
+   - Tested on IBM Quantum Heron r2 (156-qubit superconducting transmon QPU, ibm_torino / ibm_fez).
+   - Utilizes Zero-Noise Extrapolation (ZNE) with Richardson/linear extrapolation to mitigate physical gate and measurement errors.
+   - Simulates finite-shot measurement statistics with 1024 shots to quantify quantum shot noise (aleatoric uncertainty).
+
+6. Federated Learning & Green Efficiency:
+   - In distributed multi-hospital settings, QureML transmits only the 73-parameter model delta (292 bytes in float32), achieving a 708.4x parameter communication efficiency advantage over standard classical deep learning models.
+
+7. Quantum Explainability:
+   - Differentiable EndToEndQNN pipeline registers scaler, PCA, and angle encoders as differentiable PyTorch buffers.
+   - Integrated Gradients (Sundararajan et al., 2017) backpropagates attributions through the quantum circuit down to all 30 raw cytopathology biomarkers, satisfying the Completeness Axiom with less than 0.01% error.
+
+Format responses with clean, readable Markdown (bullet points, bold highlights, concise explanations). Be precise with numbers and citations when asked."""
+
+
+def get_gemini_api_keys() -> List[str]:
+    keys = []
+    # Check individual numbered keys 1..5
+    for i in range(1, 6):
+        k = os.environ.get(f"GEMINI_API_KEY_{i}", "").strip()
+        if k and k not in keys:
+            keys.append(k)
+    # Check comma-separated GEMINI_API_KEYS
+    comma_keys = os.environ.get("GEMINI_API_KEYS", "").strip()
+    if comma_keys:
+        for k in comma_keys.split(","):
+            k_clean = k.strip()
+            if k_clean and k_clean not in keys:
+                keys.append(k_clean)
+    # Check single GEMINI_API_KEY
+    single_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if single_key and single_key not in keys:
+        keys.append(single_key)
+
+    # Check local .env file if no keys found in os.environ
+    if not keys:
+        env_file = PROJECT_ROOT / ".env"
+        if env_file.exists():
+            try:
+                with open(env_file, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line or line.startswith("#") or "=" not in line:
+                            continue
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        if k.startswith("GEMINI_API_KEY_") or k == "GEMINI_API_KEY":
+                            if v and v not in keys:
+                                keys.append(v)
+                        elif k == "GEMINI_API_KEYS":
+                            for item in v.split(","):
+                                item_clean = item.strip()
+                                if item_clean and item_clean not in keys:
+                                    keys.append(item_clean)
+            except Exception:
+                pass
+    return keys
+
+
+@app.post("/chat", response_model=ChatResponse)
+def qureml_ai_chat(req: ChatRequest):
+    message = req.message.strip()
+    if not message:
+        raise HTTPException(status_code=400, detail="Missing or empty 'message'")
+
+    keys = get_gemini_api_keys()
+    if not keys:
+        raise HTTPException(
+            status_code=500,
+            detail="QureML AI Assistant is not configured with API credentials. Please set GEMINI_API_KEY_1..5 in environment."
+        )
+
+    # Prepare conversation history payload
+    contents = []
+    if req.history:
+        for h in req.history:
+            if h.text and h.role in ("user", "model"):
+                contents.append({"role": h.role, "parts": [{"text": h.text}]})
+    contents.append({"role": "user", "parts": [{"text": message}]})
+
+    payload = {
+        "contents": contents,
+        "system_instruction": {
+            "parts": [{"text": CHAT_SYSTEM_INSTRUCTION}]
+        },
+        "generationConfig": {
+            "temperature": 0.25,
+            "maxOutputTokens": 1024,
+            "topP": 0.85
+        }
+    }
+
+    req_data = json.dumps(payload).encode("utf-8")
+    start_idx = random.randint(0, len(keys) - 1)
+    last_error = None
+
+    for attempt in range(len(keys)):
+        idx = (start_idx + attempt) % len(keys)
+        current_key = keys[idx]
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={current_key}"
+
+        http_req = urllib.request.Request(
+            url,
+            data=req_data,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(http_req, timeout=12) as response:
+                if response.status == 200:
+                    resp_json = json.loads(response.read().decode("utf-8"))
+                    candidates = resp_json.get("candidates", [])
+                    if candidates:
+                        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                        if text:
+                            return ChatResponse(reply=text, status="ok", active_key_index=idx + 1)
+        except urllib.error.HTTPError as e:
+            err_msg = f"Key #{idx + 1} HTTP {e.code}: {e.reason}"
+            last_error = err_msg
+            continue
+        except Exception as e:
+            last_error = f"Key #{idx + 1} error: {str(e)}"
+            continue
+
+    raise HTTPException(
+        status_code=502,
+        detail=f"All configured API keys are currently unavailable or rate-limited. Details: {last_error}"
+    )
+
 
 
 

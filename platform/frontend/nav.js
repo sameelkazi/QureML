@@ -119,8 +119,8 @@
         </button>
       </div>
 
-      <!-- Quick Action Utilities Row (White Paper, AI Tour, Judge Report, API Docs) -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pb-4 mb-5 border-b-2 border-black">
+      <!-- Quick Action Utilities Row (White Paper, AI Tour, AI Chat, Judge Report, API Docs) -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pb-4 mb-5 border-b-2 border-black">
         <a href="/paper.pdf" onclick="event.preventDefault();if(window.openWhitePaperModal){window.openWhitePaperModal();}else{window.open('/paper.pdf','_blank');}" class="p-2.5 rounded bg-white hover:bg-[#FFFDF0] border-2 border-black font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-[2px_2px_0_#000] transition-all text-black">
           <span class="material-symbols-outlined text-base text-[#996515]">description</span>
           <span>WHITE PAPER</span>
@@ -128,6 +128,10 @@
         <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startCurrentPageTour();}else{window.location.href='/predict?ai_tour=1';}" class="p-2.5 rounded bg-[#FFF8D6] hover:bg-[#FCEBA7] border-2 border-black font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-[2px_2px_0_#000] transition-all text-black cursor-pointer">
           <span class="material-symbols-outlined text-base text-[#996515]">smart_toy</span>
           <span>AI TOUR</span>
+        </button>
+        <button type="button" onclick="if(window.openQureMLChat){window.openQureMLChat();}else{alert('Assistant is initializing...');}" class="p-2.5 rounded bg-[#FFF8D6] hover:bg-[#FCEBA7] border-2 border-black font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-[2px_2px_0_#000] transition-all text-black cursor-pointer" title="Open QureML AI Assistant">
+          <span class="material-symbols-outlined text-base text-[#996515]">chat</span>
+          <span>AI CHAT</span>
         </button>
         <a href="/walkthrough" class="p-2.5 rounded bg-white hover:bg-[#FFFDF0] border-2 border-black font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-[2px_2px_0_#000] transition-all text-black">
           <span class="material-symbols-outlined text-base text-[#996515]">assignment</span>
@@ -175,6 +179,7 @@
             <a href="/paper.pdf" onclick="event.preventDefault();if(window.openWhitePaperModal){window.openWhitePaperModal();}else{window.open('/paper.pdf','_blank');}" class="block p-2 hover:bg-[#FFFDF0] border border-transparent hover:border-black rounded transition-all font-medium text-black">Scientific White Paper <span class="text-xs text-gray-500 block">Peer-reviewed full publication</span></a>
             <a href="/walkthrough" class="block p-2 hover:bg-[#FFFDF0] border border-transparent hover:border-black rounded transition-all font-medium text-black">SIH26139 Report <span class="text-xs text-gray-500 block">Official judge walkthrough</span></a>
             <a href="${apiDocsUrl}" target="_blank" class="block p-2 hover:bg-[#FFFDF0] border border-transparent hover:border-black rounded transition-all font-medium text-black">OpenAPI Interactive Docs <span class="text-xs text-gray-500 block">FastAPI swagger endpoints</span></a>
+            <button type="button" onclick="if(window.openQureMLChat){window.openQureMLChat();}else{alert('Assistant is initializing...');}" class="w-full text-left p-2 hover:bg-[#FFFDF0] border border-transparent hover:border-black rounded transition-all font-medium text-black">QureML AI Assistant <span class="text-xs text-gray-500 block">Grounded technical & clinical Q&A</span></button>
             <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startCurrentPageTour();}else{window.location.href='/predict?ai_tour=1';}" class="w-full text-left p-2 hover:bg-[#FFFDF0] border border-transparent hover:border-black rounded transition-all font-medium text-black">AI GuideBot Tour <span class="text-xs text-gray-500 block">Interactive step-by-step assistant</span></button>
           </div>
         </div>
@@ -262,6 +267,22 @@
     pmScript.src = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/paper-modal.js';
     pmScript.defer = true;
     document.body.appendChild(pmScript);
+  }
+
+  // Universal QureML AI Assistant Chat Widget Loader
+  if (!document.getElementById("qureml-chat-css")) {
+    const cLink = document.createElement("link");
+    cLink.id = "qureml-chat-css";
+    cLink.rel = "stylesheet";
+    cLink.href = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/chat-widget.css';
+    document.head.appendChild(cLink);
+  }
+  if (!document.getElementById("qureml-chat-js") && !document.querySelector('script[src*="chat-widget.js"]')) {
+    const cScript = document.createElement("script");
+    cScript.id = "qureml-chat-js";
+    cScript.src = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/chat-widget.js';
+    cScript.defer = true;
+    document.body.appendChild(cScript);
   }
 
   // ---------------------------------------------------------------------------
