@@ -292,6 +292,13 @@ def serve_dgb_js():
         return FileResponse(str(js_file), media_type="application/javascript")
     raise HTTPException(status_code=404, detail="dashboard-guidebot.js not found")
 
+@app.get("/paper-modal.js", include_in_schema=False)
+def serve_paper_modal_js():
+    js_file = frontend_dir / "paper-modal.js"
+    if js_file.exists():
+        return FileResponse(str(js_file), media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="paper-modal.js not found")
+
 PAGES_CONFIG = [
     ("index", "index.html"),
     ("predict", "predict.html"),

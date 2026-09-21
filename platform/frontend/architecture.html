@@ -31,6 +31,10 @@ tailwind.config = {
 }
 </script>
 <link rel="stylesheet" href="/shared.css"/>
+<!-- KaTeX for pristine publication-grade LaTeX typesetting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <style>
   @media (max-width: 767px) {
     #nav-actions {
@@ -104,6 +108,9 @@ tailwind.config = {
     <div id="nav-actions" class="flex flex-wrap items-center gap-3 pt-2">
       <a class="gold-btn" href="/predict">
         <span class="material-symbols-outlined text-base">biotech</span> Run Prediction &rarr;
+      </a>
+      <a class="live-project-btn" href="https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk" onclick="if(window.openWhitePaperModal){event.preventDefault();window.openWhitePaperModal();}" title="Open Peer-Reviewed White Paper PDF">
+        <span class="material-symbols-outlined text-base">description</span> White Paper PDF
       </a>
       <a class="live-project-btn gold" href="/walkthrough">
         <span class="material-symbols-outlined text-base">fact_check</span> Judge Report
@@ -1273,8 +1280,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }).catch(() => {});
   }
 
-  hydrateLiveKpis();
-});
+    hydrateLiveKpis();
+
+    // KaTeX auto-rendering for all mathematical formulations in research cards
+    function triggerKatexRender() {
+      if (window.renderMathInElement) {
+        const container = document.getElementById('gallery-cards-container') || document.body;
+        renderMathInElement(container, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false,
+          ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+        });
+      } else {
+        setTimeout(triggerKatexRender, 150);
+      }
+    }
+
+    window.addEventListener('load', triggerKatexRender);
+    setTimeout(triggerKatexRender, 400);
+  });
 </script>
 </body>
 </html>

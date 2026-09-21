@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link rel="stylesheet" href="guidebot.css">
 <script src="guidebot.js" defer></script>
+<script src="/paper-modal.js" defer></script>
 
 <script type="importmap">
 {
@@ -1813,7 +1814,7 @@ button.contact-btn {
         <li><a href="/predict" class="nav-link-item">Triage</a></li>
         <li><a href="/train" class="nav-link-item">Train</a></li>
         <li><a href="#services-section" class="nav-link-item">Capabilities</a></li>
-        <li><a href="#projects-section" class="nav-link-item">Benchmarks</a></li>
+        <li><a href="https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk" class="nav-link-item" onclick="if(window.openWhitePaperModal){event.preventDefault();window.openWhitePaperModal();}" title="Read QureML Scientific White Paper in In-Website Viewer">White Paper</a></li>
         <li><a href="/hardware" class="nav-link-item">IBM QPU</a></li>
         <li><a href="/walkthrough" class="nav-link-item">Judge Report</a></li>
       </ul>
@@ -1888,6 +1889,10 @@ button.contact-btn {
         <a href="/evaluation" class="hero-sidebar-link">
           <span class="material-symbols-outlined">assignment</span>
           <span>Empirical Evaluation</span>
+        </a>
+        <a href="https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk" class="hero-sidebar-link" onclick="if(window.openWhitePaperModal){event.preventDefault();window.openWhitePaperModal();}" title="Read QureML Scientific White Paper in In-Website Viewer">
+          <span class="material-symbols-outlined">description</span>
+          <span>Scientific White Paper</span>
         </a>
         <a href="/walkthrough" class="hero-sidebar-link">
           <span class="material-symbols-outlined">fact_check</span>

@@ -723,6 +723,15 @@
   box-shadow: 1px 1px 0px #000000;
 }
 
+.dgb-explore-btn.dgb-explore-highlight {
+  background: #FFFBE6;
+  border: 2.5px solid #000000;
+}
+
+.dgb-explore-btn.dgb-explore-highlight:hover {
+  background: #FFE600;
+}
+
 .dgb-explore-btn .material-symbols-outlined {
   font-size: 1.35rem;
   color: #000000;

@@ -53,6 +53,10 @@
           <span>REPO</span>
         </a>
         <a href="/docs" target="_blank" class="nav-action-btn btn-white">API</a>
+        <a href="https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk" onclick="if(window.openWhitePaperModal){event.preventDefault();window.openWhitePaperModal();}" class="nav-action-btn btn-white flex items-center gap-1" title="Read QureML Scientific White Paper in In-Website Viewer">
+          <span class="material-symbols-outlined text-sm">description</span>
+          <span>PAPER</span>
+        </a>
         <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startCurrentPageTour();}else{window.location.href='/predict?ai_tour=1';}" class="nav-action-btn btn-gold flex items-center gap-1" title="Start AI GuideBot Walkthrough">
           <span class="material-symbols-outlined text-sm">smart_toy</span>
           <span>AI TOUR</span>
@@ -76,7 +80,10 @@
           <img src="https://img.logo.dev/github.com?token=pk_FLId-NEERDqqd_EiW6JE-Q" alt="GitHub" class="w-4 h-4 rounded-full" />
           <span>REPO</span>
         </a>
-        <a href="/docs" target="_blank" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">API</a>
+        <a href="https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk" onclick="if(window.openWhitePaperModal){event.preventDefault();window.openWhitePaperModal();}" class="nav-action-btn btn-white flex items-center justify-center gap-1" style="width: 100% !important; min-height: 40px !important;">
+          <span class="material-symbols-outlined text-sm">description</span>
+          <span>WHITE PAPER</span>
+        </a>
         <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startCurrentPageTour();}else{window.location.href='/predict?ai_tour=1';}" class="nav-action-btn btn-gold flex items-center justify-center gap-1.5" style="width: 100% !important; min-height: 40px !important;">
           <span class="material-symbols-outlined text-sm">smart_toy</span>
           <span>AI TOUR</span>
@@ -132,5 +139,14 @@
       s.defer = true;
       document.body.appendChild(s);
     }
+  }
+
+  // Universal White Paper Modal Loader
+  if (!document.getElementById("qureml-paper-modal-js") && !document.querySelector('script[src*="paper-modal.js"]')) {
+    const pmScript = document.createElement("script");
+    pmScript.id = "qureml-paper-modal-js";
+    pmScript.src = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/paper-modal.js';
+    pmScript.defer = true;
+    document.body.appendChild(pmScript);
   }
 })();

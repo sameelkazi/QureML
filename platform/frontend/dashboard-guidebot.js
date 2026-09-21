@@ -794,27 +794,42 @@
             { slug: 'batch', title: 'Hospital Batch Triage', icon: 'clinical_notes', desc: 'Multi-Patient Queue Review' },
             { slug: 'evaluation', title: 'Multi-Cohort Matrix', icon: 'table_chart', desc: '6 Datasets &middot; Wilcoxon Tests' },
             { slug: 'hardware', title: '156-Qubit IBM Heron', icon: 'hub', desc: 'Physical QPU (ibm_fez) Telemetry' },
+            { slug: 'paper', title: 'Scientific White Paper', icon: 'description', desc: 'Full Peer-Reviewed PDF (Drive)', url: 'https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk', isExternal: true },
             { slug: 'walkthrough', title: 'Judge Executive Report', icon: 'verified', desc: 'SIH26139 Compliance Dossier' }
           ];
 
-          this.dom.exploreContainer.innerHTML = modules.map(m => `
-            <a href="${resolvePageUrl(m.slug)}" class="dgb-explore-btn" title="Explore ${m.title}">
-              <span class="material-symbols-outlined">${m.icon}</span>
-              <div class="min-w-0 flex-1">
-                <div class="dgb-explore-title">${m.title}</div>
-                <div class="dgb-explore-desc">${m.desc}</div>
-              </div>
-              <span class="dgb-explore-arrow">&rarr;</span>
-            </a>
-          `).join('');
+          this.dom.exploreContainer.innerHTML = modules.map(m => {
+            const href = m.url || resolvePageUrl(m.slug);
+            const targetAttr = m.isExternal ? 'target="_blank" rel="noopener noreferrer"' : '';
+            return `
+              <a href="${href}" ${targetAttr} class="dgb-explore-btn ${m.isExternal ? 'dgb-explore-highlight' : ''}" data-external="${m.isExternal ? 'true' : 'false'}" title="Explore ${m.title}">
+                <span class="material-symbols-outlined">${m.icon}</span>
+                <div class="min-w-0 flex-1">
+                  <div class="dgb-explore-title">${m.title}</div>
+                  <div class="dgb-explore-desc">${m.desc}</div>
+                </div>
+                <span class="dgb-explore-arrow">${m.isExternal ? '&#x2197;' : '&rarr;'}</span>
+              </a>
+            `;
+          }).join('');
 
           // Gracefully handle clicks on explore buttons: disable auto-popup so user can explore without GuideBot opening!
           this.dom.exploreContainer.querySelectorAll('.dgb-explore-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-              e.preventDefault();
+              const isExternal = btn.getAttribute('data-external') === 'true';
               const href = btn.getAttribute('href');
               this.dontShowAgain();
-              window.location.href = href;
+              if (href.includes('1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN')) {
+                e.preventDefault();
+                if (window.openWhitePaperModal) {
+                  window.openWhitePaperModal();
+                } else {
+                  window.open(href, '_blank');
+                }
+              } else if (!isExternal) {
+                e.preventDefault();
+                window.location.href = href;
+              }
             });
           });
         }
