@@ -53,8 +53,11 @@
           <span>REPO</span>
         </a>
         <a href="/docs" target="_blank" class="nav-action-btn btn-white">API</a>
-        <a href="/architecture" class="nav-action-btn btn-white">FIGURES</a>
-        <a href="/walkthrough" class="nav-action-btn btn-gold">REPORT</a>
+        <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startTour(0);}else{window.location.href='/predict';}" class="nav-action-btn btn-gold flex items-center gap-1" title="Start AI GuideBot Walkthrough">
+          <span class="material-symbols-outlined text-sm">smart_toy</span>
+          <span>AI TOUR</span>
+        </button>
+        <a href="/walkthrough" class="nav-action-btn btn-white">REPORT</a>
       </div>
 
       <!-- Mobile Hamburger Button -->
@@ -74,8 +77,11 @@
           <span>REPO</span>
         </a>
         <a href="/docs" target="_blank" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">API</a>
-        <a href="/architecture" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">FIGURES</a>
-        <a href="/walkthrough" class="nav-action-btn btn-gold flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">REPORT</a>
+        <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startTour(0);}else{window.location.href='/predict';}" class="nav-action-btn btn-gold flex items-center justify-center gap-1.5" style="width: 100% !important; min-height: 40px !important;">
+          <span class="material-symbols-outlined text-sm">smart_toy</span>
+          <span>AI TOUR</span>
+        </button>
+        <a href="/walkthrough" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">REPORT</a>
       </div>
     </div>
   </header>
@@ -107,5 +113,24 @@
         if (iconSpan) iconSpan.textContent = "menu";
       }
     });
+  }
+
+  // Universal GuideBot Loader for all platform dashboard subpages (excluding root hero landing)
+  const isRootLanding = path === "/" || path === "/index" || path === "/index.html";
+  if (!isRootLanding) {
+    if (!document.getElementById("qureml-dgb-css")) {
+      const link = document.createElement("link");
+      link.id = "qureml-dgb-css";
+      link.rel = "stylesheet";
+      link.href = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/dashboard-guidebot.css';
+      document.head.appendChild(link);
+    }
+    if (!document.getElementById("qureml-dgb-js") && !document.querySelector('script[src*="dashboard-guidebot.js"]')) {
+      const s = document.createElement("script");
+      s.id = "qureml-dgb-js";
+      s.src = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/dashboard-guidebot.js';
+      s.defer = true;
+      document.body.appendChild(s);
+    }
   }
 })();
