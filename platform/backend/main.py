@@ -304,7 +304,9 @@ def serve_paper_modal_js():
 @app.get("/paper.pdf", include_in_schema=False)
 @app.get("/QureML_SIH26139_paper.pdf", include_in_schema=False)
 def serve_paper_pdf():
-    pdf_path = PROJECT_ROOT / "paper" / "QureML_SIH26139_paper.pdf"
+    pdf_path = frontend_dir / "paper.pdf"
+    if not pdf_path.exists():
+        pdf_path = PROJECT_ROOT / "paper" / "QureML_SIH26139_paper.pdf"
     if pdf_path.exists():
         return FileResponse(
             str(pdf_path),

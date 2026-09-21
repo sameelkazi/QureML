@@ -83,6 +83,7 @@ tailwind.config = {
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
 </style>
+  <script src="/paper-modal.js" defer></script>
 </head>
 <body class="bg-[#F5F3EF] text-[#0A0A0A] font-['Kanit'] antialiased min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-black">
 <div id="site-nav"></div>
@@ -102,7 +103,7 @@ tailwind.config = {
       <a class="gold-btn" href="/predict">
         <span class="material-symbols-outlined text-base">biotech</span> Run Prediction &rarr;
       </a>
-      <a class="live-project-btn" href="https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk" onclick="if(window.openWhitePaperModal){event.preventDefault();window.openWhitePaperModal();}" title="Open Peer-Reviewed White Paper PDF">
+      <a class="live-project-btn" href="/paper.pdf" onclick="event.preventDefault();if(window.openWhitePaperModal){window.openWhitePaperModal();}else{window.open('/paper.pdf','_blank');}" title="Open Peer-Reviewed White Paper PDF">
         <span class="material-symbols-outlined text-base">description</span> White Paper PDF
       </a>
       <a class="live-project-btn gold" href="/walkthrough">

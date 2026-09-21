@@ -213,33 +213,103 @@
         align-items: center;
         gap: 0.5rem;
       }
-      @media (max-width: 768px) {
+      .qpm-actions-mobile-bar {
+        display: none;
+      }
+      @media (min-width: 769px) and (max-width: 1080px) {
         .qpm-dialog {
-          width: 98vw;
-          height: 95vh;
-          border-width: 2px;
+          width: 96vw;
+          height: 94vh;
         }
         .qpm-header {
-          padding: 0.5rem 0.75rem;
-          flex-direction: column;
-          align-items: stretch;
-          gap: 0.5rem;
-        }
-        .qpm-actions {
-          justify-content: space-between;
-          width: 100%;
+          padding: 0.6rem 1rem;
+          gap: 0.75rem;
         }
         .qpm-title {
-          font-size: 0.9rem;
+          font-size: 0.96rem;
+        }
+        .qpm-btn {
+          font-size: 0.72rem;
+          padding: 0.4rem 0.65rem;
+          gap: 0.35rem;
+        }
+      }
+      @media (max-width: 768px) {
+        .qpm-backdrop {
+          padding: 0;
+        }
+        .qpm-dialog {
+          width: 100vw;
+          height: 100%;
+          max-height: 100dvh;
+          border-width: 2.5px;
+          border-radius: 0px;
+          box-shadow: none;
+        }
+        .qpm-header {
+          padding: 0.55rem 0.75rem;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+        }
+        .qpm-actions-desktop {
+          display: none !important;
+        }
+        .qpm-actions-mobile-bar {
+          display: flex !important;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.45rem 0.65rem;
+          background: #0D0D0D;
+          border-bottom: 2px solid #222222;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          flex-shrink: 0;
+        }
+        .qpm-mobile-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          padding: 0.4rem 0.65rem;
+          font-family: 'Kanit', sans-serif;
+          font-size: 0.74rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+          border-radius: 2px;
+          text-decoration: none;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .qpm-title {
+          font-size: 0.88rem;
+        }
+        .qpm-badge {
+          font-size: 0.6rem;
+          padding: 2px 5px;
+        }
+        .qpm-btn-close {
+          width: 36px;
+          height: 36px;
+          font-size: 1.3rem;
+          flex-shrink: 0;
         }
         .qpm-footer {
           flex-direction: column;
           align-items: stretch;
-          gap: 0.4rem;
-          padding: 0.45rem 0.75rem;
+          gap: 0.35rem;
+          padding: 0.45rem 0.75rem max(0.45rem, env(safe-area-inset-bottom)) 0.75rem;
         }
         .qpm-footer-stats {
-          font-size: 0.62rem;
+          font-size: 0.6rem;
+          overflow-x: auto;
+          white-space: nowrap;
+          width: 100%;
+          gap: 0.4rem;
+        }
+        .qpm-footer-right {
+          display: none;
         }
       }
     `;
@@ -267,17 +337,23 @@
             <span class="qpm-badge">PDF DOCUMENT</span>
             <div class="qpm-title">QureML Scientific White Paper</div>
           </div>
-          <div class="qpm-actions">
+          <!-- Desktop Action Buttons -->
+          <div class="qpm-actions qpm-actions-desktop">
+            <!-- 1-Click Direct Fullscreen PDF Tab -->
+            <a href="${LOCAL_PDF_URL}" target="_blank" rel="noopener noreferrer" class="qpm-btn qpm-btn-gold" title="Open full PDF in native high-performance browser tab">
+              <span class="material-symbols-outlined" style="font-size: 16px;">open_in_new</span>
+              <span>Open In New Tab ↗</span>
+            </a>
             <!-- SINGLE Unified Research Gallery Button -->
-            <a href="${GALLERY_URL}" class="qpm-btn qpm-btn-gold" title="Explore all 14 empirical figures and telemetry curves">
+            <a href="${GALLERY_URL}" class="qpm-btn qpm-btn-dark" title="Explore all 14 empirical figures and telemetry curves">
               <span class="material-symbols-outlined" style="font-size: 16px;">gallery_thumbnail</span>
-              <span>Research Figures Gallery &rarr;</span>
+              <span>Research Figures &rarr;</span>
             </a>
-            <!-- Direct Drive view link -->
-            <a href="${DRIVE_VIEW_URL}" target="_blank" rel="noopener noreferrer" class="qpm-btn qpm-btn-dark" title="Open PDF in Google Drive full page">
-              <span class="material-symbols-outlined" style="font-size: 15px;">open_in_new</span>
-              <span>Drive Link</span>
-            </a>
+            <!-- Cloud Viewer Toggle -->
+            <button type="button" id="qpm-cloud-toggle-btn" class="qpm-btn qpm-btn-dark" title="Switch between native PDF and Google Docs cloud viewer if blank">
+              <span class="material-symbols-outlined" style="font-size: 15px;">cloud_sync</span>
+              <span id="qpm-cloud-toggle-text">Cloud Viewer ⇄</span>
+            </button>
             <!-- Download Local PDF -->
             <a href="${LOCAL_PDF_URL}" download="QureML_SIH26139_paper.pdf" class="qpm-btn qpm-btn-dark" title="Download offline PDF copy">
               <span class="material-symbols-outlined" style="font-size: 15px;">download</span>
@@ -286,10 +362,43 @@
             <!-- Close Button -->
             <button type="button" class="qpm-btn-close" id="qpm-close-btn" aria-label="Close White Paper Modal">&times;</button>
           </div>
+          <!-- Mobile Close Button (Top-Right) -->
+          <button type="button" class="qpm-btn-close sm:hidden" id="qpm-close-btn-mobile" aria-label="Close White Paper Modal">&times;</button>
         </div>
 
-        <!-- Body with Direct Local PDF Viewer (No Google Drive white screen bug) -->
+        <!-- Dedicated Mobile Quick Action Toolbar (Thumb-Friendly, No Horizontal Overflow) -->
+        <div class="qpm-actions-mobile-bar">
+          <a href="${LOCAL_PDF_URL}" target="_blank" rel="noopener noreferrer" class="qpm-mobile-btn qpm-btn-gold">
+            <span class="material-symbols-outlined" style="font-size: 15px;">fullscreen</span>
+            <span>Fullscreen PDF ↗</span>
+          </a>
+          <button type="button" id="qpm-mobile-cloud-toggle" class="qpm-mobile-btn qpm-btn-dark">
+            <span class="material-symbols-outlined" style="font-size: 14px;">cloud_sync</span>
+            <span>Cloud Mode</span>
+          </button>
+          <a href="${GALLERY_URL}" class="qpm-mobile-btn qpm-btn-dark">
+            <span class="material-symbols-outlined" style="font-size: 15px;">gallery_thumbnail</span>
+            <span>Figures &rarr;</span>
+          </a>
+          <a href="${LOCAL_PDF_URL}" download="QureML_SIH26139_paper.pdf" class="qpm-mobile-btn qpm-btn-dark">
+            <span class="material-symbols-outlined" style="font-size: 14px;">download</span>
+            <span>Download</span>
+          </a>
+        </div>
+
+        <!-- Body with Dual-Engine Viewer & Fallback Notification -->
         <div class="qpm-body">
+          <div style="background: #111111; padding: 6px 12px; border-bottom: 1px solid #282828; display: flex; align-items: center; justify-content: space-between; font-family: monospace; font-size: 0.72rem; color: #9CA3AF; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span id="qpm-status-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
+              <span id="qpm-status-text">Native PDF Renderer (/paper.pdf)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span class="hidden sm:inline" style="color: #6B7280;">If blank:</span>
+              <button id="qpm-bar-switch-btn" type="button" style="background: #1E1E1E; color: #D4AF37; border: 1px solid #D4AF37; padding: 2px 8px; font-size: 0.68rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Switch to Cloud Viewer ⇄</button>
+              <a href="${LOCAL_PDF_URL}" target="_blank" rel="noopener noreferrer" style="color: #D4AF37; font-weight: 700; text-decoration: underline;">Direct PDF ↗</a>
+            </div>
+          </div>
           <iframe id="qpm-iframe" class="qpm-iframe" src="" type="application/pdf" title="QureML Peer-Reviewed Scientific White Paper"></iframe>
         </div>
 
@@ -313,7 +422,41 @@
     // Event handlers
     const closeBtn = backdrop.querySelector("#qpm-close-btn");
     if (closeBtn) closeBtn.addEventListener("click", closeWhitePaperModal);
+    const closeBtnMobile = backdrop.querySelector("#qpm-close-btn-mobile");
+    if (closeBtnMobile) closeBtnMobile.addEventListener("click", closeWhitePaperModal);
     backdrop.addEventListener("click", closeWhitePaperModal);
+
+    // Cloud Viewer Toggle logic
+    let useCloudViewer = false;
+    function toggleViewerEngine() {
+      useCloudViewer = !useCloudViewer;
+      const iframe = backdrop.querySelector("#qpm-iframe");
+      const statusText = backdrop.querySelector("#qpm-status-text");
+      const barSwitchBtn = backdrop.querySelector("#qpm-bar-switch-btn");
+      const cloudToggleText = backdrop.querySelector("#qpm-cloud-toggle-text");
+
+      const cloudUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent("https://qureml.vercel.app/paper.pdf") + "&embedded=true";
+      const localUrl = LOCAL_PDF_URL + "#toolbar=1&navpanes=0";
+
+      if (useCloudViewer) {
+        if (iframe) iframe.src = cloudUrl;
+        if (statusText) statusText.textContent = "Google Docs Cloud PDF Engine (Universal HTML5)";
+        if (barSwitchBtn) barSwitchBtn.textContent = "Switch to Native Engine ⇄";
+        if (cloudToggleText) cloudToggleText.textContent = "Native Engine ⇄";
+      } else {
+        if (iframe) iframe.src = localUrl;
+        if (statusText) statusText.textContent = "Native PDF Renderer (/paper.pdf)";
+        if (barSwitchBtn) barSwitchBtn.textContent = "Switch to Cloud Viewer ⇄";
+        if (cloudToggleText) cloudToggleText.textContent = "Cloud Viewer ⇄";
+      }
+    }
+
+    const cloudBtn = backdrop.querySelector("#qpm-cloud-toggle-btn");
+    if (cloudBtn) cloudBtn.addEventListener("click", toggleViewerEngine);
+    const barSwitchBtn = backdrop.querySelector("#qpm-bar-switch-btn");
+    if (barSwitchBtn) barSwitchBtn.addEventListener("click", toggleViewerEngine);
+    const mobileCloudBtn = backdrop.querySelector("#qpm-mobile-cloud-toggle");
+    if (mobileCloudBtn) mobileCloudBtn.addEventListener("click", toggleViewerEngine);
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && backdrop.classList.contains("active")) {
@@ -327,9 +470,20 @@
   function openWhitePaperModal() {
     const backdrop = createModalDOM();
     const iframe = backdrop.querySelector("#qpm-iframe");
-    // Point directly to local PDF to guarantee instant, 0-latency rendering without white screen
-    if (iframe && (!iframe.src || iframe.src === "about:blank" || !iframe.src.includes(LOCAL_PDF_URL))) {
-      iframe.src = LOCAL_PDF_URL + "#toolbar=1&navpanes=0";
+    // On phone screens, mobile browsers refuse inline PDF iframes, so default to cloud viewer or native url
+    const isMobile = window.innerWidth <= 768;
+    const initialUrl = isMobile 
+      ? ("https://docs.google.com/viewer?url=" + encodeURIComponent("https://qureml.vercel.app/paper.pdf") + "&embedded=true")
+      : (LOCAL_PDF_URL + "#toolbar=1&navpanes=0");
+    
+    if (iframe && (!iframe.src || iframe.src === "about:blank" || iframe.src === window.location.href)) {
+      iframe.src = initialUrl;
+      const statusText = backdrop.querySelector("#qpm-status-text");
+      if (statusText) {
+        statusText.textContent = isMobile 
+          ? "Google Docs Cloud Engine (Mobile Safe)" 
+          : "Native PDF Renderer (/paper.pdf)";
+      }
     }
     backdrop.classList.add("active");
     document.body.style.overflow = "hidden";

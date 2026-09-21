@@ -375,10 +375,15 @@
         return;
       }
 
+      // If user arrives on predict (e.g. from Launch Triage or direct link), ensure predict is never blocked by previous page dismissals!
+      if (currentSlug === 'predict' && !dontShow) {
+        sessionStorage.removeItem('qureml_tour_dismissed');
+        sessionStorage.removeItem('qureml_tour_dismissed_predict');
+      }
+
       const savedActive = localStorage.getItem('qureml_tour_active');
       const savedStep = parseInt(localStorage.getItem('qureml_tour_step') || '0', 10);
       const isDismissedOnPage = sessionStorage.getItem('qureml_tour_dismissed_' + currentSlug) === 'true';
-      const isDismissedGlobal = sessionStorage.getItem('qureml_tour_dismissed') === 'true';
 
       if (forceTour) {
         // Explicit AI Tour request: reset flags and start
@@ -393,8 +398,8 @@
         setTimeout(() => {
           this.startTour(savedStep);
         }, 80);
-      } else if (!isDismissedOnPage && !isDismissedGlobal && !dontShow) {
-        // Auto-trigger only once on fresh session if never dismissed
+      } else if (!isDismissedOnPage && !dontShow) {
+        // Auto-trigger on page entry unless explicitly dismissed on this specific page or permanently muted
         const matchedStepIndex = WALKTHROUGH.findIndex(s => s.slug === currentSlug);
         const initialStep = (matchedStepIndex !== -1) ? matchedStepIndex : 0;
         setTimeout(() => {
@@ -794,7 +799,7 @@
             { slug: 'batch', title: 'Hospital Batch Triage', icon: 'clinical_notes', desc: 'Multi-Patient Queue Review' },
             { slug: 'evaluation', title: 'Multi-Cohort Matrix', icon: 'table_chart', desc: '6 Datasets &middot; Wilcoxon Tests' },
             { slug: 'hardware', title: '156-Qubit IBM Heron', icon: 'hub', desc: 'Physical QPU (ibm_fez) Telemetry' },
-            { slug: 'paper', title: 'Scientific White Paper', icon: 'description', desc: 'Full Peer-Reviewed PDF (Drive)', url: 'https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk', isExternal: true },
+            { slug: 'paper', title: 'Scientific White Paper', icon: 'description', desc: 'Full Peer-Reviewed PDF', url: '/paper.pdf', isExternal: true },
             { slug: 'walkthrough', title: 'Judge Executive Report', icon: 'verified', desc: 'SIH26139 Compliance Dossier' }
           ];
 
@@ -819,12 +824,12 @@
               const isExternal = btn.getAttribute('data-external') === 'true';
               const href = btn.getAttribute('href');
               this.dontShowAgain();
-              if (href.includes('1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN')) {
+              if (href && (href.includes('paper.pdf') || href.includes('1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN'))) {
                 e.preventDefault();
                 if (window.openWhitePaperModal) {
                   window.openWhitePaperModal();
                 } else {
-                  window.open(href, '_blank');
+                  window.open('/paper.pdf', '_blank');
                 }
               } else if (!isExternal) {
                 e.preventDefault();
@@ -958,13 +963,19 @@
         this.dom.boxTag.style.display = 'none';
       }
 
-      // Smoothly scroll target panel into upper viewport so the whole feature + heading sits at top: 85px!
-      // This leaves the upper 55% of the screen for the spotlighted feature, completely clear of the GuideBot!
+      // Smoothly scroll target panel into upper viewport so the feature sits in the top half of the screen
+      // Leaves comfortable room at bottom for GuideBot on both phone (<=768px) and desktop screens!
+      const isMobile = window.innerWidth <= 768;
       const elementDocTop = targetEl.getBoundingClientRect().top + window.pageYOffset;
-      const targetScrollY = Math.max(0, elementDocTop - 85);
+      const topOffset = isMobile ? 65 : 85;
+      const targetScrollY = Math.max(0, elementDocTop - topOffset);
 
       const rect = targetEl.getBoundingClientRect();
-      const isAlreadyComfortable = (
+      const isAlreadyComfortable = isMobile ? (
+        rect.top >= 55 &&
+        rect.top <= 125 &&
+        rect.bottom <= (window.innerHeight * 0.54)
+      ) : (
         rect.top >= 70 &&
         rect.top <= 140 &&
         rect.bottom <= (window.innerHeight - 80)
@@ -1005,12 +1016,13 @@
         return;
       }
       const rect = this.activeTargetEl.getBoundingClientRect();
-      const pad = 12;
+      const isMobile = window.innerWidth <= 768;
+      const pad = isMobile ? 6 : 12;
 
-      const top = Math.max(6, Math.round(rect.top - pad));
-      const left = Math.max(6, Math.round(rect.left - pad));
-      const width = Math.min(window.innerWidth - 12, Math.round(rect.width + pad * 2));
-      const height = Math.min(window.innerHeight - 12, Math.round(rect.height + pad * 2));
+      const top = Math.max(isMobile ? 4 : 6, Math.round(rect.top - pad));
+      const left = Math.max(isMobile ? 4 : 6, Math.round(rect.left - pad));
+      const width = Math.min(window.innerWidth - (isMobile ? 8 : 12), Math.round(rect.width + pad * 2));
+      const height = Math.min(window.innerHeight - (isMobile ? 8 : 12), Math.round(rect.height + pad * 2));
       const right = left + width;
       const bottom = top + height;
 
