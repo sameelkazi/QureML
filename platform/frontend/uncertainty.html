@@ -43,68 +43,135 @@
     opacity: 0.85;
   }
 
-  /* Quantum Register Dials (Luxury Light Neo-Brutalist) */
+  /* Quantum Register Dials (Ultra-Precision Neo-Brutalist Telemetry HUD) */
   .quantum-dial-box {
     background: #FFFFFF;
     border: 2px solid #000000;
-    border-radius: 12px;
-    padding: 1.1rem 0.75rem;
+    border-radius: 8px;
+    padding: 1rem 0.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 3px 3px 0px #000000, 6px 6px 0px #D4AF37;
+    gap: 0.6rem;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 4px 4px 0px #000000;
     position: relative;
     overflow: hidden;
   }
   .quantum-dial-box:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 4px 4px 0px #000000, 8px 8px 0px #D4AF37;
-    background: #FFFDF5;
+    box-shadow: 6px 6px 0px #D4AF37;
+    background: #FFFEFA;
   }
-  .quantum-dial-ring {
+  .quantum-dial-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 0.1rem;
+  }
+  .quantum-dial-badge {
+    background: #000000;
+    color: #D4AF37;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .quantum-dial-ch {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    color: #718096;
+    letter-spacing: 0.04em;
+  }
+  .quantum-dial-ring-wrap {
     position: relative;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: #FFFDF0;
-    border: 2.5px solid #D4AF37;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.15rem 0;
+  }
+  .quantum-dial-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  .quantum-dial-bg-track {
+    fill: none;
+    stroke: #EAE5DC;
+    stroke-width: 6;
+  }
+  .quantum-dial-active-arc {
+    fill: none;
+    stroke: #D4AF37;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 201.06;
+    stroke-dashoffset: 40;
+    transition: stroke-dashoffset 0.4s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.25s ease;
+  }
+  .quantum-dial-box:hover .quantum-dial-active-arc {
+    stroke: #B8860B;
+  }
+  .quantum-dial-center-content {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 2px 5px rgba(212, 175, 55, 0.25), 0 3px 8px rgba(0, 0, 0, 0.06);
-    transition: transform 0.25s ease;
+    pointer-events: none;
   }
-  .quantum-dial-box:hover .quantum-dial-ring {
-    transform: scale(1.06);
-    border-color: #B8860B;
-  }
-  .quantum-dial-val {
+  .quantum-dial-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
+    font-size: 0.96rem;
     font-weight: 900;
     color: #0A0A0A;
-    line-height: 1.1;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
-  .quantum-dial-qubit {
+  .quantum-dial-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #996515;
+    text-transform: uppercase;
+    margin-top: 3px;
+    letter-spacing: 0.02em;
+  }
+  .quantum-dial-qubit-name {
     font-family: 'Kanit', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 800;
+    font-size: 0.88rem;
+    font-weight: 900;
     color: #000000;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-align: center;
+    line-height: 1;
   }
-  .quantum-dial-sub {
+  .quantum-dial-biomarker {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.62rem;
     font-weight: 700;
-    color: #666666;
+    color: #4A5568;
+    background: #F7F5F0;
+    border: 1px solid #E2D9CC;
+    border-radius: 4px;
+    padding: 3px 6px;
     text-transform: uppercase;
     letter-spacing: 0.02em;
     text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Biomarker Cards */
@@ -224,10 +291,7 @@
   <!-- Header Section -->
   <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
     <div>
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFFDF2] border border-[#D4AF37]/50 text-[#996515] text-xs font-mono font-bold tracking-wider uppercase mb-3 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
-        SIH26139 Clinical Protocol &middot; 30 Independent Quantum Runs &middot; 1,024 Shots/Run
-      </div>
+
       <h1 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-[#0A0A0A]">
         Quantum Uncertainty &amp; <span class="gold-gradient-text">Shot-Noise Quantification</span>
       </h1>
@@ -321,14 +385,14 @@
     </div>
 
     <!-- 2. Six-Qubit Latent Register HUD (Visual Quantum Representation) -->
-    <div class="p-6 rounded-xl bg-white border-2 border-black shadow-[4px_4px_0px_#000000] space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#EAE5DC]">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-[#FFFDF2] border border-[#D4AF37]/60 flex items-center justify-center text-[#B8860B] shadow-sm">
-            <span class="material-symbols-outlined text-lg">blur_circular</span>
+    <div class="p-6 rounded-2xl bg-white border-2 border-black shadow-[6px_6px_0px_#000000] space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#EAE5DC]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-black border-2 border-[#D4AF37] flex items-center justify-center text-[#D4AF37] shadow-[2px_2px_0px_#000000]">
+            <span class="material-symbols-outlined text-xl">blur_circular</span>
           </div>
           <div>
-            <h3 class="text-sm font-black text-[#0A0A0A] uppercase tracking-wider">
+            <h3 class="text-base font-black text-[#0A0A0A] uppercase tracking-wider font-['Kanit']">
               6-Qubit Quantum Latent Register (AngleEmbedding &theta;<sub>0..5</sub>)
             </h3>
             <div class="text-[11px] font-mono text-[#525B64]">
@@ -337,60 +401,133 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-[#FFFDF2] border border-[#D4AF37]/50 text-[#996515] uppercase tracking-wider shadow-sm">
-            6-Qubit VQC Latent Register
-          </span>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-[#000000] text-[#D4AF37] text-xs font-mono font-bold tracking-wider uppercase border border-[#D4AF37]/50 shadow-[2px_2px_0px_#000000]">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            ACTIVE ROTATION &theta; &isin; [0, &pi;]
+          </div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5" id="quantum-qubits-hud">
         <!-- Qubit 0 -->
         <div class="quantum-dial-box">
-          <div class="quantum-dial-ring">
-            <span class="quantum-dial-val" id="q-val-0">1.48 rad</span>
+          <div class="quantum-dial-header">
+            <span class="quantum-dial-badge">|q₀⟩</span>
+            <span class="quantum-dial-ch">QUBIT 0</span>
           </div>
-          <div class="quantum-dial-qubit">Qubit 0 &middot; Scale</div>
-          <div class="quantum-dial-sub">Nuclear Size / Area</div>
+          <div class="quantum-dial-ring-wrap">
+            <svg class="quantum-dial-svg" viewBox="0 0 74 74">
+              <circle class="quantum-dial-bg-track" cx="37" cy="37" r="32"></circle>
+              <circle class="quantum-dial-active-arc" id="q-arc-0" cx="37" cy="37" r="32"></circle>
+            </svg>
+            <div class="quantum-dial-center-content">
+              <div class="quantum-dial-num" id="q-num-0">2.54</div>
+              <div class="quantum-dial-unit" id="q-unit-0">rad &middot; 0.81&pi;</div>
+              <span id="q-val-0" class="sr-only">2.54 rad</span>
+            </div>
+          </div>
+          <div class="quantum-dial-qubit-name">SCALE</div>
+          <div class="quantum-dial-biomarker" title="Nuclear Size / Area">Nuclear Size / Area</div>
         </div>
         <!-- Qubit 1 -->
         <div class="quantum-dial-box">
-          <div class="quantum-dial-ring">
-            <span class="quantum-dial-val" id="q-val-1">0.92 rad</span>
+          <div class="quantum-dial-header">
+            <span class="quantum-dial-badge">|q₁⟩</span>
+            <span class="quantum-dial-ch">QUBIT 1</span>
           </div>
-          <div class="quantum-dial-qubit">Qubit 1 &middot; Shape</div>
-          <div class="quantum-dial-sub">Perimeter Concavity</div>
+          <div class="quantum-dial-ring-wrap">
+            <svg class="quantum-dial-svg" viewBox="0 0 74 74">
+              <circle class="quantum-dial-bg-track" cx="37" cy="37" r="32"></circle>
+              <circle class="quantum-dial-active-arc" id="q-arc-1" cx="37" cy="37" r="32"></circle>
+            </svg>
+            <div class="quantum-dial-center-content">
+              <div class="quantum-dial-num" id="q-num-1">1.88</div>
+              <div class="quantum-dial-unit" id="q-unit-1">rad &middot; 0.60&pi;</div>
+              <span id="q-val-1" class="sr-only">1.88 rad</span>
+            </div>
+          </div>
+          <div class="quantum-dial-qubit-name">SHAPE</div>
+          <div class="quantum-dial-biomarker" title="Perimeter Concavity">Perimeter Concavity</div>
         </div>
         <!-- Qubit 2 -->
         <div class="quantum-dial-box">
-          <div class="quantum-dial-ring">
-            <span class="quantum-dial-val" id="q-val-2">2.14 rad</span>
+          <div class="quantum-dial-header">
+            <span class="quantum-dial-badge">|q₂⟩</span>
+            <span class="quantum-dial-ch">QUBIT 2</span>
           </div>
-          <div class="quantum-dial-qubit">Qubit 2 &middot; Margin</div>
-          <div class="quantum-dial-sub">Boundary Contour</div>
+          <div class="quantum-dial-ring-wrap">
+            <svg class="quantum-dial-svg" viewBox="0 0 74 74">
+              <circle class="quantum-dial-bg-track" cx="37" cy="37" r="32"></circle>
+              <circle class="quantum-dial-active-arc" id="q-arc-2" cx="37" cy="37" r="32"></circle>
+            </svg>
+            <div class="quantum-dial-center-content">
+              <div class="quantum-dial-num" id="q-num-2">2.76</div>
+              <div class="quantum-dial-unit" id="q-unit-2">rad &middot; 0.88&pi;</div>
+              <span id="q-val-2" class="sr-only">2.76 rad</span>
+            </div>
+          </div>
+          <div class="quantum-dial-qubit-name">MARGIN</div>
+          <div class="quantum-dial-biomarker" title="Boundary Contour">Boundary Contour</div>
         </div>
         <!-- Qubit 3 -->
         <div class="quantum-dial-box">
-          <div class="quantum-dial-ring">
-            <span class="quantum-dial-val" id="q-val-3">0.45 rad</span>
+          <div class="quantum-dial-header">
+            <span class="quantum-dial-badge">|q₃⟩</span>
+            <span class="quantum-dial-ch">QUBIT 3</span>
           </div>
-          <div class="quantum-dial-qubit">Qubit 3 &middot; Error</div>
-          <div class="quantum-dial-sub">Standard Error SE</div>
+          <div class="quantum-dial-ring-wrap">
+            <svg class="quantum-dial-svg" viewBox="0 0 74 74">
+              <circle class="quantum-dial-bg-track" cx="37" cy="37" r="32"></circle>
+              <circle class="quantum-dial-active-arc" id="q-arc-3" cx="37" cy="37" r="32"></circle>
+            </svg>
+            <div class="quantum-dial-center-content">
+              <div class="quantum-dial-num" id="q-num-3">0.89</div>
+              <div class="quantum-dial-unit" id="q-unit-3">rad &middot; 0.28&pi;</div>
+              <span id="q-val-3" class="sr-only">0.89 rad</span>
+            </div>
+          </div>
+          <div class="quantum-dial-qubit-name">ERROR</div>
+          <div class="quantum-dial-biomarker" title="Standard Error SE">Standard Error SE</div>
         </div>
         <!-- Qubit 4 -->
         <div class="quantum-dial-box">
-          <div class="quantum-dial-ring">
-            <span class="quantum-dial-val" id="q-val-4">1.18 rad</span>
+          <div class="quantum-dial-header">
+            <span class="quantum-dial-badge">|q₄⟩</span>
+            <span class="quantum-dial-ch">QUBIT 4</span>
           </div>
-          <div class="quantum-dial-qubit">Qubit 4 &middot; Texture</div>
-          <div class="quantum-dial-sub">Chromatin Density</div>
+          <div class="quantum-dial-ring-wrap">
+            <svg class="quantum-dial-svg" viewBox="0 0 74 74">
+              <circle class="quantum-dial-bg-track" cx="37" cy="37" r="32"></circle>
+              <circle class="quantum-dial-active-arc" id="q-arc-4" cx="37" cy="37" r="32"></circle>
+            </svg>
+            <div class="quantum-dial-center-content">
+              <div class="quantum-dial-num" id="q-num-4">1.45</div>
+              <div class="quantum-dial-unit" id="q-unit-4">rad &middot; 0.46&pi;</div>
+              <span id="q-val-4" class="sr-only">1.45 rad</span>
+            </div>
+          </div>
+          <div class="quantum-dial-qubit-name">TEXTURE</div>
+          <div class="quantum-dial-biomarker" title="Chromatin Density">Chromatin Density</div>
         </div>
         <!-- Qubit 5 -->
         <div class="quantum-dial-box">
-          <div class="quantum-dial-ring">
-            <span class="quantum-dial-val" id="q-val-5">1.75 rad</span>
+          <div class="quantum-dial-header">
+            <span class="quantum-dial-badge">|q₅⟩</span>
+            <span class="quantum-dial-ch">QUBIT 5</span>
           </div>
-          <div class="quantum-dial-qubit">Qubit 5 &middot; Bounds</div>
-          <div class="quantum-dial-sub">Worst Extrema Max</div>
+          <div class="quantum-dial-ring-wrap">
+            <svg class="quantum-dial-svg" viewBox="0 0 74 74">
+              <circle class="quantum-dial-bg-track" cx="37" cy="37" r="32"></circle>
+              <circle class="quantum-dial-active-arc" id="q-arc-5" cx="37" cy="37" r="32"></circle>
+            </svg>
+            <div class="quantum-dial-center-content">
+              <div class="quantum-dial-num" id="q-num-5">2.38</div>
+              <div class="quantum-dial-unit" id="q-unit-5">rad &middot; 0.76&pi;</div>
+              <span id="q-val-5" class="sr-only">2.38 rad</span>
+            </div>
+          </div>
+          <div class="quantum-dial-qubit-name">BOUNDS</div>
+          <div class="quantum-dial-biomarker" title="Worst Extrema Max">Worst Extrema Max</div>
         </div>
       </div>
     </div>
@@ -549,9 +686,23 @@ document.querySelectorAll('.filter-tab-btn').forEach(btn => {
 let currentPresetKey = 'malignant';
 
 function updateQubitDials(qubits) {
+  const CIRCLE_CIRCUMFERENCE = 201.06; // 2 * Math.PI * 32
   qubits.forEach((rad, idx) => {
-    const el = document.getElementById(`q-val-${idx}`);
-    if (el) el.innerText = `${rad.toFixed(2)} rad`;
+    const numEl = document.getElementById(`q-num-${idx}`);
+    const unitEl = document.getElementById(`q-unit-${idx}`);
+    const arcEl = document.getElementById(`q-arc-${idx}`);
+    const valEl = document.getElementById(`q-val-${idx}`);
+    
+    if (numEl) numEl.innerText = rad.toFixed(2);
+    const piFraction = (rad / Math.PI).toFixed(2);
+    if (unitEl) unitEl.innerHTML = `rad &middot; ${piFraction}&pi;`;
+    if (valEl) valEl.innerText = `${rad.toFixed(2)} rad`;
+
+    if (arcEl) {
+      const fraction = Math.max(0, Math.min(1, rad / Math.PI));
+      const offset = CIRCLE_CIRCUMFERENCE * (1 - fraction);
+      arcEl.style.strokeDashoffset = offset;
+    }
   });
 }
 
