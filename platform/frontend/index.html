@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link rel="stylesheet" href="guidebot.css">
+<script src="guidebot.js" defer></script>
 
 <script type="importmap">
 {
@@ -1891,6 +1893,11 @@ button.contact-btn {
           <span class="material-symbols-outlined">fact_check</span>
           <span>Judge Skim Report</span>
         </a>
+        <button type="button" id="hero-sidebar-guidebot-btn" class="hero-sidebar-link" style="width: 100%; text-align: left; background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(184, 134, 11, 0.1) 100%); border: 1.5px solid var(--gold-primary); cursor: pointer; margin-top: 0.35rem; display: flex; align-items: center; gap: 0.65rem;">
+          <span class="material-symbols-outlined" style="color: var(--gold-primary);">smart_toy</span>
+          <span style="color: var(--gold-pale); font-weight: 800;">AI GuideBot Tour</span>
+          <span style="margin-left: auto; font-family: var(--font-mono); font-size: 0.62rem; background: var(--gold-primary); color: #000000; font-weight: 900; padding: 2px 6px; border-radius: 4px;">2 BOTS</span>
+        </button>
         <button type="button" id="hero-sidebar-team-btn" class="hero-sidebar-link" style="width: 100%; text-align: left; background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.28); cursor: pointer; margin-top: 0.35rem;">
           <span class="material-symbols-outlined" style="color: var(--gold-primary);">diversity_3</span>
           <span style="color: var(--gold-pale); font-weight: 700;">Research Team Roster</span>
@@ -4581,6 +4588,15 @@ animate3D();
     sidebarTeamBtn.addEventListener('click', () => {
       closeSidebar();
       setTimeout(openTeamModal, 250);
+    });
+  }
+  const sidebarGuideBotBtn = document.getElementById('hero-sidebar-guidebot-btn');
+  if (sidebarGuideBotBtn) {
+    sidebarGuideBotBtn.addEventListener('click', () => {
+      closeSidebar();
+      setTimeout(() => {
+        if (window.openGuideBotTour) window.openGuideBotTour(0);
+      }, 300);
     });
   }
   sidebarLinks.forEach((link) => {
