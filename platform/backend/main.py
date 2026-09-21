@@ -278,6 +278,7 @@ def serve_nav_js():
         return FileResponse(str(js_file), media_type="application/javascript")
     raise HTTPException(status_code=404, detail="nav.js not found")
 
+@app.get("/guidebot.css", include_in_schema=False)
 @app.get("/dashboard-guidebot.css", include_in_schema=False)
 def serve_dgb_css():
     css_file = frontend_dir / "dashboard-guidebot.css"
@@ -285,6 +286,7 @@ def serve_dgb_css():
         return FileResponse(str(css_file), media_type="text/css")
     raise HTTPException(status_code=404, detail="dashboard-guidebot.css not found")
 
+@app.get("/guidebot.js", include_in_schema=False)
 @app.get("/dashboard-guidebot.js", include_in_schema=False)
 def serve_dgb_js():
     js_file = frontend_dir / "dashboard-guidebot.js"
@@ -298,6 +300,21 @@ def serve_paper_modal_js():
     if js_file.exists():
         return FileResponse(str(js_file), media_type="application/javascript")
     raise HTTPException(status_code=404, detail="paper-modal.js not found")
+
+@app.get("/paper.pdf", include_in_schema=False)
+@app.get("/QureML_SIH26139_paper.pdf", include_in_schema=False)
+def serve_paper_pdf():
+    pdf_path = PROJECT_ROOT / "paper" / "QureML_SIH26139_paper.pdf"
+    if pdf_path.exists():
+        return FileResponse(
+            str(pdf_path),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": "inline; filename=QureML_SIH26139_paper.pdf",
+                "X-Frame-Options": "SAMEORIGIN"
+            }
+        )
+    raise HTTPException(status_code=404, detail="Paper PDF not found")
 
 PAGES_CONFIG = [
     ("index", "index.html"),

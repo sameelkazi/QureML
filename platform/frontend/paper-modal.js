@@ -1,11 +1,12 @@
 /**
  * QureML — In-Website White Paper Modal & Research Gallery Gateway
- * Embeds the peer-reviewed White Paper PDF via Google Drive preview in an elegant
- * in-website popup with direct access to the 14-Figure Comprehensive Research Gallery.
+ * Neo-Brutalist Gold & Onyx Edition
+ * Features native local PDF embedding (/paper.pdf) to eliminate Google Drive iframe white-screen bugs,
+ * single unified Research Gallery action, and strict Neo-Brutalist styling.
  */
 
 (function () {
-  const DRIVE_PREVIEW_URL = "https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/preview";
+  const LOCAL_PDF_URL = "/paper.pdf";
   const DRIVE_VIEW_URL = "https://drive.google.com/file/d/1CzP8Fg-207rTSUjH-5K3us4KTSWe31kN/view?usp=drivesdk";
   const GALLERY_URL = "/architecture";
 
@@ -18,7 +19,7 @@
         position: fixed;
         inset: 0;
         z-index: 999999;
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.88);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         display: flex;
@@ -27,35 +28,35 @@
         padding: 1rem;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+        transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s ease;
       }
       .qpm-backdrop.active {
         opacity: 1;
         visibility: visible;
       }
       .qpm-dialog {
-        background: #0C0C0C;
+        background: #080808;
         color: #FFFFFF;
         border: 3px solid #D4AF37;
-        box-shadow: 8px 8px 0px #000000, 0 0 35px rgba(212, 175, 55, 0.3);
-        border-radius: 14px;
-        width: 94vw;
-        max-width: 1280px;
-        height: 90vh;
-        max-height: 900px;
+        box-shadow: 10px 10px 0px #000000, 0 0 0 1px #D4AF37;
+        border-radius: 0px;
+        width: 95vw;
+        max-width: 1320px;
+        height: 92vh;
+        max-height: 940px;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        transform: scale(0.96) translateY(12px);
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: scale(0.97) translateY(8px);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .qpm-backdrop.active .qpm-dialog {
         transform: scale(1) translateY(0);
       }
       .qpm-header {
-        background: #141414;
-        border-bottom: 2px solid rgba(212, 175, 55, 0.4);
-        padding: 0.85rem 1.25rem;
+        background: #000000;
+        border-bottom: 2px solid #D4AF37;
+        padding: 0.75rem 1.25rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -69,24 +70,25 @@
         min-width: 0;
       }
       .qpm-badge {
-        font-family: var(--font-mono, "JetBrains Mono", monospace);
-        font-size: 0.65rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
         font-weight: 800;
         text-transform: uppercase;
-        background: #D4AF37;
-        color: #000000;
-        padding: 2px 8px;
-        border-radius: 4px;
-        letter-spacing: 0.05em;
+        background: #000000;
+        color: #D4AF37;
+        border: 1px solid #D4AF37;
+        padding: 3px 8px;
+        border-radius: 0px;
+        letter-spacing: 0.08em;
         white-space: nowrap;
       }
       .qpm-title {
-        font-family: var(--font-kanit, sans-serif);
-        font-size: 1.05rem;
-        font-weight: 800;
+        font-family: 'Kanit', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 900;
         color: #FFFFFF;
         text-transform: uppercase;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.04em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -100,77 +102,85 @@
       .qpm-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        font-family: var(--font-kanit, sans-serif);
-        font-size: 0.76rem;
-        font-weight: 800;
+        gap: 0.45rem;
+        font-family: 'Kanit', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 900;
         text-transform: uppercase;
-        letter-spacing: 0.03em;
-        padding: 0.42rem 0.85rem;
-        border-radius: 6px;
-        border: 2px solid #000000;
+        letter-spacing: 0.04em;
+        padding: 0.45rem 0.95rem;
+        border-radius: 0px;
         cursor: pointer;
         text-decoration: none;
-        transition: all 0.15s ease;
+        transition: all 0.12s ease;
         white-space: nowrap;
       }
       .qpm-btn-gold {
-        background: #FFE600;
+        background: #D4AF37;
         color: #000000;
-        box-shadow: 2.5px 2.5px 0px #000000;
+        border: 2px solid #000000;
+        box-shadow: 3px 3px 0px #000000;
       }
       .qpm-btn-gold:hover {
-        background: #5BFFA0;
-        transform: translate(-1px, -1px);
-        box-shadow: 3.5px 3.5px 0px #000000;
-      }
-      .qpm-btn-white {
-        background: #FFFFFF;
+        background: #F3E5AB;
         color: #000000;
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0px #000000;
+      }
+      .qpm-btn-dark {
+        background: #121212;
+        color: #E2E8F0;
+        border: 1.5px solid rgba(212, 175, 55, 0.4);
         box-shadow: 2px 2px 0px #000000;
       }
-      .qpm-btn-white:hover {
-        background: #F1F5F9;
+      .qpm-btn-dark:hover {
+        border-color: #D4AF37;
+        color: #D4AF37;
+        background: #1C1C1C;
         transform: translate(-1px, -1px);
         box-shadow: 3px 3px 0px #000000;
       }
       .qpm-btn-close {
-        background: #1F1F1F;
-        color: #FFFFFF;
-        border: 1.5px solid rgba(255, 255, 255, 0.2);
-        font-size: 1.3rem;
+        background: #000000;
+        color: #D4AF37;
+        border: 2px solid #D4AF37;
+        font-size: 1.35rem;
         line-height: 1;
-        width: 34px;
-        height: 34px;
-        border-radius: 6px;
+        width: 36px;
+        height: 36px;
+        border-radius: 0px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.15s ease;
+        box-shadow: 2px 2px 0px #000000;
+        transition: all 0.12s ease;
       }
       .qpm-btn-close:hover {
         background: #EF4444;
         border-color: #EF4444;
         color: #FFFFFF;
-        transform: scale(1.05);
+        transform: translate(-1px, -1px);
+        box-shadow: 3px 3px 0px #000000;
       }
       .qpm-body {
         position: relative;
         flex: 1;
         min-height: 0;
-        background: #181818;
+        background: #141414;
+        display: flex;
+        flex-direction: column;
       }
       .qpm-iframe {
         width: 100%;
         height: 100%;
         border: none;
-        background: #FFFFFF;
+        background: #1A1A1A;
       }
       .qpm-footer {
-        background: #111111;
-        border-top: 1.5px solid rgba(212, 175, 55, 0.3);
-        padding: 0.65rem 1.25rem;
+        background: #000000;
+        border-top: 2px solid #1E1E1E;
+        padding: 0.6rem 1.25rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -180,23 +190,37 @@
       .qpm-footer-stats {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        font-family: var(--font-mono, "JetBrains Mono", monospace);
-        font-size: 0.68rem;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: #718096;
+      }
+      .qpm-tag {
+        border: 1px solid #2D3748;
+        background: #0C0C0C;
+        padding: 2px 6px;
         color: #A0AEC0;
       }
-      .qpm-footer-stats span b {
+      .qpm-tag b {
         color: #D4AF37;
+      }
+      .qpm-footer-right {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        color: #A0AEC0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
       @media (max-width: 768px) {
         .qpm-dialog {
           width: 98vw;
-          height: 94vh;
-          margin: 0;
+          height: 95vh;
           border-width: 2px;
         }
         .qpm-header {
-          padding: 0.6rem 0.85rem;
+          padding: 0.5rem 0.75rem;
           flex-direction: column;
           align-items: stretch;
           gap: 0.5rem;
@@ -206,16 +230,16 @@
           width: 100%;
         }
         .qpm-title {
-          font-size: 0.85rem;
+          font-size: 0.9rem;
         }
         .qpm-footer {
           flex-direction: column;
           align-items: stretch;
-          gap: 0.5rem;
-          padding: 0.5rem 0.85rem;
+          gap: 0.4rem;
+          padding: 0.45rem 0.75rem;
         }
         .qpm-footer-stats {
-          display: none;
+          font-size: 0.62rem;
         }
       }
     `;
@@ -240,42 +264,45 @@
         <!-- Header -->
         <div class="qpm-header">
           <div class="qpm-title-group">
-            <span class="qpm-badge">Peer-Reviewed PDF</span>
+            <span class="qpm-badge">PDF DOCUMENT</span>
             <div class="qpm-title">QureML Scientific White Paper</div>
           </div>
           <div class="qpm-actions">
+            <!-- SINGLE Unified Research Gallery Button -->
             <a href="${GALLERY_URL}" class="qpm-btn qpm-btn-gold" title="Explore all 14 empirical figures and telemetry curves">
-              <span class="material-symbols-outlined" style="font-size: 15px;">gallery_thumbnail</span>
+              <span class="material-symbols-outlined" style="font-size: 16px;">gallery_thumbnail</span>
               <span>Research Figures Gallery &rarr;</span>
             </a>
-            <a href="${DRIVE_VIEW_URL}" target="_blank" rel="noopener noreferrer" class="qpm-btn qpm-btn-white" title="Open PDF in Google Drive full page">
+            <!-- Direct Drive view link -->
+            <a href="${DRIVE_VIEW_URL}" target="_blank" rel="noopener noreferrer" class="qpm-btn qpm-btn-dark" title="Open PDF in Google Drive full page">
               <span class="material-symbols-outlined" style="font-size: 15px;">open_in_new</span>
-              <span>Open Drive Full</span>
+              <span>Drive Link</span>
             </a>
+            <!-- Download Local PDF -->
+            <a href="${LOCAL_PDF_URL}" download="QureML_SIH26139_paper.pdf" class="qpm-btn qpm-btn-dark" title="Download offline PDF copy">
+              <span class="material-symbols-outlined" style="font-size: 15px;">download</span>
+              <span>Download</span>
+            </a>
+            <!-- Close Button -->
             <button type="button" class="qpm-btn-close" id="qpm-close-btn" aria-label="Close White Paper Modal">&times;</button>
           </div>
         </div>
 
-        <!-- Body with Google Drive Preview iFrame -->
+        <!-- Body with Direct Local PDF Viewer (No Google Drive white screen bug) -->
         <div class="qpm-body">
-          <iframe id="qpm-iframe" class="qpm-iframe" src="" allow="autoplay" loading="lazy"></iframe>
+          <iframe id="qpm-iframe" class="qpm-iframe" src="" type="application/pdf" title="QureML Peer-Reviewed Scientific White Paper"></iframe>
         </div>
 
-        <!-- Footer -->
+        <!-- Brutalist Footer Specs (Zero Duplicate Gallery Buttons) -->
         <div class="qpm-footer">
           <div class="qpm-footer-stats">
-            <span><b>6</b> Clinical Cohorts</span>
-            <span>&bull;</span>
-            <span><b>73</b> Matched Parameters</span>
-            <span>&bull;</span>
-            <span><b>156-Qubit</b> IBM Heron Telemetry</span>
-            <span>&bull;</span>
-            <span><b>Zero-Miss</b> Gate</span>
+            <span class="qpm-tag"><b>6</b> CLINICAL COHORTS</span>
+            <span class="qpm-tag"><b>73</b> PARAMETERS MATCHED</span>
+            <span class="qpm-tag"><b>156-QUBIT</b> IBM HERON</span>
+            <span class="qpm-tag"><b>ZERO-MISS</b> GATE</span>
           </div>
-          <div class="flex items-center gap-2">
-            <a href="${GALLERY_URL}" class="qpm-btn qpm-btn-gold" style="font-size: 0.72rem; padding: 0.35rem 0.75rem;">
-              <span>View 14 Empirical Figures &rarr;</span>
-            </a>
+          <div class="qpm-footer-right">
+            <span>SIH26139 COMPLIANT SPECIFICATION</span>
           </div>
         </div>
       </div>
@@ -300,8 +327,9 @@
   function openWhitePaperModal() {
     const backdrop = createModalDOM();
     const iframe = backdrop.querySelector("#qpm-iframe");
-    if (iframe && (!iframe.src || iframe.src === "about:blank")) {
-      iframe.src = DRIVE_PREVIEW_URL;
+    // Point directly to local PDF to guarantee instant, 0-latency rendering without white screen
+    if (iframe && (!iframe.src || iframe.src === "about:blank" || !iframe.src.includes(LOCAL_PDF_URL))) {
+      iframe.src = LOCAL_PDF_URL + "#toolbar=1&navpanes=0";
     }
     backdrop.classList.add("active");
     document.body.style.overflow = "hidden";
