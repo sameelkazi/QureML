@@ -175,7 +175,8 @@
 }
 
 .dgb-container.dock-center .dgb-chatbox {
-  width: 550px;
+  width: 620px;
+  max-width: calc(100vw - 40px);
   margin-bottom: 2.5rem;
 }
 
@@ -194,20 +195,26 @@
 .dgb-container.dock-right .dgb-chatbox::before,
 .dgb-container.dock-center .dgb-chatbox::before {
   left: -13px;
+  right: auto;
   border-left: 3.5px solid #000000;
   border-bottom: 3.5px solid #000000;
+  border-right: none;
+  border-top: none;
   transform: rotate(45deg);
 }
 
 /* Tail pointing right (when character is to the right) */
 .dgb-container.dock-left .dgb-chatbox::before {
   right: -13px;
+  left: auto;
   border-right: 3.5px solid #000000;
   border-top: 3.5px solid #000000;
+  border-left: none;
+  border-bottom: none;
   transform: rotate(45deg);
 }
 
-/* Yellow Brutalist Header Banner */
+/* Yellow Brutalist Header Banner (Draggable Handle) */
 .dgb-header {
   background: #FFE600;
   border-bottom: 3px solid #000000;
@@ -216,6 +223,39 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  cursor: grab;
+  cursor: -webkit-grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.dgb-header:active,
+.dgb-container.is-dragging .dgb-header {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  background: #FFD700;
+}
+
+.dgb-container.is-dragging {
+  transition: none !important;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dgb-drag-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px dashed rgba(0, 0, 0, 0.35);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #000000;
+  pointer-events: none;
 }
 
 .dgb-speaker-badge {
@@ -404,6 +444,42 @@
   color: #000000;
 }
 
+.dgb-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.dgb-btn-dont-show {
+  background: transparent;
+  border: 1.5px dashed #777777;
+  border-radius: 6px;
+  color: #666666;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 0.28rem 0.6rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.dgb-btn-dont-show:hover {
+  background: #FFF0F0;
+  border-color: #EF4444;
+  color: #DC2626;
+  box-shadow: 2px 2px 0px #000000;
+  transform: translate(-1px, -1px);
+}
+
+.dgb-btn-dont-show:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px #000000;
+}
+
 .dgb-btn-group {
   display: flex;
   align-items: center;
@@ -587,4 +663,99 @@
     padding: 0.35rem 0.85rem 0.35rem 0.45rem;
     font-size: 0.75rem;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   6. EXPLORE MODULES GRID (Conclusion Step)
+   --------------------------------------------------------------------------- */
+.dgb-explore-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+}
+
+.dgb-explore-grid::-webkit-scrollbar {
+  width: 5px;
+}
+.dgb-explore-grid::-webkit-scrollbar-track {
+  background: #EAE5DC;
+  border-radius: 4px;
+}
+.dgb-explore-grid::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .dgb-explore-grid {
+    grid-template-columns: 1fr;
+    max-height: 210px;
+  }
+}
+
+.dgb-explore-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  text-decoration: none;
+  color: #000000;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  cursor: pointer;
+}
+
+.dgb-explore-btn:hover {
+  background: #FFE600;
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0px #000000;
+}
+
+.dgb-explore-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000000;
+}
+
+.dgb-explore-btn .material-symbols-outlined {
+  font-size: 1.35rem;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.dgb-explore-title {
+  font-family: var(--font-kanit, sans-serif);
+  font-weight: 900;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+}
+
+.dgb-explore-desc {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 0.62rem;
+  color: #555555;
+  margin-top: 0.1rem;
+}
+
+.dgb-explore-arrow {
+  font-family: var(--font-mono, monospace);
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: #000000;
+  margin-left: auto;
+  opacity: 0.6;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.dgb-explore-btn:hover .dgb-explore-arrow {
+  transform: translateX(2px);
+  opacity: 1;
 }

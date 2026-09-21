@@ -53,7 +53,7 @@
           <span>REPO</span>
         </a>
         <a href="/docs" target="_blank" class="nav-action-btn btn-white">API</a>
-        <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startTour(0);}else{window.location.href='/predict';}" class="nav-action-btn btn-gold flex items-center gap-1" title="Start AI GuideBot Walkthrough">
+        <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startCurrentPageTour();}else{window.location.href='/predict?ai_tour=1';}" class="nav-action-btn btn-gold flex items-center gap-1" title="Start AI GuideBot Walkthrough">
           <span class="material-symbols-outlined text-sm">smart_toy</span>
           <span>AI TOUR</span>
         </button>
@@ -77,7 +77,7 @@
           <span>REPO</span>
         </a>
         <a href="/docs" target="_blank" class="nav-action-btn btn-white flex items-center justify-center" style="width: 100% !important; min-height: 40px !important;">API</a>
-        <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startTour(0);}else{window.location.href='/predict';}" class="nav-action-btn btn-gold flex items-center justify-center gap-1.5" style="width: 100% !important; min-height: 40px !important;">
+        <button type="button" onclick="if(window.ClinicalDashboardGuideBot){window.ClinicalDashboardGuideBot.startCurrentPageTour();}else{window.location.href='/predict?ai_tour=1';}" class="nav-action-btn btn-gold flex items-center justify-center gap-1.5" style="width: 100% !important; min-height: 40px !important;">
           <span class="material-symbols-outlined text-sm">smart_toy</span>
           <span>AI TOUR</span>
         </button>
