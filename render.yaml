@@ -6,7 +6,7 @@ services:
     region: oregon
     branch: main
     buildCommand: "pip install --upgrade pip && pip install torch --index-url https://download.pytorch.org/whl/cpu && pip install -r platform/backend/requirements.txt"
-    startCommand: "uvicorn platform.backend.main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "uvicorn server:app --host 0.0.0.0 --port $PORT"
     healthCheckPath: /health
     autoDeploy: true
     envVars:

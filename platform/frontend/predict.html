@@ -371,9 +371,9 @@ document.getElementById('run-predict').addEventListener('click', async () => {
     const d = await r.json();
     lastPrediction = d;
 
-    const probPct = (d.malignancy_probability * 100).toFixed(2);
-    const isMalignant = d.decision_classification.toLowerCase().includes('malignant');
-    const isBorderline = d.risk_tier.toLowerCase().includes('medium') || d.risk_tier.toLowerCase().includes('borderline');
+    const probPct = (d.probability * 100).toFixed(2);
+    const isMalignant = (d.predicted_class || '').toLowerCase().includes('malignant');
+    const isBorderline = (d.risk_tier || '').toLowerCase().includes('medium') || (d.risk_tier || '').toLowerCase().includes('borderline');
 
     let badgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50';
     let badgeText = 'LOW RISK &middot; BENIGN';
@@ -394,7 +394,7 @@ document.getElementById('run-predict').addEventListener('click', async () => {
             <span class="px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border ${badgeClass}">
               ${badgeText}
             </span>
-            <span class="text-xs font-mono text-[#8A9BA8]">Decision: <strong class="text-white">${d.decision_classification}</strong></span>
+            <span class="text-xs font-mono text-[#8A9BA8]">Decision: <strong class="text-white">${d.predicted_class}</strong></span>
           </div>
 
           <div class="text-xs font-mono text-[#8A9BA8]">
@@ -409,7 +409,7 @@ document.getElementById('run-predict').addEventListener('click', async () => {
             <div class="text-4xl font-black font-mono ${isMalignant ? 'text-red-400' : (isBorderline ? 'text-[#F5D77F]' : 'text-emerald-400')}">
               ${probPct}%
             </div>
-            <div class="text-[11px] text-[#8A9BA8] font-mono pt-1">Threshold: ${d.operating_threshold}</div>
+            <div class="text-[11px] text-[#8A9BA8] font-mono pt-1">Threshold: &tau;=${(d.threshold_operating_points?.standard_default ?? 0.50).toFixed(2)} (Standard)</div>
           </div>
 
           <div class="p-6 rounded-2xl bg-[#141414] border border-white/5 space-y-3 md:col-span-2">
@@ -422,7 +422,7 @@ document.getElementById('run-predict').addEventListener('click', async () => {
               <div class="h-full rounded-full transition-all duration-700 ${isMalignant ? 'bg-gradient-to-r from-[#B8860B] to-red-500' : (isBorderline ? 'bg-gradient-to-r from-[#D4AF37] to-[#F5D77F]' : 'bg-gradient-to-r from-emerald-600 to-emerald-400')}" style="width: ${Math.max(2, probPct)}%;"></div>
             </div>
             <p class="text-xs text-[#8A9BA8] font-light leading-relaxed pt-1">
-              ${d.clinical_interpretation}
+              ${d.interpretation}
             </p>
           </div>
         </div>
@@ -480,7 +480,7 @@ function recordDecision(action, notes) {
   const log = JSON.parse(localStorage.getItem('qureml_decision_log') || '[]');
   const entry = {
     timestamp: new Date().toLocaleTimeString(),
-    summary: `Risk: ${(lastPrediction.malignancy_probability * 100).toFixed(1)}% (${lastPrediction.decision_classification})`,
+    summary: `Risk: ${(lastPrediction.probability * 100).toFixed(1)}% (${lastPrediction.predicted_class})`,
     advisory: lastPrediction.risk_tier,
     action: action,
     notes: notes || 'Routine clinical protocol'

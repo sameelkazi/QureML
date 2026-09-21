@@ -37,7 +37,7 @@ If not using Blueprints:
      ```
    - **Start Command**:
      ```bash
-     uvicorn platform.backend.main:app --host 0.0.0.0 --port $PORT
+     uvicorn server:app --host 0.0.0.0 --port $PORT
      ```
    - **Instance Type**: `Free`
 4. Click **Create Web Service**.

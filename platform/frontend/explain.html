@@ -332,8 +332,8 @@ document.getElementById('run-explain').addEventListener('click', async () => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/30">
             <div class="text-xs font-mono text-[#D4AF37] uppercase">Predicted Malignancy</div>
-            <div class="text-3xl font-black text-white mt-1 font-mono">${(d.prediction_probability * 100).toFixed(2)}%</div>
-            <div class="text-[11px] text-[#8A9BA8] font-mono mt-1">${d.clinical_interpretation}</div>
+            <div class="text-3xl font-black text-white mt-1 font-mono">${(d.probability * 100).toFixed(2)}%</div>
+            <div class="text-[11px] text-[#8A9BA8] font-mono mt-1">${d.risk_tier ? `${d.risk_tier} &middot; ${d.predicted_class}` : (d.interpretation || '')}</div>
           </div>
 
           <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10">
@@ -344,7 +344,7 @@ document.getElementById('run-explain').addEventListener('click', async () => {
 
           <div class="p-5 rounded-2xl bg-[#0C0C0C] border border-white/10">
             <div class="text-xs font-mono text-[#8A9BA8] uppercase">Completeness Check (ICML 2017)</div>
-            <div class="text-3xl font-black text-emerald-400 mt-1 font-mono">${(d.completeness_error * 100).toFixed(4)}%</div>
+            <div class="text-3xl font-black text-emerald-400 mt-1 font-mono">${(d.completeness_error_pct).toFixed(4)}%</div>
             <div class="text-[11px] text-emerald-400/80 font-mono mt-1">&Delta; Attribution Sum Validated</div>
           </div>
         </div>
