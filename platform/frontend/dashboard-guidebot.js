@@ -9,8 +9,38 @@
 (function() {
   'use strict';
 
+  // Strict global singleton guard: prevents duplicate execution or multiple instances
+  if (window.__QUREML_GUIDEBOT_INITIALIZED__) {
+    console.log('QureML GuideBot already initialized; skipping duplicate execution.');
+    return;
+  }
+  window.__QUREML_GUIDEBOT_INITIALIZED__ = true;
+
   // Dynamic asset base resolution
   const ASSET_BASE = (window.location.pathname.startsWith('/static') ? '/static' : '') + '/assets/guidebot';
+
+  // Helper: Normalize page URLs to base slug (handles /predict, /static/predict.html, /predict.html)
+  function getPageSlug(pathOrUrl) {
+    if (!pathOrUrl) return '';
+    const clean = pathOrUrl.split('?')[0].split('#')[0];
+    const filename = clean.split('/').filter(Boolean).pop() || 'index';
+    return filename.replace(/\.html$/, '');
+  }
+
+  // Helper: Resolve cross-page destination matching current hosting environment
+  function resolvePageUrl(targetSlug) {
+    if (window.location.protocol === 'file:') {
+      return `./${targetSlug}.html`;
+    }
+    const currentPath = window.location.pathname;
+    if (currentPath.startsWith('/static/')) {
+      return `/static/${targetSlug}.html`;
+    }
+    if (currentPath.includes('.html')) {
+      return `/${targetSlug}.html`;
+    }
+    return `/${targetSlug}`;
+  }
 
   // Character Poses Catalog
   const BOTS = {
@@ -39,7 +69,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-0-intro',
-      page: '/predict',
+      slug: 'predict',
       speaker: 'ali',
       pose: 'forward', // Ali straight pose at start!
       dock: 'dock-center',
@@ -57,7 +87,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-1-presets',
-      page: '/predict',
+      slug: 'predict',
       speaker: 'ali',
       pose: 'point_left',
       dock: 'dock-right',
@@ -77,7 +107,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-2-biomarkers',
-      page: '/predict',
+      slug: 'predict',
       speaker: 'samridhi',
       pose: 'point_left',
       dock: 'dock-right',
@@ -97,7 +127,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-3-execute',
-      page: '/predict',
+      slug: 'predict',
       speaker: 'ali',
       pose: 'point_left',
       dock: 'dock-right',
@@ -116,7 +146,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-4-uncertainty',
-      page: '/uncertainty',
+      slug: 'uncertainty',
       speaker: 'ali',
       pose: 'point_left',
       dock: 'dock-right',
@@ -136,7 +166,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-5-explain',
-      page: '/explain',
+      slug: 'explain',
       speaker: 'samridhi',
       pose: 'point_left',
       dock: 'dock-right',
@@ -156,7 +186,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-6-compare',
-      page: '/compare',
+      slug: 'compare',
       speaker: 'ali',
       pose: 'point_left',
       dock: 'dock-right',
@@ -176,7 +206,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-7-hardware',
-      page: '/hardware',
+      slug: 'hardware',
       speaker: 'ali',
       pose: 'point_left',
       dock: 'dock-right',
@@ -196,7 +226,7 @@
     // ------------------------------------------------------------------------
     {
       id: 'step-8-conclusion',
-      page: '/walkthrough',
+      slug: 'walkthrough',
       speaker: 'samridhi',
       pose: 'forward', // Samridhi straight pose at the end!
       dock: 'dock-center',
@@ -220,26 +250,43 @@
       this.activeTargetEl = null;
       this.dom = {};
 
+      // Preload all bot poses into browser cache for instant zero-lag switching
+      Object.values(BOTS).forEach(bot => {
+        ['forward', 'point_left', 'point_right'].forEach(poseKey => {
+          if (bot[poseKey]) {
+            const preImg = new Image();
+            preImg.src = bot[poseKey];
+          }
+        });
+      });
+
       this.initDOM();
       this.bindEvents();
 
       // Check cross-page tour state or auto-trigger on /predict
       const savedActive = localStorage.getItem('qureml_tour_active');
       const savedStep = parseInt(localStorage.getItem('qureml_tour_step') || '0', 10);
-      const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+      const currentSlug = getPageSlug(window.location.pathname);
 
       if (savedActive === 'true') {
         setTimeout(() => {
           this.startTour(savedStep);
-        }, 350);
-      } else if (currentPath === '/predict' || currentPath.endsWith('/predict') || currentPath.endsWith('predict.html')) {
+        }, 100);
+      } else if (currentSlug === 'predict') {
         setTimeout(() => {
           this.startTour(0);
-        }, 550);
+        }, 300);
       }
     }
 
     initDOM() {
+      // Clean up any existing instances or elements before creating
+      ['dgb-container', 'dgb-mask', 'dgb-box', 'dgb-launcher'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+      });
+      document.querySelectorAll('.dgb-container, .dgb-spotlight-mask, .dgb-spotlight-box, .dgb-launcher').forEach(el => el.remove());
+
       // 1. Dark Full-Screen Shadow Mask
       const mask = document.createElement('div');
       mask.className = 'dgb-spotlight-mask';
@@ -322,25 +369,25 @@
       `;
       document.body.appendChild(launcher);
 
-      // Cache elements
+      // Cache elements strictly within our own container to avoid ANY ID collision
       this.dom = {
         mask,
         box,
-        boxTag: document.getElementById('dgb-box-tag'),
+        boxTag: box.querySelector('#dgb-box-tag') || document.getElementById('dgb-box-tag'),
         container,
-        charImg: document.getElementById('dgb-char-img'),
-        speakerBadge: document.getElementById('dgb-speaker-badge'),
-        stepPill: document.getElementById('dgb-step-pill'),
-        closeBtn: document.getElementById('dgb-btn-close'),
-        tag: document.getElementById('dgb-tag'),
-        title: document.getElementById('dgb-title'),
-        text: document.getElementById('dgb-text'),
-        calloutBox: document.getElementById('dgb-callout-box'),
-        complianceText: document.getElementById('dgb-compliance-text'),
-        innovationText: document.getElementById('dgb-innovation-text'),
-        btnSkip: document.getElementById('dgb-btn-skip'),
-        btnPrev: document.getElementById('dgb-btn-prev'),
-        btnNext: document.getElementById('dgb-btn-next'),
+        charImg: container.querySelector('#dgb-char-img'),
+        speakerBadge: container.querySelector('#dgb-speaker-badge'),
+        stepPill: container.querySelector('#dgb-step-pill'),
+        closeBtn: container.querySelector('#dgb-btn-close'),
+        tag: container.querySelector('#dgb-tag'),
+        title: container.querySelector('#dgb-title'),
+        text: container.querySelector('#dgb-text'),
+        calloutBox: container.querySelector('#dgb-callout-box'),
+        complianceText: container.querySelector('#dgb-compliance-text'),
+        innovationText: container.querySelector('#dgb-innovation-text'),
+        btnSkip: container.querySelector('#dgb-btn-skip'),
+        btnPrev: container.querySelector('#dgb-btn-prev'),
+        btnNext: container.querySelector('#dgb-btn-next'),
         launcher
       };
     }
@@ -385,11 +432,11 @@
       localStorage.setItem('qureml_tour_step', this.currentStep);
 
       // Verify current page matches the step's page
-      const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-      const stepPage = (WALKTHROUGH[this.currentStep].page || '').replace(/\/$/, '');
+      const currentSlug = getPageSlug(window.location.pathname);
+      const targetSlug = WALKTHROUGH[this.currentStep].slug;
 
-      if (stepPage && !currentPath.endsWith(stepPage) && currentPath !== stepPage) {
-        window.location.href = WALKTHROUGH[this.currentStep].page;
+      if (targetSlug && currentSlug !== targetSlug) {
+        window.location.href = resolvePageUrl(targetSlug);
         return;
       }
 
@@ -402,10 +449,15 @@
     endTour() {
       this.isActive = false;
       this.activeTargetEl = null;
+      document.querySelectorAll('.dgb-spotlight-target').forEach(el => {
+        el.classList.remove('dgb-spotlight-target');
+      });
       localStorage.removeItem('qureml_tour_active');
       localStorage.removeItem('qureml_tour_step');
       this.dom.mask.classList.remove('active');
+      this.dom.mask.style.clipPath = 'none';
       this.dom.box.classList.remove('active');
+      this.dom.box.style.opacity = '0';
       this.dom.container.classList.remove('active');
       this.dom.launcher.style.display = 'inline-flex';
     }
@@ -414,14 +466,14 @@
       if (this.currentStep < WALKTHROUGH.length - 1) {
         const nextIdx = this.currentStep + 1;
         const nextStep = WALKTHROUGH[nextIdx];
-        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-        const targetPage = (nextStep.page || '').replace(/\/$/, '');
+        const currentSlug = getPageSlug(window.location.pathname);
+        const targetSlug = nextStep.slug;
 
         // If next step lives on another page, navigate to that page!
-        if (targetPage && !currentPath.endsWith(targetPage) && currentPath !== targetPage) {
+        if (targetSlug && currentSlug !== targetSlug) {
           localStorage.setItem('qureml_tour_active', 'true');
           localStorage.setItem('qureml_tour_step', nextIdx);
-          window.location.href = nextStep.page;
+          window.location.href = resolvePageUrl(targetSlug);
           return;
         }
 
@@ -430,6 +482,10 @@
         this.render();
       } else {
         this.endTour();
+        const currentSlug = getPageSlug(window.location.pathname);
+        if (currentSlug !== 'predict') {
+          window.location.href = resolvePageUrl('predict');
+        }
       }
     }
 
@@ -437,14 +493,14 @@
       if (this.currentStep > 0) {
         const prevIdx = this.currentStep - 1;
         const prevStep = WALKTHROUGH[prevIdx];
-        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-        const targetPage = (prevStep.page || '').replace(/\/$/, '');
+        const currentSlug = getPageSlug(window.location.pathname);
+        const targetSlug = prevStep.slug;
 
         // If prev step lives on another page, navigate back!
-        if (targetPage && !currentPath.endsWith(targetPage) && currentPath !== targetPage) {
+        if (targetSlug && currentSlug !== targetSlug) {
           localStorage.setItem('qureml_tour_active', 'true');
           localStorage.setItem('qureml_tour_step', prevIdx);
-          window.location.href = prevStep.page;
+          window.location.href = resolvePageUrl(targetSlug);
           return;
         }
 
@@ -458,14 +514,10 @@
       const step = WALKTHROUGH[this.currentStep];
       const bot = BOTS[step.speaker] || BOTS.ali;
 
-      // 1. Dynamic Character Pose Switching
+      // 1. Instant Character Pose Switching (Pre-cached)
       const poseSrc = bot[step.pose] || bot.forward;
-      if (this.dom.charImg.src !== poseSrc) {
-        this.dom.charImg.classList.add('switching');
-        setTimeout(() => {
-          this.dom.charImg.src = poseSrc;
-          this.dom.charImg.classList.remove('switching');
-        }, 120);
+      if (this.dom.charImg.getAttribute('src') !== poseSrc) {
+        this.dom.charImg.src = poseSrc;
       }
 
       // 2. Intelligent Docking Position
@@ -499,11 +551,17 @@
     }
 
     positionSpotlight(step) {
+      // Clear previous spotlight target elevation
+      document.querySelectorAll('.dgb-spotlight-target').forEach(el => {
+        el.classList.remove('dgb-spotlight-target');
+      });
+
       if (!step.target) {
         // Step 0 (Intro) & Step 8 (Conclusion) have no spotlight box!
         this.activeTargetEl = null;
         this.dom.box.classList.remove('active');
         this.dom.box.style.opacity = '0';
+        this.dom.mask.style.clipPath = 'none';
         return;
       }
 
@@ -516,15 +574,14 @@
         this.activeTargetEl = null;
         this.dom.box.classList.remove('active');
         this.dom.box.style.opacity = '0';
+        this.dom.mask.style.clipPath = 'none';
         return;
       }
 
       this.activeTargetEl = targetEl;
+      targetEl.classList.add('dgb-spotlight-target');
 
-      // Smooth scroll target element into comfortable view
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      // Frame the element with the spotlight box
+      // Frame tag label
       if (step.spotlightTag) {
         this.dom.boxTag.textContent = step.spotlightTag;
         this.dom.boxTag.style.display = 'block';
@@ -532,36 +589,68 @@
         this.dom.boxTag.style.display = 'none';
       }
 
+      // Check if target is already comfortably visible in viewport
+      const rect = targetEl.getBoundingClientRect();
+      const isAlreadyVisible = (
+        rect.top >= 70 &&
+        rect.bottom <= (window.innerHeight - 80)
+      );
+
+      // Only scroll if outside comfortable viewport
+      if (!isAlreadyVisible) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Position box and cut hole in mask
       this.updateBoxGeometry();
       this.dom.box.classList.add('active');
       this.dom.box.style.opacity = '1';
 
-      // Continuously update during smooth scroll animation
-      let count = 0;
-      const track = () => {
-        if (this.isActive && this.activeTargetEl && count < 35) {
-          this.updateBoxGeometry();
-          count++;
-          requestAnimationFrame(track);
-        }
-      };
-      requestAnimationFrame(track);
+      // If scrolling was triggered, smoothly track geometry across a few frames
+      if (!isAlreadyVisible) {
+        let frames = 0;
+        const trackScroll = () => {
+          if (this.isActive && this.activeTargetEl && frames < 16) {
+            this.updateBoxGeometry();
+            frames++;
+            requestAnimationFrame(trackScroll);
+          }
+        };
+        requestAnimationFrame(trackScroll);
+      }
     }
 
     updateBoxGeometry() {
-      if (!this.activeTargetEl) return;
+      if (!this.activeTargetEl) {
+        this.dom.mask.style.clipPath = 'none';
+        return;
+      }
       const rect = this.activeTargetEl.getBoundingClientRect();
-      const pad = 14;
+      const pad = 12;
 
-      const top = Math.max(8, rect.top - pad);
-      const left = Math.max(8, rect.left - pad);
-      const width = Math.min(window.innerWidth - 16, rect.width + pad * 2);
-      const height = Math.min(window.innerHeight - 16, rect.height + pad * 2);
+      const top = Math.max(6, Math.round(rect.top - pad));
+      const left = Math.max(6, Math.round(rect.left - pad));
+      const width = Math.min(window.innerWidth - 12, Math.round(rect.width + pad * 2));
+      const height = Math.min(window.innerHeight - 12, Math.round(rect.height + pad * 2));
+      const right = left + width;
+      const bottom = top + height;
 
+      // 1. Move neon-yellow brutalist frame
       this.dom.box.style.top = `${top}px`;
       this.dom.box.style.left = `${left}px`;
       this.dom.box.style.width = `${width}px`;
       this.dom.box.style.height = `${height}px`;
+
+      // 2. Cut transparent rectangular window in mask!
+      // This leaves the highlighted element 100% crystal clear & unblurred!
+      this.dom.mask.style.clipPath = `polygon(
+        0% 0%, 0% 100%, 100% 100%, 100% 0%, 0% 0%,
+        ${left}px ${top}px,
+        ${right}px ${top}px,
+        ${right}px ${bottom}px,
+        ${left}px ${bottom}px,
+        ${left}px ${top}px
+      )`;
     }
   }
 

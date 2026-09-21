@@ -278,6 +278,20 @@ def serve_nav_js():
         return FileResponse(str(js_file), media_type="application/javascript")
     raise HTTPException(status_code=404, detail="nav.js not found")
 
+@app.get("/dashboard-guidebot.css", include_in_schema=False)
+def serve_dgb_css():
+    css_file = frontend_dir / "dashboard-guidebot.css"
+    if css_file.exists():
+        return FileResponse(str(css_file), media_type="text/css")
+    raise HTTPException(status_code=404, detail="dashboard-guidebot.css not found")
+
+@app.get("/dashboard-guidebot.js", include_in_schema=False)
+def serve_dgb_js():
+    js_file = frontend_dir / "dashboard-guidebot.js"
+    if js_file.exists():
+        return FileResponse(str(js_file), media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="dashboard-guidebot.js not found")
+
 PAGES_CONFIG = [
     ("index", "index.html"),
     ("predict", "predict.html"),

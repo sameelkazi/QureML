@@ -15,7 +15,7 @@
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  transition: opacity 0.25s ease, visibility 0.25s ease, clip-path 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: auto;
 }
 
@@ -30,12 +30,12 @@
   pointer-events: none;
   border: 3.5px solid #FFE600;
   border-radius: 14px;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.86), 0 0 35px rgba(255, 230, 0, 0.9), inset 0 0 20px rgba(255, 230, 0, 0.25);
+  box-shadow: 0 0 35px rgba(255, 230, 0, 0.85);
   z-index: 99985;
-  transition: top 0.25s ease,
-              left 0.25s ease,
-              width 0.25s ease,
-              height 0.25s ease,
+  transition: top 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              left 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 0.2s ease;
   opacity: 0;
 }
@@ -62,6 +62,15 @@
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
+}
+
+/* Elevated High-Contrast Target Element (Shines Brightly & 100% Unblurred) */
+.dgb-spotlight-target {
+  position: relative !important;
+  z-index: 99982 !important;
+  box-shadow: 0 0 35px rgba(255, 230, 0, 0.25) !important;
+  border-radius: 12px !important;
+  transition: box-shadow 0.25s ease !important;
 }
 
 /* ---------------------------------------------------------------------------
