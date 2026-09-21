@@ -613,6 +613,7 @@ def results_summary():
     return df.to_dict(orient="records")
 
 @app.get("/health")
+@app.get("/api/health")
 def health():
     return {"status": "ok", "service": "QureML Clinical Triage API"}
 
