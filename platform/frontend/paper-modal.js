@@ -335,7 +335,7 @@
         <div class="qpm-header">
           <div class="qpm-title-group">
             <span class="qpm-badge">PDF DOCUMENT</span>
-            <div class="qpm-title">QureML Scientific White Paper</div>
+            <div class="qpm-title">QureML Scientific Research Paper</div>
           </div>
           <!-- Desktop Action Buttons -->
           <div class="qpm-actions qpm-actions-desktop">
@@ -359,11 +359,9 @@
               <span class="material-symbols-outlined" style="font-size: 15px;">download</span>
               <span>Download</span>
             </a>
-            <!-- Close Button -->
-            <button type="button" class="qpm-btn-close" id="qpm-close-btn" aria-label="Close White Paper Modal">&times;</button>
           </div>
-          <!-- Mobile Close Button (Top-Right) -->
-          <button type="button" class="qpm-btn-close sm:hidden" id="qpm-close-btn-mobile" aria-label="Close White Paper Modal">&times;</button>
+          <!-- Single Dedicated Close Button -->
+          <button type="button" class="qpm-btn-close" id="qpm-close-btn" aria-label="Close Research Paper Modal">&times;</button>
         </div>
 
         <!-- Dedicated Mobile Quick Action Toolbar (Thumb-Friendly, No Horizontal Overflow) -->

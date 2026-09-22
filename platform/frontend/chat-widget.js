@@ -1,75 +1,80 @@
 /**
- * ============================================================================
- * QureML Quantum Clinical Intelligence Assistant — Client-Side Chat Widget
- * Interactive Multi-Turn Grounded Architecture & Benchmarks Q&A
- * SIH26139 | Egreen Quanta & SPIT Mumbai
- * ============================================================================
+ * QureML Quantum Clinical Intelligence Assistant (SIH26139)
+ * Ali Bot — Grounded AI Assistant & Clinical Co-Pilot
+ * Neo-Brutalist UI/UX with Ali Bot Avatar & Multi-Key Failover
  */
 
 (function () {
   'use strict';
 
-  // Prevent duplicate initialization
   if (window.__QUREML_CHAT_INITIALIZED__) return;
   window.__QUREML_CHAT_INITIALIZED__ = true;
 
-  const CHAT_STORAGE_KEY = 'qureml_chat_history';
+  const CHAT_STORAGE_KEY = 'qureml_chat_history_v2';
+  const ALI_AVATAR_SRC = '/assets/guidebot/ali_forward.png';
   let isRequestInProgress = false;
 
-  // Simple Markdown Parser for clean, rich message rendering
-  function renderMarkdown(text) {
-    if (!text) return '';
-    let escaped = text
+  // Simple Markdown Renderer
+  function renderMarkdown(md) {
+    if (!md) return '';
+    let escaped = md
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
-    // Fenced Code blocks
-    escaped = escaped.replace(/```([\s\S]*?)```/g, function (match, code) {
-      return '<pre style="background:#111;color:#F5D77F;padding:8px 10px;border-radius:3px;overflow-x:auto;font-family:monospace;font-size:0.8em;border:1px solid #333;margin:6px 0;"><code>' + code.trim() + '</code></pre>';
+    // Code blocks ```code```
+    escaped = escaped.replace(/```([\s\S]*?)```/g, (match, p1) => {
+      return `<pre class="qureml-code-block"><code>${p1.trim()}</code></pre>`;
     });
 
-    // Inline code
+    // Inline code `code`
     escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-    // Bold text (**text**)
+    // Bold **text**
     escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
-    // Italic text (*text*)
+    // Italic *text*
     escaped = escaped.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
-    // Markdown Bullet lists
+    // Lists and paragraphs
     const lines = escaped.split('\n');
-    let inList = false;
     let html = '';
+    let inList = false;
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (/^[-*•]\s+/.test(line)) {
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         if (!inList) {
           html += '<ul>';
           inList = true;
         }
-        html += '<li>' + line.replace(/^[-*•]\s+/, '') + '</li>';
-      } else if (/^\d+\.\s+/.test(line)) {
+        html += `<li>${trimmed.substring(2)}</li>`;
+      } else if (/^\d+\.\s/.test(trimmed)) {
         if (!inList) {
           html += '<ol>';
           inList = true;
         }
-        html += '<li>' + line.replace(/^\d+\.\s+/, '') + '</li>';
+        html += `<li>${trimmed.replace(/^\d+\.\s/, '')}</li>`;
       } else {
         if (inList) {
-          html += '</ul>';
+          html += inList === true ? '</ul>' : '</ol>';
           inList = false;
         }
-        if (line) {
-          html += '<p>' + line + '</p>';
+        if (trimmed) {
+          html += `<p>${trimmed}</p>`;
         }
       }
-    }
+    });
     if (inList) html += '</ul>';
 
     return html || escaped;
+  }
+
+  function escapeHtml(str) {
+    return (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
   // Load chat history from sessionStorage
@@ -90,14 +95,22 @@
 
   // Inject Widget DOM
   function createWidgetDOM() {
-    // 1. Trigger Floating Button
+    // 1. Trigger Floating Button (Bottom Right)
     const trigger = document.createElement('button');
     trigger.id = 'qureml-chat-trigger';
     trigger.type = 'button';
-    trigger.setAttribute('aria-label', 'Open QureML AI Assistant');
+    trigger.setAttribute('aria-label', 'Open Ali Bot AI Assistant');
     trigger.innerHTML = `
-      <span class="material-symbols-outlined" style="font-size:1.15rem;">smart_toy</span>
-      <span>ASK QUREML AI</span>
+      <div class="qureml-trigger-avatar-wrap">
+        <div class="qureml-trigger-avatar-circle">
+          <img src="${ALI_AVATAR_SRC}" alt="Ali Bot Avatar" />
+        </div>
+        <span class="qureml-trigger-status-dot"></span>
+      </div>
+      <div class="qureml-trigger-text-block">
+        <span class="qureml-trigger-name">ALI BOT</span>
+        <span class="qureml-trigger-role">ASK QUREML AI</span>
+      </div>
     `;
 
     // 2. Chat Window Container
@@ -108,15 +121,23 @@
       <!-- Header -->
       <div class="qureml-chat-header">
         <div class="qureml-chat-title-group">
-          <div class="qureml-chat-logo-badge">Q</div>
-          <div>
-            <div class="qureml-chat-title">QURE<span>ML</span> ASSISTANT</div>
-            <div class="qureml-chat-subtitle">GROUNDED QUANTUM CLINICAL AI</div>
+          <div class="qureml-header-avatar-wrap">
+            <div class="qureml-header-avatar-circle">
+              <img src="${ALI_AVATAR_SRC}" alt="Ali Bot Avatar" />
+            </div>
+            <span class="qureml-header-status-badge"></span>
+          </div>
+          <div class="qureml-header-titles">
+            <div class="qureml-chat-title">
+              ALI BOT
+              <span class="qureml-chat-role-badge">PROJECT EXPLAINER</span>
+            </div>
+            <div class="qureml-chat-subtitle">QUREML CLINICAL INTELLIGENCE // SIH26139</div>
           </div>
         </div>
         <div class="qureml-chat-header-actions">
           <button id="qureml-chat-clear-btn" type="button" class="qureml-chat-header-btn" title="Clear Conversation">
-            <span class="material-symbols-outlined" style="font-size:1.05rem;">restart_alt</span>
+            <span class="material-symbols-outlined" style="font-size:1rem;">restart_alt</span>
           </button>
           <button id="qureml-chat-close-btn" type="button" class="qureml-chat-header-btn" title="Close Assistant">
             <span class="material-symbols-outlined" style="font-size:1.1rem;">close</span>
@@ -126,12 +147,13 @@
 
       <!-- Quick Suggestion Chips for Judges -->
       <div class="qureml-chat-chips">
-        <button type="button" class="qureml-chat-chip" data-query="Explain Control A vs Control B with the exact 73-parameter matching.">73 Params Match</button>
-        <button type="button" class="qureml-chat-chip" data-query="How does the 6-qubit PQC run on IBM Quantum Heron hardware with ZNE mitigation?">IBM Heron Hardware</button>
-        <button type="button" class="qureml-chat-chip" data-query="Explain the clinical triage referral gate (tau = 0.10) and 100% sensitivity.">Clinical Triage (τ=0.10)</button>
-        <button type="button" class="qureml-chat-chip" data-query="What was the statistically significant quantum advantage on Heart Disease at 25% data?">Heart Disease p=0.0039</button>
-        <button type="button" class="qureml-chat-chip" data-query="How does Integrated Gradients explainability work across the quantum ansatz?">Explainability (IG)</button>
-        <button type="button" class="qureml-chat-chip" data-query="Why is federated learning 708.4x lighter in parameter transmission?">Federated 708.4× Win</button>
+        <button type="button" class="qureml-chat-chip" data-query="Summarize the core methodology, benchmark results, and clinical findings of the QureML research paper.">📄 Research Paper</button>
+        <button type="button" class="qureml-chat-chip" data-query="Explain Control A vs Control B with the exact 73-parameter matching.">⚡ 73 Params Match</button>
+        <button type="button" class="qureml-chat-chip" data-query="How does the 6-qubit PQC run on IBM Quantum Heron hardware with ZNE mitigation?">⚛️ IBM Heron Hardware</button>
+        <button type="button" class="qureml-chat-chip" data-query="Explain the clinical triage referral gate (tau = 0.10) and 100% sensitivity.">🩺 Triage Gate (τ=0.10)</button>
+        <button type="button" class="qureml-chat-chip" data-query="What was the statistically significant quantum advantage on Heart Disease at 25% data?">📈 Heart Disease p=0.0039</button>
+        <button type="button" class="qureml-chat-chip" data-query="How does Integrated Gradients explainability work across the quantum ansatz?">🔬 Explainability (IG)</button>
+        <button type="button" class="qureml-chat-chip" data-query="Why is federated learning 708.4x lighter in parameter transmission?">🌐 Federated 708.4× Win</button>
       </div>
 
       <!-- Messages Stream -->
@@ -143,11 +165,11 @@
           id="qureml-chat-input" 
           type="text" 
           class="qureml-chat-input" 
-          placeholder="Ask anything about architecture, benchmarks, or clinical utility..." 
+          placeholder="Ask Ali about architecture, benchmarks, or clinical utility..." 
           autocomplete="off"
         />
         <button id="qureml-chat-send-btn" type="submit" class="qureml-chat-send-btn" title="Send Message">
-          <span class="material-symbols-outlined" style="font-size:1.2rem;">send</span>
+          <span class="material-symbols-outlined" style="font-size:1.15rem;">send</span>
         </button>
       </form>
     `;
@@ -155,7 +177,7 @@
     document.body.appendChild(trigger);
     document.body.appendChild(win);
 
-    // Initial Welcome Message
+    // Initial Messages Render
     const messagesBox = win.querySelector('#qureml-chat-messages');
     renderMessages(messagesBox);
 
@@ -224,26 +246,141 @@
     }
   }
 
+  // Create Assistant Message Row DOM
+  function createAssistantRow(replyText) {
+    const row = document.createElement('div');
+    row.className = 'qureml-msg-row assistant';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'qureml-msg-avatar';
+    avatar.innerHTML = `<img src="${ALI_AVATAR_SRC}" alt="Ali Bot" />`;
+
+    const bubbleWrap = document.createElement('div');
+    bubbleWrap.className = 'qureml-chat-bubble-wrap';
+
+    const senderTag = document.createElement('span');
+    senderTag.className = 'qureml-msg-sender-tag';
+    senderTag.textContent = 'ALI BOT • PROJECT EXPLAINER';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'qureml-chat-bubble assistant';
+    bubble.innerHTML = renderMarkdown(replyText);
+
+    const actions = document.createElement('div');
+    actions.className = 'qureml-bubble-actions';
+
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'qureml-copy-btn';
+    copyBtn.innerHTML = `
+      <span class="material-symbols-outlined" style="font-size:12px;">content_copy</span>
+      <span>COPY</span>
+    `;
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(replyText).then(() => {
+        copyBtn.innerHTML = `
+          <span class="material-symbols-outlined" style="font-size:12px;">check</span>
+          <span>COPIED!</span>
+        `;
+        setTimeout(() => {
+          copyBtn.innerHTML = `
+            <span class="material-symbols-outlined" style="font-size:12px;">content_copy</span>
+            <span>COPY</span>
+          `;
+        }, 1800);
+      }).catch(() => {});
+    });
+
+    actions.appendChild(copyBtn);
+    bubbleWrap.appendChild(senderTag);
+    bubbleWrap.appendChild(bubble);
+    bubbleWrap.appendChild(actions);
+
+    row.appendChild(avatar);
+    row.appendChild(bubbleWrap);
+    return row;
+  }
+
+  // Create User Message Row DOM
+  function createUserRow(userText) {
+    const row = document.createElement('div');
+    row.className = 'qureml-msg-row user';
+
+    const bubbleWrap = document.createElement('div');
+    bubbleWrap.className = 'qureml-chat-bubble-wrap';
+
+    const senderTag = document.createElement('span');
+    senderTag.className = 'qureml-msg-sender-tag';
+    senderTag.style.textAlign = 'right';
+    senderTag.textContent = 'YOU (EVALUATOR)';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'qureml-chat-bubble user';
+    bubble.textContent = userText;
+
+    bubbleWrap.appendChild(senderTag);
+    bubbleWrap.appendChild(bubble);
+    row.appendChild(bubbleWrap);
+    return row;
+  }
+
   function renderMessages(container) {
     if (!container) return;
     const history = getHistory();
     container.innerHTML = '';
 
-    // Default System Greeting
-    const welcomeDiv = document.createElement('div');
-    welcomeDiv.className = 'qureml-chat-bubble assistant';
-    welcomeDiv.innerHTML = renderMarkdown(
-      "Greetings! I am the **QureML Quantum Clinical Intelligence Assistant** (SIH26139).\n\n" +
-      "I am strictly grounded in our **hybrid quantum machine learning architecture**, 73-parameter matched controls, real IBM Quantum Heron r2 execution, and empirical benchmarks across 6 clinical datasets.\n\n" +
-      "Select a suggested topic above or ask any technical question!"
-    );
-    container.appendChild(welcomeDiv);
+    // Default System Greeting from Ali Bot
+    const welcomeText = 
+      "Greetings! I am **Ali Bot**, the interactive Project Explainer for **QureML** (SIH26139), developed under Team Lead **Sameel Kazi**.\n\n" +
+      "I am strictly grounded in our team's **73-parameter hybrid quantum architecture**, empirical evaluations across 6 clinical cohorts, and physical execution on the 156-qubit **IBM Quantum Heron r2** processor.\n\n" +
+      "Feel free to click any suggestion chip above, read our peer-reviewed research paper, or ask me about our quantum controls, clinical referral threshold (τ = 0.10), and explainability benchmarks!";
+
+    const welcomeRow = createAssistantRow(welcomeText);
+
+    // Add Interactive Research Paper Action Card to Ali Bot's intro message
+    const bubbleWrap = welcomeRow.querySelector('.qureml-chat-bubble-wrap');
+    if (bubbleWrap) {
+      const paperCard = document.createElement('div');
+      paperCard.className = 'qureml-intro-paper-wrap';
+      paperCard.innerHTML = `
+        <a href="/paper.pdf" class="qureml-intro-paper-btn" id="qureml-intro-paper-btn" title="Open QureML Scientific Research Paper">
+          <div class="qureml-paper-btn-left">
+            <span class="material-symbols-outlined qureml-paper-btn-icon">description</span>
+            <div class="qureml-paper-btn-meta">
+              <span class="qureml-paper-btn-title">RESEARCH PAPER</span>
+              <span class="qureml-paper-btn-sub">Peer-Reviewed Scientific Publication (PDF)</span>
+            </div>
+          </div>
+          <span class="qureml-paper-btn-arrow">&rarr;</span>
+        </a>
+      `;
+      const btn = paperCard.querySelector('#qureml-intro-paper-btn');
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof window.openWhitePaperModal === 'function') {
+            window.openWhitePaperModal();
+          } else {
+            window.open('/paper.pdf', '_blank');
+          }
+        });
+      }
+      const actions = bubbleWrap.querySelector('.qureml-bubble-actions');
+      if (actions) {
+        bubbleWrap.insertBefore(paperCard, actions);
+      } else {
+        bubbleWrap.appendChild(paperCard);
+      }
+    }
+
+    container.appendChild(welcomeRow);
 
     history.forEach(item => {
-      const bubble = document.createElement('div');
-      bubble.className = `qureml-chat-bubble ${item.role === 'user' ? 'user' : 'assistant'}`;
-      bubble.innerHTML = renderMarkdown(item.text);
-      container.appendChild(bubble);
+      if (item.role === 'user') {
+        container.appendChild(createUserRow(item.text));
+      } else {
+        container.appendChild(createAssistantRow(item.text));
+      }
     });
 
     container.scrollTop = container.scrollHeight;
@@ -295,11 +432,10 @@
         }
       } catch (err) {
         lastResponse = err;
-        // Network error on this candidate, try next
       }
     }
 
-    throw lastResponse || new Error('Unable to connect to QureML Assistant endpoint.');
+    throw lastResponse || new Error('Unable to connect to Ali Bot AI Assistant.');
   }
 
   async function sendMessage(userText) {
@@ -311,23 +447,25 @@
     const input = document.getElementById('qureml-chat-input');
     if (sendBtn) sendBtn.disabled = true;
 
-    // Append user message bubble
-    const userBubble = document.createElement('div');
-    userBubble.className = 'qureml-chat-bubble user';
-    userBubble.textContent = userText;
-    messagesBox.appendChild(userBubble);
+    // Append user message row
+    messagesBox.appendChild(createUserRow(userText));
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    // Append typing indicator
-    const typingElem = document.createElement('div');
-    typingElem.className = 'qureml-typing-indicator';
-    typingElem.id = 'qureml-active-typing';
-    typingElem.innerHTML = `
-      <div class="qureml-typing-dot"></div>
-      <div class="qureml-typing-dot"></div>
-      <div class="qureml-typing-dot"></div>
+    // Append typing indicator with Ali Bot avatar
+    const typingRow = document.createElement('div');
+    typingRow.className = 'qureml-typing-row';
+    typingRow.id = 'qureml-active-typing';
+    typingRow.innerHTML = `
+      <div class="qureml-msg-avatar">
+        <img src="${ALI_AVATAR_SRC}" alt="Ali Bot" />
+      </div>
+      <div class="qureml-typing-bubble">
+        <div class="qureml-typing-dot"></div>
+        <div class="qureml-typing-dot"></div>
+        <div class="qureml-typing-dot"></div>
+      </div>
     `;
-    messagesBox.appendChild(typingElem);
+    messagesBox.appendChild(typingRow);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
     const history = getHistory();
@@ -338,30 +476,23 @@
 
     try {
       const data = await executeChatRequest(payload);
-      const replyText = data.reply || 'No response received from assistant.';
+      const replyText = data.reply || 'No response received from Ali Bot.';
 
       // Save to conversation history
       history.push({ role: 'user', text: userText });
       history.push({ role: 'model', text: replyText });
       saveHistory(history);
 
-      // Replace typing indicator with assistant bubble
-      if (typingElem.parentNode) typingElem.remove();
-      const assistantBubble = document.createElement('div');
-      assistantBubble.className = 'qureml-chat-bubble assistant';
-      assistantBubble.innerHTML = renderMarkdown(replyText);
-      messagesBox.appendChild(assistantBubble);
+      // Remove typing indicator & append Ali Bot assistant row
+      if (typingRow.parentNode) typingRow.remove();
+      messagesBox.appendChild(createAssistantRow(replyText));
     } catch (err) {
-      if (typingElem.parentNode) typingElem.remove();
-      const errorBubble = document.createElement('div');
-      errorBubble.className = 'qureml-chat-bubble assistant';
-      errorBubble.style.borderColor = '#b91c1c';
-      errorBubble.style.background = '#fef2f2';
-      errorBubble.innerHTML = renderMarkdown(
-        `**Connection Notice:** ${err.message || 'The assistant is currently unavailable.'}\n\n` +
-        `*If running locally or on Vercel, verify that API credentials (API_KEY_1 through API_KEY_5) are configured in the environment settings.*`
+      if (typingRow.parentNode) typingRow.remove();
+      const errorRow = createAssistantRow(
+        `**Connection Notice:** ${err.message || 'Ali Bot is currently unavailable.'}\n\n` +
+        `*If running locally or on Vercel, verify that API credentials (GEMINI_API_KEYS) are configured in the environment settings.*`
       );
-      messagesBox.appendChild(errorBubble);
+      messagesBox.appendChild(errorRow);
     } finally {
       isRequestInProgress = false;
       if (sendBtn) sendBtn.disabled = false;
@@ -370,7 +501,7 @@
     }
   }
 
-  // Global Programmatic Launcher (callable from nav or walkthrough)
+  // Global Programmatic Launcher (callable from nav menu or walkthrough)
   window.openQureMLChat = function (initialQuery) {
     const win = document.getElementById('qureml-chat-window');
     const trigger = document.getElementById('qureml-chat-trigger');

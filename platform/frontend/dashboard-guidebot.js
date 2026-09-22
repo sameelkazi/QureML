@@ -46,7 +46,7 @@
   const BOTS = {
     ali: {
       name: 'Ali Bot',
-      role: 'QUANTUM ARCHITECT // ALGORITHM SPECIALIST',
+      role: 'PROJECT EXPLAINER // PLATFORM GUIDE',
       badgeClass: 'ali',
       forward: `${ASSET_BASE}/ali_forward.png`,
       point_left: `${ASSET_BASE}/ali_point_left.png`,
@@ -76,7 +76,7 @@
       target: null,
       tag: 'SIH26139 PLATFORM SUITE',
       title: 'Welcome Judge & Evaluator to QureML',
-      text: 'Greetings! I am <b>Ali</b>, Quantum Architecture Lead. <b>Problem Statement SIH26139</b> (Egreen Quanta) challenges us to deliver an automated, clinical-grade platform for early oncology detection. In this director-level tour, we will <b>navigate directly into every core module</b> across the entire clinical platform dashboard!',
+      text: 'Greetings! I am <b>Ali</b>, interactive Project Explainer for Team Lead <b>Sameel Kazi</b>. <b>Problem Statement SIH26139</b> (Egreen Quanta) challenges us to deliver an automated, clinical-grade platform for early oncology detection. In this director-level tour, we will <b>navigate directly into every core module</b> across the entire clinical platform dashboard!',
       compliance: 'Fully addresses SIH26139 HealthTech deliverable requirements with automated clinical triage workflows.',
       innovation: '6-qubit Variational Quantum Circuit (73 parameters) evaluated on physical 156-qubit IBM Heron transmon hardware.',
       btnNext: 'Begin Live Dashboard Tour &rarr;'
