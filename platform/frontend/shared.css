@@ -675,10 +675,9 @@ textarea:-webkit-autofill:focus {
 }
 
 .brutalist-input:focus {
-  animation: none !important;
-  transform: none !important;
-  border-color: #000000 !important;
-  box-shadow: 3px 3px 0 #000000, 6px 6px 0 #D4AF37 !important;
+  animation: focus-pulse 4s cubic-bezier(0.25, 0.8, 0.25, 1) infinite,
+    glitch 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) infinite !important;
+  box-shadow: 4px 4px 0 #000000, 8px 8px 0 #D4AF37 !important;
 }
 
 .brutalist-label {
@@ -726,9 +725,13 @@ textarea:-webkit-autofill:focus {
 }
 
 .smooth-type:focus::before {
-  opacity: 0 !important;
-  display: none !important;
-  animation: none !important;
+  opacity: 1;
+  animation: type-gradient 2s linear infinite;
+}
+
+@keyframes type-gradient {
+  0% { background-position: 300px 0; }
+  100% { background-position: 0 0; }
 }
 
 .brutalist-input::placeholder {
