@@ -375,36 +375,46 @@
         return;
       }
 
+      // Purge any stale localStorage tour active flags from prior browser sessions to prevent navigation hijacking
+      localStorage.removeItem('qureml_tour_active');
+      localStorage.removeItem('qureml_tour_step');
+
       // If user arrives on predict (e.g. from Launch Triage or direct link), ensure predict is never blocked by previous page dismissals!
       if (currentSlug === 'predict' && !dontShow) {
         sessionStorage.removeItem('qureml_tour_dismissed');
         sessionStorage.removeItem('qureml_tour_dismissed_predict');
       }
 
-      const savedActive = localStorage.getItem('qureml_tour_active');
-      const savedStep = parseInt(localStorage.getItem('qureml_tour_step') || '0', 10);
+      const savedActive = sessionStorage.getItem('qureml_tour_active');
+      const savedStep = parseInt(sessionStorage.getItem('qureml_tour_step') || '0', 10);
       const isDismissedOnPage = sessionStorage.getItem('qureml_tour_dismissed_' + currentSlug) === 'true';
 
       if (forceTour) {
-        // Explicit AI Tour request: reset flags and start
+        // Explicit AI Tour request via URL query parameter: reset flags and start
         localStorage.removeItem('qureml_tour_dont_show');
         sessionStorage.removeItem('qureml_tour_dismissed_' + currentSlug);
         sessionStorage.removeItem('qureml_tour_dismissed');
+        const matchedStepIndex = WALKTHROUGH.findIndex(s => s.slug === currentSlug);
         setTimeout(() => {
-          this.startTour(0);
+          this.startTour(matchedStepIndex !== -1 ? matchedStepIndex : 0, false);
         }, 120);
       } else if (savedActive === 'true') {
-        // Resuming multi-page tour sequence
+        // Resuming multi-page tour sequence that was explicitly transitioned in this session
+        const targetStep = WALKTHROUGH[savedStep];
+        if (targetStep && targetStep.slug === currentSlug) {
+          setTimeout(() => {
+            this.startTour(savedStep, false);
+          }, 80);
+        } else {
+          // User navigated independently to a different page: clear tour session so no hijacking occurs
+          sessionStorage.removeItem('qureml_tour_active');
+          sessionStorage.removeItem('qureml_tour_step');
+        }
+      } else if (currentSlug === 'predict' && !isDismissedOnPage && !dontShow) {
+        // Auto-trigger ONLY on the main clinical triage landing page (/predict), NEVER on figures or other sub-pages!
         setTimeout(() => {
-          this.startTour(savedStep);
-        }, 80);
-      } else if (!isDismissedOnPage && !dontShow) {
-        // Auto-trigger on page entry unless explicitly dismissed on this specific page or permanently muted
-        const matchedStepIndex = WALKTHROUGH.findIndex(s => s.slug === currentSlug);
-        const initialStep = (matchedStepIndex !== -1) ? matchedStepIndex : 0;
-        setTimeout(() => {
-          this.startTour(initialStep);
-        }, 220);
+          this.startTour(0, false);
+        }, 250);
       }
     }
 
@@ -666,25 +676,47 @@
       sessionStorage.removeItem('qureml_tour_dismissed');
       localStorage.removeItem('qureml_tour_dont_show');
       const matchIdx = WALKTHROUGH.findIndex(s => s.slug === currentSlug);
-      this.startTour(matchIdx !== -1 ? matchIdx : 0);
+      if (matchIdx !== -1) {
+        this.startTour(matchIdx, false);
+      } else {
+        // If clicked explicitly on a non-tour page (like figures), user explicitly requested the tour:
+        this.startTour(0, true);
+      }
     }
 
-    startTour(startIndex = 0) {
+    startTour(startIndex = 0, allowRedirect = false) {
       const currentSlug = getPageSlug(window.location.pathname);
       sessionStorage.removeItem('qureml_tour_dismissed_' + currentSlug);
       sessionStorage.removeItem('qureml_tour_dismissed');
       localStorage.removeItem('qureml_tour_dont_show');
-      this.isActive = true;
+
       this.currentStep = Math.max(0, Math.min(startIndex, WALKTHROUGH.length - 1));
-      localStorage.setItem('qureml_tour_active', 'true');
-      localStorage.setItem('qureml_tour_step', this.currentStep);
 
       // Verify current page matches the step's page
       const targetSlug = WALKTHROUGH[this.currentStep].slug;
       if (targetSlug && currentSlug !== targetSlug) {
-        window.location.href = resolvePageUrl(targetSlug);
+        if (allowRedirect) {
+          sessionStorage.setItem('qureml_tour_active', 'true');
+          sessionStorage.setItem('qureml_tour_step', this.currentStep);
+          window.location.href = resolvePageUrl(targetSlug);
+        } else {
+          // DO NOT REDIRECT! Check if current page has any walkthrough step
+          const pageStep = WALKTHROUGH.findIndex(s => s.slug === currentSlug);
+          if (pageStep !== -1) {
+            this.currentStep = pageStep;
+            sessionStorage.setItem('qureml_tour_step', this.currentStep);
+          } else {
+            // This page is not part of the tour; do not popup or redirect
+            this.endTour(false);
+            return;
+          }
+        }
         return;
       }
+
+      this.isActive = true;
+      sessionStorage.setItem('qureml_tour_active', 'true');
+      sessionStorage.setItem('qureml_tour_step', this.currentStep);
 
       this.dom.mask.classList.add('active');
       this.dom.container.classList.add('active');
@@ -698,6 +730,8 @@
       document.querySelectorAll('.dgb-spotlight-target').forEach(el => {
         el.classList.remove('dgb-spotlight-target');
       });
+      sessionStorage.removeItem('qureml_tour_active');
+      sessionStorage.removeItem('qureml_tour_step');
       localStorage.removeItem('qureml_tour_active');
       localStorage.removeItem('qureml_tour_step');
       if (isDismiss) {
@@ -719,24 +753,20 @@
         const currentSlug = getPageSlug(window.location.pathname);
         const targetSlug = nextStep.slug;
 
-        // If next step lives on another page, navigate to that page!
+        // If next step lives on another page, navigate to that page with active session flag!
         if (targetSlug && currentSlug !== targetSlug) {
-          localStorage.setItem('qureml_tour_active', 'true');
-          localStorage.setItem('qureml_tour_step', nextIdx);
+          sessionStorage.setItem('qureml_tour_active', 'true');
+          sessionStorage.setItem('qureml_tour_step', nextIdx);
           window.location.href = resolvePageUrl(targetSlug);
           return;
         }
 
         this.currentStep = nextIdx;
-        localStorage.setItem('qureml_tour_step', this.currentStep);
+        sessionStorage.setItem('qureml_tour_step', this.currentStep);
         this.render();
       } else {
         // Last step (Conclusion): mark don't show again and end tour!
         this.dontShowAgain();
-        const currentSlug = getPageSlug(window.location.pathname);
-        if (currentSlug !== 'predict') {
-          window.location.href = resolvePageUrl('predict');
-        }
       }
     }
 
@@ -749,14 +779,14 @@
 
         // If prev step lives on another page, navigate back!
         if (targetSlug && currentSlug !== targetSlug) {
-          localStorage.setItem('qureml_tour_active', 'true');
-          localStorage.setItem('qureml_tour_step', prevIdx);
+          sessionStorage.setItem('qureml_tour_active', 'true');
+          sessionStorage.setItem('qureml_tour_step', prevIdx);
           window.location.href = resolvePageUrl(targetSlug);
           return;
         }
 
         this.currentStep = prevIdx;
-        localStorage.setItem('qureml_tour_step', this.currentStep);
+        sessionStorage.setItem('qureml_tour_step', this.currentStep);
         this.render();
       }
     }

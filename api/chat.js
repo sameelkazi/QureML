@@ -59,28 +59,56 @@ Your sole purpose is to explain and answer questions about the QureML project, i
 
 Format responses with clean, readable Markdown (bullet points, bold highlights, concise explanations). Be precise with numbers and citations when asked.`;
 
-function getAvailableKeys() {
-  const keys = [];
-  // Check individual numbered keys 1..5
-  for (let i = 1; i <= 5; i++) {
-    const k = process.env[`GEMINI_API_KEY_${i}`];
-    if (k && k.trim() && !keys.includes(k.trim())) {
-      keys.push(k.trim());
+function extractKeysFromString(str, targetList) {
+  if (!str || typeof str !== 'string') return;
+  // Handle comma, semicolon, newline, pipe, or whitespace separated keys
+  const tokens = str.split(/[,;\n\r| \t]+/);
+  for (const token of tokens) {
+    // Strip surrounding quotes, square brackets, or whitespace
+    const cleaned = token.trim().replace(/^['"`\[]+|['"`\]]+$/g, '').trim();
+    if (cleaned && cleaned.length >= 10 && !targetList.includes(cleaned)) {
+      targetList.push(cleaned);
     }
   }
-  // Check comma-separated GEMINI_API_KEYS
-  if (process.env.GEMINI_API_KEYS) {
-    process.env.GEMINI_API_KEYS.split(',').forEach(k => {
-      const trimmed = k.trim();
-      if (trimmed && !keys.includes(trimmed)) {
-        keys.push(trimmed);
+}
+
+function getAvailableKeys() {
+  const keys = [];
+  const envVarNames = [
+    'GEMINI_API_KEYS',
+    'GEMINI_API_KEY',
+    'GEMINI_KEYS',
+    'GEMINI_KEY',
+    'GOOGLE_API_KEY',
+    'GOOGLE_API_KEYS',
+    'API_KEY',
+    'API_KEYS'
+  ];
+
+  for (let i = 1; i <= 10; i++) {
+    envVarNames.push(`GEMINI_API_KEY_${i}`);
+    envVarNames.push(`API_KEY_${i}`);
+    envVarNames.push(`GEMINI_KEY_${i}`);
+    envVarNames.push(`GOOGLE_API_KEY_${i}`);
+  }
+
+  // Explicit check
+  for (const name of envVarNames) {
+    if (process.env[name]) {
+      extractKeysFromString(process.env[name], keys);
+    }
+  }
+
+  // Dynamic case-insensitive sweep across all env vars
+  try {
+    for (const [key, val] of Object.entries(process.env)) {
+      const upper = key.toUpperCase();
+      if (upper.includes('GEMINI') || upper.includes('API_KEY')) {
+        extractKeysFromString(val, keys);
       }
-    });
-  }
-  // Fallback check for single GEMINI_API_KEY
-  if (process.env.GEMINI_API_KEY && !keys.includes(process.env.GEMINI_API_KEY.trim())) {
-    keys.push(process.env.GEMINI_API_KEY.trim());
-  }
+    }
+  } catch (_) {}
+
   return keys;
 }
 
@@ -108,8 +136,9 @@ export default async function handler(req, res) {
 
   if (keys.length === 0) {
     return res.status(500).json({
-      error: 'QureML AI Assistant is not yet configured with API credentials. Please set API_KEY_1 through API_KEY_5 in the environment settings.',
-      configured: false
+      error: 'QureML AI Assistant credentials not found in Vercel environment. IMPORTANT: If you just added environment variables in the Vercel Dashboard, you must trigger a Redeploy for them to take effect.',
+      configured: false,
+      keysDetected: 0
     });
   }
 
@@ -142,6 +171,9 @@ export default async function handler(req, res) {
     }
   };
 
+  // Supported models
+  const candidateModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash'];
+
   // Start with a randomized key offset to distribute load evenly
   const startIdx = Math.floor(Math.random() * keys.length);
   let lastError = null;
@@ -149,45 +181,57 @@ export default async function handler(req, res) {
   // Try each key sequentially with automatic failover
   for (let attempt = 0; attempt < keys.length; attempt++) {
     const currentKey = keys[(startIdx + attempt) % keys.length];
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${currentKey}`;
 
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+    for (const model of candidateModels) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${currentKey}`;
 
-      if (response.ok) {
-        const data = await response.json();
-        const candidate = data?.candidates?.[0];
-        const text = candidate?.content?.parts?.[0]?.text;
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
 
-        if (text) {
-          return res.status(200).json({
-            reply: text,
-            status: 'ok',
-            activeKeyIndex: (startIdx + attempt) % keys.length + 1
-          });
+        if (response.ok) {
+          const data = await response.json();
+          const candidate = data?.candidates?.[0];
+          const text = candidate?.content?.parts?.[0]?.text;
+
+          if (text) {
+            return res.status(200).json({
+              reply: text,
+              status: 'ok',
+              activeKeyIndex: (startIdx + attempt) % keys.length + 1
+            });
+          }
         }
-      }
 
-      // If rate limited (HTTP 429) or temporary server overload (503), failover to next key
-      const status = response.status;
-      const errorBody = await response.text();
-      lastError = `Key #${(startIdx + attempt) % keys.length + 1} HTTP ${status}: ${errorBody.substring(0, 120)}`;
-      console.warn(`[QureML AI Failover] ${lastError}. Attempting next available key...`);
-    } catch (err) {
-      lastError = `Key #${(startIdx + attempt) % keys.length + 1} network error: ${err.message}`;
-      console.warn(`[QureML AI Network Failover] ${lastError}`);
+        const status = response.status;
+        const errorBody = await response.text();
+        lastError = `Key #${(startIdx + attempt) % keys.length + 1} (${model}) HTTP ${status}: ${errorBody.substring(0, 150)}`;
+        console.warn(`[QureML AI Failover] ${lastError}`);
+
+        // If 404 (model name not available on this tier), try next model immediately with same key
+        if (status === 404) {
+          continue;
+        }
+
+        // If 429 (quota) or 400/403 (invalid key), failover to next key
+        break;
+      } catch (err) {
+        lastError = `Key #${(startIdx + attempt) % keys.length + 1} network error: ${err.message}`;
+        console.warn(`[QureML AI Network Failover] ${lastError}`);
+        break;
+      }
     }
   }
 
   // If all keys failed
   return res.status(502).json({
-    error: 'All configured API keys are currently rate-limited or unavailable. Please retry in a few seconds.',
-    details: lastError
+    error: 'All configured API keys are currently unavailable or rate-limited. Please retry shortly.',
+    details: lastError,
+    keysConfigured: keys.length
   });
 }

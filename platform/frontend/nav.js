@@ -28,14 +28,15 @@
   const _fetch = window.fetch;
   window.fetch = function (input, init) {
     if (typeof input === "string" && input.startsWith("/")) {
-      const isStatic =
+      const isStaticOrVercelApi =
         input.match(/\.(html|css|js|png|jpg|jpeg|svg|webp|pdf|json|ico|woff2?)$/i) ||
+        input.startsWith("/api/") ||
         input.startsWith("/assets/") ||
         input.startsWith("/paper_figures/") ||
         input.startsWith("/team/") ||
         input.startsWith("/static/");
 
-      if (!isStatic && window.QUREML_BACKEND_URL) {
+      if (!isStaticOrVercelApi && window.QUREML_BACKEND_URL) {
         input = window.QUREML_BACKEND_URL + input;
       }
     }

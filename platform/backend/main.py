@@ -1,6 +1,17 @@
+import sys
+import os
+
+# Guard: Ensure standard library 'platform' is cached in sys.modules before any package imports it
+if "platform" not in sys.modules or not hasattr(sys.modules["platform"], "python_implementation"):
+    _cwd = os.getcwd()
+    _orig_sys_path = list(sys.path)
+    sys.path = [p for p in sys.path if os.path.abspath(p or ".") != _cwd and not os.path.abspath(p or ".").endswith(os.sep + "platform")]
+    import platform as _stdlib_platform
+    sys.modules["platform"] = _stdlib_platform
+    sys.path = _orig_sys_path
+
 import json
 import pickle
-import os
 import random
 import urllib.request
 import urllib.error
@@ -1951,48 +1962,57 @@ Your sole purpose is to explain and answer questions about the QureML project, i
 Format responses with clean, readable Markdown (bullet points, bold highlights, concise explanations). Be precise with numbers and citations when asked."""
 
 
+def _extract_keys_from_text(text: str, target_list: List[str]):
+    if not text:
+        return
+    import re
+    tokens = re.split(r"[,;\n\r|\t ]+", text)
+    for tok in tokens:
+        cleaned = tok.strip().strip("'\"[]")
+        if len(cleaned) >= 10 and cleaned not in target_list:
+            target_list.append(cleaned)
+
+
 def get_gemini_api_keys() -> List[str]:
     keys = []
-    # Check individual numbered keys 1..5
-    for i in range(1, 6):
-        k = os.environ.get(f"GEMINI_API_KEY_{i}", "").strip()
-        if k and k not in keys:
-            keys.append(k)
-    # Check comma-separated GEMINI_API_KEYS
-    comma_keys = os.environ.get("GEMINI_API_KEYS", "").strip()
-    if comma_keys:
-        for k in comma_keys.split(","):
-            k_clean = k.strip()
-            if k_clean and k_clean not in keys:
-                keys.append(k_clean)
-    # Check single GEMINI_API_KEY
-    single_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if single_key and single_key not in keys:
-        keys.append(single_key)
+    env_names = [
+        "GEMINI_API_KEYS", "GEMINI_API_KEY", "GEMINI_KEYS", "GEMINI_KEY",
+        "GOOGLE_API_KEY", "GOOGLE_API_KEYS", "API_KEY", "API_KEYS"
+    ]
+    for i in range(1, 11):
+        env_names.append(f"GEMINI_API_KEY_{i}")
+        env_names.append(f"API_KEY_{i}")
+        env_names.append(f"GEMINI_KEY_{i}")
+        env_names.append(f"GOOGLE_API_KEY_{i}")
 
-    # Check local .env file if no keys found in os.environ
-    if not keys:
-        env_file = PROJECT_ROOT / ".env"
-        if env_file.exists():
-            try:
-                with open(env_file, "r", encoding="utf-8") as f:
-                    for line in f:
-                        line = line.strip()
-                        if not line or line.startswith("#") or "=" not in line:
-                            continue
-                        k, v = line.split("=", 1)
-                        k = k.strip()
-                        v = v.strip().strip('"').strip("'")
-                        if k.startswith("GEMINI_API_KEY_") or k == "GEMINI_API_KEY":
-                            if v and v not in keys:
-                                keys.append(v)
-                        elif k == "GEMINI_API_KEYS":
-                            for item in v.split(","):
-                                item_clean = item.strip()
-                                if item_clean and item_clean not in keys:
-                                    keys.append(item_clean)
-            except Exception:
-                pass
+    # Check os.environ
+    for name in env_names:
+        val = os.environ.get(name, "").strip()
+        if val:
+            _extract_keys_from_text(val, keys)
+
+    # Dynamic case-insensitive sweep across os.environ
+    for k, v in os.environ.items():
+        k_upper = k.upper()
+        if "GEMINI" in k_upper or "API_KEY" in k_upper:
+            _extract_keys_from_text(v, keys)
+
+    # Always check local .env file
+    env_file = PROJECT_ROOT / ".env"
+    if env_file.exists():
+        try:
+            with open(env_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    k, v = line.split("=", 1)
+                    k_upper = k.strip().upper()
+                    if "GEMINI" in k_upper or "API_KEY" in k_upper or "GOOGLE" in k_upper:
+                        _extract_keys_from_text(v, keys)
+        except Exception:
+            pass
+
     return keys
 
 
@@ -2006,7 +2026,7 @@ def qureml_ai_chat(req: ChatRequest):
     if not keys:
         raise HTTPException(
             status_code=500,
-            detail="QureML AI Assistant is not configured with API credentials. Please set GEMINI_API_KEY_1..5 in environment."
+            detail="QureML AI Assistant is not configured with API credentials. Please set GEMINI_API_KEYS or GEMINI_API_KEY_1..5 in .env or environment."
         )
 
     # Prepare conversation history payload
@@ -2030,36 +2050,45 @@ def qureml_ai_chat(req: ChatRequest):
     }
 
     req_data = json.dumps(payload).encode("utf-8")
+    candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"]
     start_idx = random.randint(0, len(keys) - 1)
     last_error = None
 
     for attempt in range(len(keys)):
         idx = (start_idx + attempt) % len(keys)
         current_key = keys[idx]
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={current_key}"
 
-        http_req = urllib.request.Request(
-            url,
-            data=req_data,
-            headers={"Content-Type": "application/json"},
-            method="POST"
-        )
-        try:
-            with urllib.request.urlopen(http_req, timeout=12) as response:
-                if response.status == 200:
-                    resp_json = json.loads(response.read().decode("utf-8"))
-                    candidates = resp_json.get("candidates", [])
-                    if candidates:
-                        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-                        if text:
-                            return ChatResponse(reply=text, status="ok", active_key_index=idx + 1)
-        except urllib.error.HTTPError as e:
-            err_msg = f"Key #{idx + 1} HTTP {e.code}: {e.reason}"
-            last_error = err_msg
-            continue
-        except Exception as e:
-            last_error = f"Key #{idx + 1} error: {str(e)}"
-            continue
+        for model in candidate_models:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={current_key}"
+            http_req = urllib.request.Request(
+                url,
+                data=req_data,
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            try:
+                with urllib.request.urlopen(http_req, timeout=14) as response:
+                    if response.status == 200:
+                        resp_json = json.loads(response.read().decode("utf-8"))
+                        candidates = resp_json.get("candidates", [])
+                        if candidates:
+                            text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                            if text:
+                                return ChatResponse(reply=text, status="ok", active_key_index=idx + 1)
+            except urllib.error.HTTPError as e:
+                body = ""
+                try:
+                    body = e.read().decode("utf-8")[:120]
+                except Exception:
+                    pass
+                err_msg = f"Key #{idx + 1} ({model}) HTTP {e.code}: {body or e.reason}"
+                last_error = err_msg
+                if e.code == 404:
+                    continue  # Try next candidate model with same key
+                break  # Failover to next key
+            except Exception as e:
+                last_error = f"Key #{idx + 1} error: {str(e)}"
+                break
 
     raise HTTPException(
         status_code=502,

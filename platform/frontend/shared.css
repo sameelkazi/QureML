@@ -477,8 +477,9 @@ body {
 }
 
 /* Input Fields (Universal Default) */
-input[type="number"], input[type="text"], input[type="search"], select, textarea {
+input[type="number"], input[type="text"], input[type="search"], input[type="email"], select, textarea {
   background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
   border: 3px solid #000000 !important;
   color: #000000 !important;
   font-family: var(--font-mono);
@@ -489,10 +490,24 @@ input[type="number"], input[type="text"], input[type="search"], select, textarea
   transition: all 0.2s ease !important;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus, select:focus, textarea:focus,
+input:active, select:active, textarea:active {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
   border-color: #000000 !important;
   box-shadow: 2px 2px 0 #000000, 4px 4px 0 #D4AF37 !important;
   outline: none !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
+  box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
 }
 
 /* Clean Spinner */
@@ -660,9 +675,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .brutalist-input:focus {
-  animation: focus-pulse 4s cubic-bezier(0.25, 0.8, 0.25, 1) infinite,
-    glitch 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) infinite !important;
-  box-shadow: 4px 4px 0 #000000, 8px 8px 0 #D4AF37 !important;
+  animation: none !important;
+  transform: none !important;
+  border-color: #000000 !important;
+  box-shadow: 3px 3px 0 #000000, 6px 6px 0 #D4AF37 !important;
 }
 
 .brutalist-label {
@@ -710,13 +726,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .smooth-type:focus::before {
-  opacity: 1;
-  animation: type-gradient 2s linear infinite;
-}
-
-@keyframes type-gradient {
-  0% { background-position: 300px 0; }
-  100% { background-position: 0 0; }
+  opacity: 0 !important;
+  display: none !important;
+  animation: none !important;
 }
 
 .brutalist-input::placeholder {
