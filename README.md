@@ -32,7 +32,7 @@
 **Sponsor:** Egreen Quanta &nbsp;|&nbsp; **Host Institution:** Sardar Patel Institute of Technology (SPIT), Mumbai  
 **Team:** Unhandled Exceptionz
 
-[📄 **Read Full Research Paper (PDF)**](paper/QureML_SIH26139_paper.pdf) &nbsp;|&nbsp; [📊 **Interactive Research Gallery**](http://127.0.0.1:8000/architecture) &nbsp;|&nbsp; [🖥️ **Live Clinical Platform**](http://127.0.0.1:8000/)
+[📄 **Read Full Research Paper (PDF)**](paper/QureML_SIH26139_paper.pdf) &nbsp;|&nbsp; [🌐 **Live Deployed Platform**](https://qureml.vercel.app/) &nbsp;|&nbsp; [📊 **Interactive Research Gallery**](https://qureml.vercel.app/architecture) &nbsp;|&nbsp; [🩺 **Clinical Triage**](https://qureml.vercel.app/predict)
 
 </div>
 
@@ -243,14 +243,25 @@ cp .env.example .env
 # IBM_QUANTUM_TOKEN=your_token_here
 ```
 
-### 3. Launch the Clinical Decision Platform
+### 3. Access Platform
+
+#### 🌐 Live Cloud Deployment (Vercel Production)
+The production platform is hosted and active at:
+- **Main Platform:** [https://qureml.vercel.app/](https://qureml.vercel.app/)
+- **Interactive Research Gallery:** [https://qureml.vercel.app/architecture](https://qureml.vercel.app/architecture)
+- **Clinical Triage & Prediction:** [https://qureml.vercel.app/predict](https://qureml.vercel.app/predict)
+- **Model Explainability (IG):** [https://qureml.vercel.app/explain](https://qureml.vercel.app/explain)
+- **4-Control Ablation Comparison:** [https://qureml.vercel.app/compare](https://qureml.vercel.app/compare)
+
+#### 💻 Local Development Server
+To launch the platform locally:
 ```bash
 python -m uvicorn platform.backend.main:app --host 127.0.0.1 --port 8000 --reload
 ```
-Navigate to:
-- **Triage Dashboard:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-- **Research Architecture Gallery:** [http://127.0.0.1:8000/architecture](http://127.0.0.1:8000/architecture)
-- **Interactive Swagger API Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+Local endpoints:
+- **Local Dashboard:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- **Local Architecture Gallery:** [http://127.0.0.1:8000/architecture](http://127.0.0.1:8000/architecture)
+- **Interactive OpenAPI/Swagger:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
 

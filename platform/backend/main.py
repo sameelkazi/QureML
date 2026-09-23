@@ -330,6 +330,20 @@ def serve_paper_modal_js():
         return FileResponse(str(js_file), media_type="application/javascript")
     raise HTTPException(status_code=404, detail="paper-modal.js not found")
 
+@app.get("/chat-widget.css", include_in_schema=False)
+def serve_chat_widget_css():
+    css_file = frontend_dir / "chat-widget.css"
+    if css_file.exists():
+        return FileResponse(str(css_file), media_type="text/css")
+    raise HTTPException(status_code=404, detail="chat-widget.css not found")
+
+@app.get("/chat-widget.js", include_in_schema=False)
+def serve_chat_widget_js():
+    js_file = frontend_dir / "chat-widget.js"
+    if js_file.exists():
+        return FileResponse(str(js_file), media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="chat-widget.js not found")
+
 @app.get("/paper.pdf", include_in_schema=False)
 @app.get("/QureML_SIH26139_paper.pdf", include_in_schema=False)
 def serve_paper_pdf():
