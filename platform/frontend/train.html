@@ -296,6 +296,16 @@
 
 <script src="/nav.js"></script>
 <script>
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 async function checkApi() {
   const el = document.getElementById('api-status');
   try {
@@ -344,7 +354,7 @@ function handleFile(file) {
     currentCsvContent = e.target.result;
     const lines = currentCsvContent.trim().split('\n');
     fileDetails.classList.remove('hidden');
-    fileDetails.innerHTML = `<span class="material-symbols-outlined text-sm text-[#D4AF37]">description</span> ${currentFileName} &middot; ${lines.length - 1} cases detected`;
+    fileDetails.innerHTML = `<span class="material-symbols-outlined text-sm text-[#D4AF37]">description</span> ${escapeHtml(currentFileName)} &middot; ${lines.length - 1} cases detected`;
     btnTrain.disabled = false;
   };
   reader.readAsText(file);
@@ -360,7 +370,7 @@ btnLoadSample.addEventListener('click', async () => {
     currentFileName = 'sample_clinical_cohort_60cases.csv';
     const lines = currentCsvContent.trim().split('\n');
     fileDetails.classList.remove('hidden');
-    fileDetails.innerHTML = `<span class="material-symbols-outlined text-sm text-[#D4AF37]">description</span> ${currentFileName} &middot; ~${lines.length - 1} balanced clinical cases`;
+    fileDetails.innerHTML = `<span class="material-symbols-outlined text-sm text-[#D4AF37]">description</span> ${escapeHtml(currentFileName)} &middot; ~${lines.length - 1} balanced clinical cases`;
     btnTrain.disabled = false;
   } catch (err) {
     alert('Could not load sample dataset: ' + err.message);
@@ -445,12 +455,12 @@ function displayResults(data) {
   const accDelta = (data.comparison.accuracy_delta >= 0 ? '+' : '') + (data.comparison.accuracy_delta * 100).toFixed(2) + '%';
 
   verdictChip.className = "px-4 py-2 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#1A1608] border border-[#D4AF37]/50 text-[#F5D77F] flex items-center gap-2";
-  verdictChip.innerHTML = `<span class="material-symbols-outlined text-sm">biotech</span> ${verdict} (&Delta;Acc: ${accDelta})`;
+  verdictChip.innerHTML = `<span class="material-symbols-outlined text-sm">biotech</span> ${escapeHtml(verdict)} (&Delta;Acc: ${accDelta})`;
 
   const caveatEl = document.getElementById('caveat-banner');
   if (data.comparison.caveat) {
     caveatEl.classList.remove('hidden');
-    caveatEl.innerHTML = `<span class="material-symbols-outlined text-amber-400 text-sm flex-shrink-0">warning</span> <span>${data.comparison.caveat}</span>`;
+    caveatEl.innerHTML = `<span class="material-symbols-outlined text-amber-400 text-sm flex-shrink-0">warning</span> <span>${escapeHtml(data.comparison.caveat)}</span>`;
   } else {
     caveatEl.classList.add('hidden');
   }
@@ -480,7 +490,7 @@ function displayResults(data) {
   document.getElementById('cb-tp').textContent = `${cb.confusion_matrix.tp} (TP)`;
 
   document.getElementById('comparative-interpretation').innerHTML = `
-    Across this on-demand training run on <strong>${currentFileName || 'custom dataset'}</strong>, Control A (Hybrid Quantum VQC) achieved 
+    Across this on-demand training run on <strong>${escapeHtml(currentFileName || 'custom dataset')}</strong>, Control A (Hybrid Quantum VQC) achieved 
     <strong>${(qa.test_accuracy * 100).toFixed(1)}% test accuracy</strong> (ROC-AUC: ${qa.test_auc ? qa.test_auc.toFixed(3) : 'N/A'}) in ${qa.training_time_seconds.toFixed(2)}s, 
     while parameter-matched Control B (Classical MLP) achieved <strong>${(cb.test_accuracy * 100).toFixed(1)}% test accuracy</strong> (ROC-AUC: ${cb.test_auc ? cb.test_auc.toFixed(3) : 'N/A'}) in ${cb.training_time_seconds.toFixed(2)}s. 
     Both models operate with exactly <strong>73 parameters</strong>. All data was processed ephemerally in volatile RAM and purged upon response completion.

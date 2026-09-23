@@ -4,7 +4,9 @@
   "trailingSlash": false,
   "outputDirectory": "platform/frontend",
   "rewrites": [
+    { "source": "/api/proxy/:path*", "destination": "https://qureml-backend.onrender.com/:path*" },
     { "source": "/api/:path*", "destination": "/api/:path*" },
+
     { "source": "/static/:path*", "destination": "/:path*" },
     { "source": "/triage", "destination": "/predict.html" },
     { "source": "/predict", "destination": "/predict.html" },

@@ -1,47 +1,34 @@
 (function () {
   // ---------------------------------------------------------------------------
-  // Universal API Base URL Resolver & Interceptor for Vercel + Render
+  // Secure Edge-Proxy API Gateway Routing
   // ---------------------------------------------------------------------------
-  const STORAGE_KEY = "qureml_backend_url";
-  const DEFAULT_RENDER_URL = "https://qureml-backend.onrender.com";
+  // When running in production (Vercel), requests to backend endpoints route via
+  // the Vercel edge reverse proxy (/api/proxy/*), eliminating cross-origin exposure
+  // of internal backend hostnames and protecting against client-side request tampering.
+  // When running locally, calls route directly to relative endpoints.
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  const API_PROXY_PREFIX = isLocal ? "" : "/api/proxy";
 
-  let backendUrl = localStorage.getItem(STORAGE_KEY);
-  if (backendUrl) {
-    try {
-      const parsed = new URL(backendUrl);
-      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-        backendUrl = isLocal ? "" : DEFAULT_RENDER_URL;
-      } else {
-        backendUrl = parsed.origin + parsed.pathname.replace(/\/$/, "");
-      }
-    } catch (_) {
-      backendUrl = isLocal ? "" : DEFAULT_RENDER_URL;
-    }
-  } else {
-    backendUrl = isLocal ? "" : DEFAULT_RENDER_URL;
-  }
-  backendUrl = backendUrl.replace(/\/$/, "");
-  window.QUREML_BACKEND_URL = backendUrl;
-
-  // Intercept window.fetch for relative API calls when running on Vercel or remote
+  // Intercept window.fetch for relative API calls to route securely through edge gateway
   const _fetch = window.fetch;
   window.fetch = function (input, init) {
     if (typeof input === "string" && input.startsWith("/")) {
+      const cleanPath = input.split("?")[0].split("#")[0];
       const isStaticOrVercelApi =
-        input.match(/\.(html|css|js|png|jpg|jpeg|svg|webp|pdf|json|ico|woff2?)$/i) ||
-        input.startsWith("/api/") ||
-        input.startsWith("/assets/") ||
-        input.startsWith("/paper_figures/") ||
-        input.startsWith("/team/") ||
-        input.startsWith("/static/");
+        cleanPath.match(/\.(html|css|js|png|jpg|jpeg|svg|webp|pdf|json|ico|woff2?)$/i) ||
+        cleanPath.startsWith("/api/") ||
+        cleanPath.startsWith("/assets/") ||
+        cleanPath.startsWith("/paper_figures/") ||
+        cleanPath.startsWith("/team/") ||
+        cleanPath.startsWith("/static/");
 
-      if (!isStaticOrVercelApi && window.QUREML_BACKEND_URL) {
-        input = window.QUREML_BACKEND_URL + input;
+      if (!isStaticOrVercelApi && API_PROXY_PREFIX) {
+        input = API_PROXY_PREFIX + input;
       }
     }
     return _fetch.call(this, input, init);
   };
+
 
   const NAV_ITEMS = [
     { slug: "index", label: "Overview", href: "/" },
@@ -76,7 +63,7 @@
     return `<a href="${item.href}" class="nav-link-item ${isActive ? "active font-bold" : ""}" style="font-size: 1.05rem; padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.08); display: block;">${item.label}</a>`;
   }).join("");
 
-  const apiDocsUrl = window.QUREML_BACKEND_URL ? (window.QUREML_BACKEND_URL + "/docs") : "/docs";
+  const apiDocsUrl = "/docs";
 
   target.innerHTML = `
   <header class="global-nav-header">
@@ -113,12 +100,13 @@
           <span class="material-symbols-outlined text-[#B8860B] font-bold">apps</span>
           <span class="font-extrabold text-sm uppercase tracking-wider font-kanit">QureML Platform Modules & Navigation</span>
         </div>
-        <!-- Live Backend API Status Pill -->
-        <button id="api-status-btn" type="button" class="px-2.5 py-1 rounded bg-[#FFFDF0] hover:bg-[#FFF8D6] border-2 border-black font-mono font-bold text-xs flex items-center gap-1.5 shadow-[2px_2px_0_#000] cursor-pointer transition-all active:translate-x-[1px] active:translate-y-[1px]" title="Click to inspect or change Backend API URL">
+        <!-- Live Backend API Status Pill (Read-Only Secured Badge) -->
+        <div id="api-status-badge" class="px-2.5 py-1 rounded bg-[#FFFDF0] border-2 border-black font-mono font-bold text-xs flex items-center gap-1.5 shadow-[2px_2px_0_#000]" title="Quantum Inference Engine Status">
           <span id="api-status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; transition: background 0.3s ease;"></span>
-          <span id="api-status-text">API ONLINE</span>
-        </button>
+          <span id="api-status-text">QML ENGINE ONLINE</span>
+        </div>
       </div>
+
 
       <!-- Quick Action Utilities Row (White Paper, AI Tour, AI Chat, Judge Report, API Docs) -->
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pb-4 mb-5 border-b-2 border-black">
@@ -287,10 +275,8 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Backend API Health Poller & Connection Modal
+  // Backend QML Engine Health Telemetry (Read-Only Status Badge)
   // ---------------------------------------------------------------------------
-  const apiStatusBtn = document.getElementById("api-status-btn");
-  const mobileApiStatusBtn = document.getElementById("mobile-api-status-btn");
   const apiDot = document.getElementById("api-status-dot");
   const mobileApiDot = document.getElementById("mobile-api-status-dot");
   const apiText = document.getElementById("api-status-text");
@@ -299,145 +285,36 @@
     const color = state === "online" ? "#10b981" : state === "waking" ? "#f59e0b" : "#ef4444";
     if (apiDot) apiDot.style.background = color;
     if (mobileApiDot) mobileApiDot.style.background = color;
-    if (apiText) apiText.textContent = msg || (state === "online" ? "API ONLINE" : state === "waking" ? "WAKING UP..." : "OFFLINE");
+    if (apiText) apiText.textContent = msg || (state === "online" ? "QML ENGINE ONLINE" : state === "waking" ? "INITIALIZING..." : "STANDBY");
   }
 
   async function checkBackendHealth() {
     try {
       const t0 = performance.now();
-      const res = await _fetch((window.QUREML_BACKEND_URL || "") + "/health", { cache: "no-store" });
+      const res = await _fetch((API_PROXY_PREFIX || "") + "/health", { cache: "no-store" });
       const t1 = performance.now();
       if (res.ok) {
-        setStatus("online", "API ONLINE");
+        setStatus("online", "QML ENGINE ONLINE");
         window.__QUREML_API_STATUS = { online: true, latency: Math.round(t1 - t0) };
       } else {
-        setStatus("waking", "WAKING UP...");
+        setStatus("waking", "INITIALIZING...");
         window.__QUREML_API_STATUS = { online: false, waking: true };
         setTimeout(checkBackendHealth, 5000);
       }
     } catch (e) {
       if (!isLocal) {
-        setStatus("waking", "WAKING UP...");
+        setStatus("waking", "INITIALIZING...");
         window.__QUREML_API_STATUS = { online: false, waking: true };
         setTimeout(checkBackendHealth, 7000);
       } else {
-        setStatus("offline", "OFFLINE");
+        setStatus("offline", "STANDBY");
         window.__QUREML_API_STATUS = { online: false, waking: false };
       }
     }
   }
 
-  // Initial check
+  // Initial telemetry health check
   checkBackendHealth();
-
-  // Settings Modal Creation
-  function openApiModal() {
-    let modal = document.getElementById("qureml-api-modal");
-    if (!modal) {
-      modal = document.createElement("div");
-      modal.id = "qureml-api-modal";
-      modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999999;display:flex;align-items:center;justify-content:center;padding:1rem;";
-      modal.innerHTML = `
-        <div style="background:#fff;border:4px solid #000;box-shadow:8px 8px 0 #000;width:100%;max-width:540px;padding:1.5rem;font-family:Kanit,sans-serif;color:#000;">
-          <div style="display:flex;align-items:center;justify-content:between;border-bottom:2px solid #000;padding-bottom:0.75rem;margin-bottom:1rem;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#10b981;" id="modal-api-dot"></span>
-              <h3 style="font-weight:800;font-size:1.25rem;text-transform:uppercase;margin:0;">QureML API Backend Settings</h3>
-            </div>
-            <button id="close-api-modal-btn" style="background:#000;color:#fff;border:none;width:28px;height:28px;font-weight:bold;cursor:pointer;margin-left:auto;">&times;</button>
-          </div>
-          <p style="font-size:0.875rem;margin-bottom:1rem;line-height:1.4;color:#333;">
-            Configure the Render FastAPI service URL. In production, QureML frontend on Vercel routes inference and evaluation requests directly to this backend.
-          </p>
-          <div style="margin-bottom:1rem;">
-            <label style="display:block;font-size:0.75rem;font-weight:700;font-family:monospace;text-transform:uppercase;margin-bottom:4px;">Render Service URL</label>
-            <input id="api-url-input" type="text" value="${window.QUREML_BACKEND_URL || ''}" placeholder="https://qureml-backend.onrender.com" style="width:100%;padding:8px 12px;border:2px solid #000;font-family:monospace;font-size:0.875rem;box-sizing:border-box;" />
-          </div>
-          <div style="background:#fef9c3;border:2px solid #ca8a04;padding:10px;font-size:0.75rem;margin-bottom:1.25rem;line-height:1.4;">
-            <strong>Render Free Tier Note:</strong> If the backend has been inactive for 15 minutes, Render spins down the container. The first request will trigger a cold start (~45s).
-          </div>
-          <div style="display:flex;gap:8px;justify-content:flex-end;">
-            <button id="test-api-btn" style="background:#fff;border:2px solid #000;padding:6px 14px;font-weight:700;cursor:pointer;box-shadow:2px 2px 0 #000;">Test / Ping</button>
-            <button id="reset-api-btn" style="background:#f3f4f6;border:2px solid #000;padding:6px 14px;font-weight:700;cursor:pointer;box-shadow:2px 2px 0 #000;">Reset Default</button>
-            <button id="save-api-btn" style="background:#D4AF37;border:2px solid #000;padding:6px 16px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 #000;">Save & Apply</button>
-          </div>
-          <div id="modal-test-output" style="margin-top:10px;font-family:monospace;font-size:0.75rem;display:none;padding:6px;border:1px solid #000;background:#f8fafc;"></div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-
-      const closeBtn = document.getElementById("close-api-modal-btn");
-      const testBtn = document.getElementById("test-api-btn");
-      const resetBtn = document.getElementById("reset-api-btn");
-      const saveBtn = document.getElementById("save-api-btn");
-      const input = document.getElementById("api-url-input");
-      const out = document.getElementById("modal-test-output");
-
-      closeBtn.onclick = () => modal.remove();
-      modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
-
-      testBtn.onclick = async () => {
-        out.style.display = "block";
-        out.textContent = "Pinging " + (input.value.trim() || "(local)") + "/health ...";
-        try {
-          const t0 = performance.now();
-          const target = (input.value.trim().replace(/\/$/, "") || "") + "/health";
-          const res = await _fetch(target, { cache: "no-store" });
-          const t1 = performance.now();
-          if (res.ok) {
-            const data = await res.json();
-            out.textContent = `SUCCESS (HTTP ${res.status}, ${Math.round(t1 - t0)}ms): ${JSON.stringify(data)}`;
-            out.style.color = "#15803d";
-          } else {
-            out.textContent = `HTTP ${res.status}: ${res.statusText}`;
-            out.style.color = "#b45309";
-          }
-        } catch (err) {
-          out.textContent = `Connection error: ${err.message}. If Render is asleep, please wait 30-45s and retry.`;
-          out.style.color = "#b91c1c";
-        }
-      };
-
-      resetBtn.onclick = () => {
-        localStorage.removeItem(STORAGE_KEY);
-        input.value = isLocal ? "" : DEFAULT_RENDER_URL;
-        out.style.display = "none";
-      };
-
-      saveBtn.onclick = () => {
-        let val = input.value.trim().replace(/\/$/, "");
-        if (val) {
-          if (!/^https?:\/\//i.test(val)) {
-            val = "https://" + val;
-          }
-          try {
-            const parsed = new URL(val);
-            if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-              out.style.display = "block";
-              out.textContent = "Error: Only http:// or https:// URLs are allowed.";
-              out.style.color = "#b91c1c";
-              return;
-            }
-            const cleanUrl = parsed.origin + parsed.pathname.replace(/\/$/, "");
-            localStorage.setItem(STORAGE_KEY, cleanUrl);
-            window.QUREML_BACKEND_URL = cleanUrl;
-          } catch (e) {
-            out.style.display = "block";
-            out.textContent = "Error: Please enter a valid URL.";
-            out.style.color = "#b91c1c";
-            return;
-          }
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
-          window.QUREML_BACKEND_URL = isLocal ? "" : DEFAULT_RENDER_URL;
-        }
-        modal.remove();
-        checkBackendHealth();
-      };
-    }
-  }
-
-  if (apiStatusBtn) apiStatusBtn.onclick = openApiModal;
-  if (mobileApiStatusBtn) mobileApiStatusBtn.onclick = openApiModal;
 })();
+
 

@@ -386,26 +386,10 @@
     container.scrollTop = container.scrollHeight;
   }
 
-  // Resolve active backend chat endpoint across Vercel & local FastAPI
+  // Resolve active backend chat endpoint using same-origin relative paths (zero server exposure)
   async function executeChatRequest(payload) {
-    const candidateEndpoints = [];
-    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-
-    if (isLocal) {
-      // Running locally: prioritize local server, then Vercel endpoint
-      if (window.QUREML_BACKEND_URL) {
-        candidateEndpoints.push(window.QUREML_BACKEND_URL + '/chat');
-      }
-      candidateEndpoints.push('http://127.0.0.1:8000/chat');
-      candidateEndpoints.push('/api/chat');
-    } else {
-      // Hosted on Vercel or remote: prioritize Vercel Serverless Function where Vercel Env Vars reside!
-      candidateEndpoints.push('/api/chat');
-      if (window.QUREML_BACKEND_URL) {
-        candidateEndpoints.push(window.QUREML_BACKEND_URL + '/chat');
-      }
-      candidateEndpoints.push('/chat');
-    }
+    // Relative endpoints guarantee zero host, port, or cloud provider URL exposure in client DOM/network
+    const candidateEndpoints = ['/api/chat', '/chat'];
 
     let lastResponse = null;
 
@@ -490,7 +474,7 @@
       if (typingRow.parentNode) typingRow.remove();
       const errorRow = createAssistantRow(
         `**Connection Notice:** ${err.message || 'Ali Bot is currently unavailable.'}\n\n` +
-        `*If running locally or on Vercel, verify that API credentials (GEMINI_API_KEYS) are configured in the environment settings.*`
+        `*If running locally or on Vercel, verify that assistant API credentials are configured in the environment settings.*`
       );
       messagesBox.appendChild(errorRow);
     } finally {

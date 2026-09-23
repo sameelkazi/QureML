@@ -142,6 +142,16 @@
 
 <script src="/nav.js"></script>
 <script>
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 async function checkApi() {
   const el = document.getElementById('api-status');
   try {
@@ -164,7 +174,7 @@ async function loadPatients() {
     const list = await r.json();
     sel.innerHTML = list.map(p => `
       <option value="${p.index}">
-        Patient #${p.index} [ID: ${p.patient_id}] &mdash; True Pathology: ${p.ground_truth.toUpperCase()}
+        Patient #${p.index} [ID: ${escapeHtml(p.patient_id)}] &mdash; True Pathology: ${escapeHtml(p.ground_truth.toUpperCase())}
       </option>
     `).join('');
   } catch {
@@ -209,8 +219,8 @@ function renderTwinCard(type, data) {
 
       <!-- Model Name & Spec -->
       <div>
-        <h3 class="text-2xl font-bold text-white">${data.model_name}</h3>
-        <p class="text-xs text-[#8A9BA8] font-mono mt-1">${data.architecture}</p>
+        <h3 class="text-2xl font-bold text-white">${escapeHtml(data.model_name)}</h3>
+        <p class="text-xs text-[#8A9BA8] font-mono mt-1">${escapeHtml(data.architecture)}</p>
       </div>
 
       <!-- Probability Readout -->
@@ -226,8 +236,8 @@ function renderTwinCard(type, data) {
         </div>
 
         <div class="flex justify-between items-center text-xs font-mono text-[#8A9BA8] pt-1">
-          <span>Decision: <strong class="text-white">${data.decision}</strong></span>
-          <span>Risk Tier: <strong class="${probPct >= 30 ? 'text-red-400' : 'text-emerald-400'}">${data.risk_tier}</strong></span>
+          <span>Decision: <strong class="text-white">${escapeHtml(data.decision)}</strong></span>
+          <span>Risk Tier: <strong class="${probPct >= 30 ? 'text-red-400' : 'text-emerald-400'}">${escapeHtml(data.risk_tier)}</strong></span>
         </div>
       </div>
 
@@ -261,12 +271,12 @@ document.getElementById('run-compare').addEventListener('click', async () => {
         <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#0C0C0C] border border-[#D4AF37]/30">
           <div class="flex items-center gap-3 font-mono text-sm">
             <span class="text-[#D4AF37] font-bold">CASE EVALUATION:</span>
-            <span class="text-white">Patient Record #${d.patient_id}</span>
+            <span class="text-white">Patient Record #${escapeHtml(d.patient_id)}</span>
           </div>
           <div class="flex items-center gap-2 font-mono text-xs">
             <span class="text-[#8A9BA8]">CONFIRMED BIOPSY GROUND TRUTH:</span>
             <span class="px-3 py-1 rounded-full font-bold uppercase ${d.ground_truth.toLowerCase() === 'malignant' ? 'bg-red-500/20 text-red-300 border border-red-500/50' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'}">
-              ${d.ground_truth}
+              ${escapeHtml(d.ground_truth)}
             </span>
           </div>
         </div>
@@ -281,11 +291,12 @@ document.getElementById('run-compare').addEventListener('click', async () => {
   } catch(e) {
     out.innerHTML = `
       <div class="mt-4 p-4 rounded-xl border border-red-500/40 bg-red-950/20 text-red-300 font-mono text-sm">
-        Error running dual comparison: ${e.message}
+        Error running dual comparison: ${escapeHtml(e.message)}
       </div>
     `;
   }
 });
+
 </script>
 </body>
 </html>

@@ -34,6 +34,19 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_auc_score, recall_score, f1_score, confusion_matrix
 from statsmodels.stats.contingency_tables import mcnemar
 
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+
+# ------------------------------------------------------------------------------
+# Security & Upload Constraints (Hardened)
+# ------------------------------------------------------------------------------
+MAX_UPLOAD_BYTES = 5 * 1024 * 1024  # 5MB upload size ceiling
+MAX_CSV_ROWS = 5000                 # 5,000 row batch & custom training ceiling
+
+limiter = Limiter(key_func=get_remote_address)
+
+
 # ------------------------------------------------------------------------------
 # 1. Model & Quantum Circuit Definition (Exact Control A Architecture)
 # ------------------------------------------------------------------------------
@@ -118,19 +131,56 @@ class EndToEndQNN(torch.nn.Module):
 # ------------------------------------------------------------------------------
 # 2. FastAPI Application & Asset Loading
 # ------------------------------------------------------------------------------
+is_prod = os.environ.get("ENVIRONMENT", "").lower() in ("production", "prod") or os.environ.get("RENDER", "") == "true"
+
 app = FastAPI(
     title="QureML Hybrid Quantum-Classical Clinical Triage API",
     description="Minimal production-proof demonstrator for SIH26139 (Egreen Quanta).",
-    version="1.1.0"
+    version="1.1.0",
+    docs_url=None if is_prod else "/docs",
+    redoc_url=None if is_prod else "/redoc",
+    openapi_url=None if is_prod else "/openapi.json"
 )
+
+# SlowAPI Rate Limiter State & Exception Handling
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Confirmed Real Production and Development Origins (Hardened CORS)
+ALLOWED_ORIGINS = [
+    "https://qureml.vercel.app",
+    "https://qure-ml.vercel.app",
+    "https://qureml-backend.onrender.com",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"^https://.*qure.*\.vercel\.app$",
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS", "HEAD"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def proxy_prefix_middleware(request: Request, call_next):
+    """
+    Transparently strip /api/proxy prefix for edge reverse-proxy parity
+    between Vercel production edge gateway and local development.
+    """
+    if request.scope.get("path", "").startswith("/api/proxy/"):
+        request.scope["path"] = request.scope["path"][len("/api/proxy"):]
+    elif request.scope.get("path", "") == "/api/proxy":
+        request.scope["path"] = "/"
+    return await call_next(request)
+
+
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent.parent
@@ -686,6 +736,7 @@ class BatchPredictResponse(BaseModel):
     results: List[BatchPatientResult]
 
 @app.post("/predict-batch", response_model=BatchPredictResponse)
+@limiter.limit("20/minute")
 async def predict_batch(request: Request, file: Optional[UploadFile] = File(None)):
     """
     Accepts a CSV upload (or raw CSV in request body) containing multiple patient records.
@@ -701,6 +752,13 @@ async def predict_batch(request: Request, file: Optional[UploadFile] = File(None
     if not csv_bytes:
         raise HTTPException(status_code=400, detail="No CSV file or data provided in request.")
 
+    # Finding 3: File upload size cap (5MB)
+    if len(csv_bytes) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Uploaded file exceeds size limit of {MAX_UPLOAD_BYTES // (1024*1024)}MB."
+        )
+
     try:
         df = pd.read_csv(io.BytesIO(csv_bytes))
     except Exception as e:
@@ -708,6 +766,13 @@ async def predict_batch(request: Request, file: Optional[UploadFile] = File(None
 
     if df.empty:
         raise HTTPException(status_code=400, detail="Uploaded CSV file is empty.")
+
+    # Finding 3: Row-count ceiling (5,000 rows)
+    if len(df) > MAX_CSV_ROWS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Uploaded CSV exceeds maximum limit of {MAX_CSV_ROWS} rows (received {len(df)} rows)."
+        )
 
     # 1. Identify Patient ID column
     id_col = None
@@ -717,9 +782,10 @@ async def predict_batch(request: Request, file: Optional[UploadFile] = File(None
             break
     
     if id_col is not None:
-        patient_ids = [str(x) for x in df[id_col]]
+        patient_ids = [str(x)[:64] for x in df[id_col]]
     else:
         patient_ids = [f"PT-{i+1:03d}" for i in range(len(df))]
+
 
     # 2. Identify Ground Truth Label column (optional)
     label_col = None
@@ -1576,6 +1642,7 @@ def get_sample_dataset():
 
 
 @app.post("/custom-dataset-train")
+@limiter.limit("10/minute")
 async def custom_dataset_train(
     request: Request,
     file: Optional[UploadFile] = File(None),
@@ -1599,6 +1666,13 @@ async def custom_dataset_train(
     if not csv_bytes:
         raise HTTPException(status_code=400, detail="No CSV dataset provided in request.")
 
+    # Finding 3: File upload size cap (5MB)
+    if len(csv_bytes) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Uploaded dataset exceeds size limit of {MAX_UPLOAD_BYTES // (1024*1024)}MB."
+        )
+
     try:
         df = pd.read_csv(io.BytesIO(csv_bytes))
     except Exception as e:
@@ -1606,6 +1680,14 @@ async def custom_dataset_train(
 
     if df.empty or len(df) < 10:
         raise HTTPException(status_code=400, detail=f"Dataset must contain at least 10 rows. Received {len(df)} rows.")
+
+    # Finding 3: Row-count ceiling (5,000 rows)
+    if len(df) > MAX_CSV_ROWS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Uploaded dataset exceeds maximum limit of {MAX_CSV_ROWS} rows (received {len(df)} rows)."
+        )
+
 
     # 1. Identify Target Column
     target_col = None
@@ -1932,7 +2014,7 @@ Your sole purpose is to explain and answer questions about the QureML project, i
 - Team: Developed under the leadership of Team Lead Sameel Kazi and his team from SPIT Mumbai in partnership with Egreen Quanta for SIH26139.
 - Role Clarification: You (Ali Bot) are strictly the PROJECT EXPLAINER and interactive guide. You are NOT the team leader. Sameel Kazi is the Team Leader. Always acknowledge Sameel Kazi as the project leader.
 - Tone: Rigorous, highly technical, academic yet clear, clinically grounded, objective, and completely honest.
-- CRITICAL DIRECTIVE: NEVER mention "Gemini", "Google", or any external third-party AI provider. You are the proprietary built-in QureML Quantum Assistant.
+- CRITICAL DIRECTIVE: NEVER mention any external LLM vendors, third-party AI providers, or underlying model architectures. You are the proprietary built-in QureML Quantum Assistant.
 - SCOPE DIRECTIVE: You MUST ONLY answer questions related to QureML, quantum machine learning, clinical oncology diagnostics, the SIH26139 problem statement, our datasets, architecture, and empirical benchmarks. If a user asks an unrelated general question (e.g., sports, general coding, random trivia), politely redirect them back to QureML.
 
 ### CORE PROJECT ARCHITECTURE:
@@ -1992,9 +2074,10 @@ def _extract_keys_from_text(text: str, target_list: List[str]):
             target_list.append(cleaned)
 
 
-def get_gemini_api_keys() -> List[str]:
+def get_assistant_api_keys() -> List[str]:
     keys = []
     env_names = [
+        "QUREML_API_KEY", "QUREML_API_KEYS", "ASSISTANT_API_KEY", "ASSISTANT_API_KEYS",
         "GEMINI_API_KEYS", "GEMINI_API_KEY", "GEMINI_KEYS", "GEMINI_KEY",
         "GOOGLE_API_KEY", "GOOGLE_API_KEYS", "API_KEY", "API_KEYS"
     ]
@@ -2036,16 +2119,18 @@ def get_gemini_api_keys() -> List[str]:
 
 
 @app.post("/chat", response_model=ChatResponse)
-def qureml_ai_chat(req: ChatRequest):
+@limiter.limit("25/minute")
+def qureml_ai_chat(request: Request, req: ChatRequest):
+
     message = req.message.strip()
     if not message:
         raise HTTPException(status_code=400, detail="Missing or empty 'message'")
 
-    keys = get_gemini_api_keys()
+    keys = get_assistant_api_keys()
     if not keys:
         raise HTTPException(
             status_code=500,
-            detail="QureML AI Assistant is not configured with API credentials. Please set GEMINI_API_KEYS or GEMINI_API_KEY_1..5 in .env or environment."
+            detail="QureML AI Assistant is not configured with API credentials. Please set QUREML_API_KEY or API_KEY in .env or environment."
         )
 
     # Prepare conversation history payload

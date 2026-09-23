@@ -99,6 +99,16 @@
 
 <script src="/nav.js"></script>
 <script>
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 async function checkApi() {
   const el = document.getElementById('api-status');
   try {
@@ -180,18 +190,19 @@ document.getElementById('run-batch').addEventListener('click', async () => {
     const rows = d.results.map((p, idx) => {
       const isMal = p.predicted_class.toLowerCase().includes('malignant');
       const isCorrect = p.correct;
+      const rawPid = p.patient_id || ('Patient #' + (idx + 1));
       return `
         <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-          <td class="py-3 px-4 text-xs font-mono text-white font-semibold">${p.patient_id || ('Patient #' + (idx + 1))}</td>
+          <td class="py-3 px-4 text-xs font-mono text-white font-semibold">${escapeHtml(rawPid)}</td>
           <td class="py-3 px-4 text-xs font-mono text-right font-bold ${isMal ? 'text-[#F5D77F]' : 'text-emerald-400'}">
             ${(p.probability * 100).toFixed(2)}%
           </td>
           <td class="py-3 px-4 text-xs font-mono">
             <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${isMal ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'}">
-              ${p.predicted_class}
+              ${escapeHtml(p.predicted_class)}
             </span>
           </td>
-          <td class="py-3 px-4 text-xs font-mono text-[#8A9BA8] uppercase">${p.true_label || '&mdash;'}</td>
+          <td class="py-3 px-4 text-xs font-mono text-[#8A9BA8] uppercase">${p.true_label ? escapeHtml(p.true_label) : '&mdash;'}</td>
           <td class="py-3 px-4 text-xs font-mono">
             ${isCorrect === null || isCorrect === undefined ? '&mdash;' : (isCorrect ? '<span class="text-emerald-400 font-bold">✓ CORRECT</span>' : '<span class="text-red-400 font-bold">✗ MISMATCH</span>')}
           </td>
@@ -239,13 +250,14 @@ document.getElementById('run-batch').addEventListener('click', async () => {
   } catch(e) {
     out.innerHTML = `
       <div class="mt-4 p-4 rounded-xl border border-red-500/40 bg-red-950/20 text-red-300 font-mono text-sm">
-        Error processing batch screening: ${e.message}
+        Error processing batch screening: ${escapeHtml(e.message)}
       </div>
     `;
   } finally {
     btn.disabled = false;
   }
 });
+
 </script>
 </body>
 </html>

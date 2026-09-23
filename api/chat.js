@@ -16,7 +16,7 @@ Your sole purpose is to explain and answer questions about the QureML project, i
 - Team: Developed under the leadership of Team Lead Sameel Kazi and his team from SPIT Mumbai in partnership with Egreen Quanta for SIH26139.
 - Role Clarification: You (Ali Bot) are strictly the PROJECT EXPLAINER and interactive guide. You are NOT the team leader. Sameel Kazi is the Team Leader. Always acknowledge Sameel Kazi as the project leader.
 - Tone: Rigorous, highly technical, academic yet clear, clinically grounded, objective, and completely honest.
-- CRITICAL DIRECTIVE: NEVER mention "Gemini", "Google", or any external third-party AI provider. You are the proprietary built-in QureML Quantum Assistant.
+- CRITICAL DIRECTIVE: NEVER mention any external LLM vendors, third-party AI providers, or underlying model architectures. You are the proprietary built-in QureML Quantum Assistant.
 - SCOPE DIRECTIVE: You MUST ONLY answer questions related to QureML, quantum machine learning, clinical oncology diagnostics, the SIH26139 problem statement, our datasets, architecture, and empirical benchmarks. If a user asks an unrelated general question (e.g., sports, general coding, random trivia), politely redirect them back to QureML.
 
 ### CORE PROJECT ARCHITECTURE:
@@ -80,6 +80,10 @@ function extractKeysFromString(str, targetList) {
 function getAvailableKeys() {
   const keys = [];
   const envVarNames = [
+    'QUREML_API_KEY',
+    'QUREML_API_KEYS',
+    'ASSISTANT_API_KEY',
+    'ASSISTANT_API_KEYS',
     'GEMINI_API_KEYS',
     'GEMINI_API_KEY',
     'GEMINI_KEYS',
@@ -118,8 +122,38 @@ function getAvailableKeys() {
 }
 
 export default async function handler(req, res) {
-  // CORS configuration
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Strict Origin Validation & CORS Hardening
+  const ALLOWED_ORIGINS = [
+    'https://qureml.vercel.app',
+    'https://qure-ml.vercel.app',
+    'https://qureml-backend.onrender.com'
+  ];
+
+  const reqOrigin = req.headers.origin || req.headers.referer;
+  let clientOrigin = null;
+
+  if (reqOrigin) {
+    try {
+      const urlObj = new URL(reqOrigin);
+      const originHost = urlObj.origin;
+      if (
+        ALLOWED_ORIGINS.includes(originHost) ||
+        urlObj.hostname === 'localhost' ||
+        urlObj.hostname === '127.0.0.1' ||
+        urlObj.hostname.endsWith('.vercel.app')
+      ) {
+        clientOrigin = originHost;
+      }
+    } catch (_) {}
+  } else {
+    clientOrigin = 'https://qureml.vercel.app';
+  }
+
+  if (req.headers.origin && !clientOrigin) {
+    return res.status(403).json({ error: 'Access forbidden: unauthorized origin.' });
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', clientOrigin || 'https://qureml.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
@@ -147,7 +181,7 @@ export default async function handler(req, res) {
     });
   }
 
-  // Format conversation history for Gemini API
+  // Format conversation history for Assistant LLM gateway
   const contents = [];
   if (Array.isArray(history)) {
     history.forEach(item => {
