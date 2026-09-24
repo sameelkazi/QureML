@@ -35,14 +35,14 @@ $RECYCLE.BIN/
 # Scratch, Local Execution Proofs & Working Notes
 scratch/
 outputs_proofs/
-Claude outputs/
+videoshots/
 EXECUTION_PLAN.md
-.agents/
-.gemini/
+DEPLOYMENT.md
+*.local
+.cache/
 
 # Logs & Temporary Files
 *.log
 *.tmp
 tmp/
 node_modules/
-platform/frontend/src-app/node_modules/
