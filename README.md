@@ -126,10 +126,11 @@ In addition to statevector simulations, QureML was deployed directly to **IBM Qu
 
 ### Hardware Execution Telemetry:
 - **Processor:** `ibm_fez` (IBM Heron r2 architecture, 156 superconducting transmon qubits)
-- **Error Mitigation:** Resilience Level 2 (Zero-Noise Extrapolation with Exponential/Polynomial Factory extrapolation)
+- **Error Mitigation:** Resilience Level 2 (Zero-Noise Extrapolation + TREX Readout Mitigation)
 - **Crosstalk Suppression:** Dynamical Decoupling pulse sequences ($XY4$) during idle qubit coherence windows
 - **Shots:** 1,024 shots per circuit execution
-- **Clinical Sensitivity:** **100% Zero-Miss Malignancy Sensitivity** on locked test cohorts under calibrated threshold ($\tau = 0.10$).
+- **Validation Cohort:** Full locked test cohort ($n=57$: 21 malignant, 36 benign; Job ID `darsoltvr3kc73ejc5i0`)
+- **Clinical Sensitivity:** **100% Zero-Miss Malignancy Sensitivity** (21/21 malignant caught, 0 missed) at both default ($\tau = 0.50$) and triage ($\tau = 0.10$) thresholds; exploratory uncalibrated 10-patient cohort achieves 80% at $\tau=0.50$ and 100% at $\tau=0.10$.
 
 ---
 
@@ -201,8 +202,9 @@ QureML/
 ├── results/                           # Raw scientific data, logs, and CSVs
 │   ├── phase1_mvp_wdbc.json           # Wisconsin diagnostic test logs
 │   ├── phase2_stats_summary.csv       # Multi-seed ablation metrics
+│   ├── phase2e_liver_ablated_stats.csv# ILPD liver 4-control ablation statistics
 │   ├── phase3_qsvm_comparison.csv     # Quantum Kernel (QSVM) comparisons
-│   ├── ibm_hardware_validation.csv    # Raw telemetry from ibm_fez QPU
+│   ├── ibm_hardware_validation_v2.csv # Full locked test cohort validation on ibm_fez QPU
 │   └── ...                            # Full ablation sweep archives
 ├── assets/                            # Brand assets, vectors, and logos
 ├── fonts/                             # Self-hosted typography

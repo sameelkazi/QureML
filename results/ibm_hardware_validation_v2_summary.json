@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-09-26 19:17:55",
+  "backend": "ibm_fez",
+  "architecture": "IBM Heron r2",
+  "job_id": "darsoltvr3kc73ejc5i0",
+  "quantum_seconds": 63,
+  "wall_clock_seconds": 180.38,
+  "n_patients": 57,
+  "n_malignant": 21,
+  "n_benign": 36,
+  "default_threshold_0_50": {
+    "sensitivity": 1.0,
+    "specificity": 1.0,
+    "accuracy": 1.0,
+    "ppv": 1.0,
+    "npv": 1.0,
+    "tp": 21,
+    "fn": 0,
+    "tn": 36,
+    "fp": 0
+  },
+  "triage_threshold_0_10": {
+    "sensitivity": 1.0,
+    "specificity": 0.8889,
+    "accuracy": 0.9298,
+    "tp": 21,
+    "fn": 0,
+    "tn": 32,
+    "fp": 4
+  },
+  "simulator_agreement_50": 1.0,
+  "mean_absolute_prob_difference": 0.0097
+}
