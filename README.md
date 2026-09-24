@@ -215,7 +215,23 @@ QureML/
 
 ---
 
+## 🔒 Security Architecture & Production Hardening
+
+QureML implements strict, real-world security guardrails designed for high-consequence MedTech and clinical decision environments:
+
+- **🛡️ Edge Reverse Proxy Isolation**: The backend FastAPI engine is fully masked behind Vercel's edge network (`/api/proxy/*`). Raw backend hostnames and infrastructure providers are never exposed in client DOM or network calls, neutralizing direct-to-origin DDoS, automated scrapers, and client-side URL tampering.
+- **⏱️ Per-IP Rate Limiting (`slowapi`)**: Robust protection against denial-of-wallet and compute starvation:
+  - `POST /chat`: Capped at **25 requests/minute** per IP (prevents LLM API quota exhaustion).
+  - `POST /custom-dataset-train`: Capped at **10 requests/minute** per IP (protects CPU during on-demand VQC optimization).
+  - `POST /predict-batch`: Capped at **20 requests/minute** per IP (safeguards high-throughput quantum queue).
+- **📦 Strict Ingestion Guardrails**: Enforced **5 MB upload byte ceiling** (HTTP 413) and **5,000 row cap** (HTTP 400) on batch screening and custom training datasets prior to memory buffer allocation or PCA/circuit execution.
+- **🧹 Context-Aware DOM Sanitization**: Comprehensive entity-escaping (`&`, `<`, `>`, `"`, `'`) across all dynamic frontend rendering (`batch.html`, `train.html`, `compare.html`) to eliminate reflected and stored Cross-Site Scripting (XSS) from malicious CSV inputs or filenames.
+- **🌐 Strict CORS Boundary**: Restricted exclusively to official production edge domains (`qureml.vercel.app`, `qure-ml.vercel.app`) with credentials forbidden (`allow_credentials=False`).
+
+---
+
 ## ⚡ Quickstart & Reproducibility Guide
+
 
 ### 1. Clone & Environment Setup
 ```bash
@@ -261,7 +277,38 @@ python -m uvicorn platform.backend.main:app --host 127.0.0.1 --port 8000 --reloa
 Local endpoints:
 - **Local Dashboard:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 - **Local Architecture Gallery:** [http://127.0.0.1:8000/architecture](http://127.0.0.1:8000/architecture)
-- **Interactive OpenAPI/Swagger:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Interactive OpenAPI/Swagger:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) (Enabled in local development; disabled in production)
+
+---
+
+## 🔒 Security Architecture & Production Hardening
+
+QureML implements end-to-end security hardening tailored to its specialized architecture (stateless, zero-auth scientific demonstrator):
+
+1. **Edge Reverse Proxy & Backend Isolation**:
+   - The client browser communicates exclusively with `qureml.vercel.app` via same-origin relative endpoints (`/api/...` and transparent `/api/proxy/*`).
+   - The underlying compute backend hostname, IPs, and ports are completely hidden and unexposed in client-side code, preventing direct DDoS, scraping, or topology discovery.
+   - Swagger `/docs` and `/openapi.json` are disabled in production to protect internal schemas.
+
+2. **Per-IP Rate Limiting (SlowAPI)**:
+   - Stateful per-IP throttling protects compute-heavy endpoints against denial-of-service and brute-force exhaustion:
+     - `/chat`: 25 requests/min per IP
+     - `/predict-batch`: 20 requests/min per IP
+     - `/custom-dataset-train`: 10 requests/min per IP
+   - Returns standard `HTTP 429 Too Many Requests` with retry headers.
+
+3. **Upload Size & Row-Count Caps**:
+   - Pre-ingestion size validation prevents memory-exhaustion attacks:
+     - Hard byte cap: 5MB maximum file size (returns `HTTP 413 Payload Too Large` before memory parsing).
+     - Row cap: 5,000 rows maximum on CSV datasets (returns `HTTP 400 Bad Request`).
+
+4. **Context-Aware DOM Sanitization (Anti-XSS)**:
+   - Dynamic client-side views (`batch.html`, `train.html`, `compare.html`) enforce strict entity escaping (`escapeHtml()`) across all patient IDs, dataset labels, filenames, and clinical flags, preventing stored and reflected XSS.
+
+5. **Restricted CORS & Origin Validation**:
+   - Backend APIs reject cross-origin preflight requests from unauthorized origins (`HTTP 405/403`).
+   - `allow_credentials=False` prevents credential leakage.
+   - Vercel serverless chat functions enforce strict origin verification against `qureml.vercel.app`, preventing unauthorized third-party token consumption.
 
 ---
 
