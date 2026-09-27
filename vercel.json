@@ -3,6 +3,14 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "outputDirectory": "platform/frontend",
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 60
+    },
+    "platform/frontend/api/chat.js": {
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
     { "source": "/api/proxy/:path*", "destination": "https://qureml-backend.onrender.com/:path*" },
     { "source": "/api/:path*", "destination": "/api/:path*" },

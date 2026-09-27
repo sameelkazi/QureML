@@ -6,6 +6,10 @@
  * STRICT CONFIDENTIALITY: Never reveals underlying LLM provider in public responses.
  */
 
+export const config = {
+  maxDuration: 60
+};
+
 const SYSTEM_INSTRUCTION = `You are the QureML Quantum Clinical Intelligence Assistant (Ali Bot) for SIH26139.
 You are an expert scientific, technical, and clinical AI explainer embedded in the QureML hybrid quantum machine learning platform.
 Your sole purpose is to explain and answer questions about the QureML project, its architecture, benchmarks, clinical utility, and deliverables to evaluators, judges, clinicians, and researchers.
@@ -62,7 +66,8 @@ Your sole purpose is to explain and answer questions about the QureML project, i
 8. Peer-Reviewed Research Paper:
    - A comprehensive scientific research paper titled "QureML: Evaluating Quantum Utility, Fair-Baseline Controls, and Clinical Decision Support in Hybrid Quantum-Classical Oncology Pipelines" (with 14 publication figures and telemetry curves) is directly accessible in the platform (/paper.pdf) via the "RESEARCH PAPER" button in your welcome greeting or navigation bar.
 
-Format responses with clean, readable Markdown (bullet points, bold highlights, concise explanations). Be precise with numbers and citations when asked.`;
+Format responses with clean, readable Markdown (bullet points, bold highlights, concise explanations). Be precise with numbers and citations when asked.
+Keep answers direct, focused, and high-impact (2-4 well-structured paragraphs or key bullet points max); avoid overly sprawling preambles so explanations are delivered rapidly and completely without truncation.`;
 
 function extractKeysFromString(str, targetList) {
   if (!str || typeof str !== 'string') return;
@@ -205,13 +210,13 @@ export default async function handler(req, res) {
     },
     generationConfig: {
       temperature: 0.25,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 800,
       topP: 0.85
     }
   };
 
-  // Supported models
-  const candidateModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash'];
+  // Supported models prioritized for low latency and high availability
+  const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
 
   // Start with a randomized key offset to distribute load evenly
   const startIdx = Math.floor(Math.random() * keys.length);
@@ -225,13 +230,18 @@ export default async function handler(req, res) {
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${currentKey}`;
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();

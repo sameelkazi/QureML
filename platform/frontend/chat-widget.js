@@ -388,8 +388,9 @@
 
   // Resolve active backend chat endpoint using same-origin relative paths (zero server exposure)
   async function executeChatRequest(payload) {
-    // Relative endpoints guarantee zero host, port, or cloud provider URL exposure in client DOM/network
-    const candidateEndpoints = ['/api/chat', '/chat'];
+    const isVercel = window.location.hostname.endsWith('vercel.app');
+    // On Vercel, /api/chat is the primary serverless endpoint with credentials
+    const candidateEndpoints = isVercel ? ['/api/chat'] : ['/api/chat', '/chat'];
 
     let lastResponse = null;
 
@@ -407,11 +408,18 @@
         }
 
         const errData = await res.json().catch(() => ({}));
-        const errMsg = errData.detail || errData.error || `Server responded with HTTP ${res.status}`;
-        lastResponse = new Error(errMsg);
+        const errMsg = errData.detail || errData.error;
 
-        // If this candidate returned 404 (not found) or 500 (unconfigured), continue trying next candidate
-        if (res.status === 404 || res.status === 500 || res.status === 502) {
+        if (res.status === 502 || res.status === 504) {
+          lastResponse = new Error('The query took longer than expected to generate an in-depth response. Please retry in a moment or break down the question.');
+          // Do not failover to unconfigured secondary endpoints on timeout
+          break;
+        }
+
+        lastResponse = new Error(errMsg || `Server responded with HTTP ${res.status}`);
+
+        // If this candidate returned 404 (e.g. running purely locally), try next candidate
+        if (res.status === 404) {
           continue;
         }
       } catch (err) {
@@ -472,10 +480,11 @@
       messagesBox.appendChild(createAssistantRow(replyText));
     } catch (err) {
       if (typingRow.parentNode) typingRow.remove();
-      const errorRow = createAssistantRow(
-        `**Connection Notice:** ${err.message || 'Ali Bot is currently unavailable.'}\n\n` +
-        `*If running locally or on Vercel, verify that assistant API credentials are configured in the environment settings.*`
-      );
+      const isConfigError = err.message && (err.message.includes('credentials') || err.message.includes('configured') || err.message.includes('API key'));
+      const errorText = isConfigError
+        ? `**Connection Notice:** ${err.message}\n\n*If running locally or on Vercel, verify that assistant API credentials are configured in the environment settings.*`
+        : `**Assistant Notice:** ${err.message || 'Ali Bot is currently unavailable. Please retry in a moment.'}`;
+      const errorRow = createAssistantRow(errorText);
       messagesBox.appendChild(errorRow);
     } finally {
       isRequestInProgress = false;
