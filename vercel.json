@@ -6,9 +6,6 @@
   "functions": {
     "api/chat.js": {
       "maxDuration": 60
-    },
-    "platform/frontend/api/chat.js": {
-      "maxDuration": 60
     }
   },
   "rewrites": [
