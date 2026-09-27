@@ -215,8 +215,15 @@ export default async function handler(req, res) {
     }
   };
 
-  // Supported models prioritized for low latency and high availability
-  const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+  // Supported models prioritized for latest API availability and low latency
+  const candidateModels = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-2.5-pro',
+    'gemini-1.5-flash',
+    'gemini-1.5-flash-latest',
+    'gemini-1.5-pro'
+  ];
 
   // Start with a randomized key offset to distribute load evenly
   const startIdx = Math.floor(Math.random() * keys.length);
