@@ -21,6 +21,7 @@
 # QureML: Empirical Ablation and Clinical Triage Platform for Hybrid Quantum Machine Learning
 
 [![Paper PDF](https://img.shields.io/badge/Research_Paper-PDF_(IEEE)-red.svg)](paper/QureML_SIH26139_paper.pdf)
+[![YouTube Demo](https://img.shields.io/badge/Demo_Video-YouTube-FF0000.svg?logo=youtube&logoColor=white)](https://youtu.be/x38iLfUddBY)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![PennyLane 0.44](https://img.shields.io/badge/PennyLane-0.44-purple.svg)](https://pennylane.ai/)
 [![Qiskit 2.3](https://img.shields.io/badge/Qiskit-2.3-613394.svg)](https://qiskit.org/)
@@ -32,7 +33,7 @@
 **Sponsor:** Egreen Quanta &nbsp;|&nbsp; **Host Institution:** Sardar Patel Institute of Technology (SPIT), Mumbai  
 **Team:** Unhandled Exceptionz
 
-[📄 **Read Full Research Paper (PDF)**](paper/QureML_SIH26139_paper.pdf) &nbsp;|&nbsp; [🌐 **Live Deployed Platform**](https://qureml.vercel.app/) &nbsp;|&nbsp; [📊 **Interactive Research Gallery**](https://qureml.vercel.app/architecture) &nbsp;|&nbsp; [🩺 **Clinical Triage**](https://qureml.vercel.app/predict)
+[📄 **Read Full Research Paper (PDF)**](paper/QureML_SIH26139_paper.pdf) &nbsp;|&nbsp; [🎬 **Watch Video Walkthrough**](https://youtu.be/x38iLfUddBY) &nbsp;|&nbsp; [🌐 **Live Deployed Platform**](https://qureml.vercel.app/) &nbsp;|&nbsp; [📊 **Interactive Research Gallery**](https://qureml.vercel.app/architecture) &nbsp;|&nbsp; [🩺 **Clinical Triage**](https://qureml.vercel.app/predict)
 
 </div>
 
@@ -53,9 +54,31 @@
 
 ---
 
+## 🎬 Platform Demonstration & Video Walkthrough
+
+A comprehensive end-to-end video walkthrough of the QureML platform, physical IBM Quantum QPU execution, fair-baseline ablation benchmarks, and clinical triage decision support is available on YouTube:
+
+<p align="center">
+  <a href="https://youtu.be/x38iLfUddBY" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.youtube.com/vi/x38iLfUddBY/maxresdefault.jpg" alt="QureML ft. The Unhandled Exceptionz - Platform Demonstration" width="94%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);" />
+  </a>
+  <br>
+  <em>▶️ <b><a href="https://youtu.be/x38iLfUddBY" target="_blank" rel="noopener noreferrer">Watch "QureML ft. The Unhandled Exceptionz" on YouTube</a></b> (Complete architectural showcase, IBM Heron QPU inference, and clinical triage walkthrough)</em>
+</p>
+
+### 📺 Key Highlights Covered in the Demonstration:
+- **Angle-Encoded Variational Quantum Circuits**: Live execution of the 6-qubit $R_y$/$R_z$ ansatz with circular CNOT entanglement on PennyLane statevector backends.
+- **Physical IBM Quantum Heron QPU Inference**: Verified real-hardware execution on the 156-qubit `ibm_fez` processor (Resilience Level 2 ZNE, 1,024 shots/patient, $|\Delta p| = 0.0097$).
+- **The 4-Control Fair Baseline Ablation**: Side-by-side comparison isolating variational quantum utility against parameter-matched classical MLPs (73 parameters).
+- **Clinical Decision Support & High-Sensitivity Triage**: Calibrated decision curve analysis, selective classification ($\tau = 0.10$), and 100% retrospective sensitivity.
+- **Differentiable Axiomatic Explainability**: Path-Integrated Gradients backpropagated from quantum expectation values down to raw clinical cytopathology biomarkers ($<0.25\%$ completeness error).
+- **Communication-Efficient Federated Learning**: 73-parameter payload synchronization (292 bytes/round, 708.4× bandwidth reduction over standard MLPs).
+
+---
+
 ## 📌 Abstract & Scientific Motivation
 
-Variational Quantum Classifiers (VQCs) are widely hyped in medical machine learning literature with claims of "exponential quantum advantage" based on un-ablated, small-scale toy demonstrations. **QureML** presents a rigorous, publication-grade empirical ablation study of hybrid quantum-classical neural networks across **five clinical diagnostic modalities** and physical execution on **IBM Quantum's 156-qubit Heron r2 processor (`ibm_fez`)**.
+Variational Quantum Classifiers (VQCs) are widely hyped in medical machine learning literature with claims of "exponential quantum advantage" based on un-ablated, small-scale toy demonstrations. **QureML** presents a rigorous, publication-grade empirical ablation study of hybrid quantum-classical neural networks across **six clinical diagnostic benchmarks** and physical execution on **IBM Quantum's 156-qubit Heron r2 processor (`ibm_fez`)**.
 
 To delineate genuine inductive utility from spurious stochastic variation, we introduce an **honest four-control experimental protocol** with exact parameter-matching, multi-seed cross-validation (up to 25 independent seeds), Wilcoxon signed-rank significance testing with family-wise Holm-Bonferroni correction, and end-to-end differentiable axiomatic explainability (Path-Integrated Gradients, ICML 2017).
 
